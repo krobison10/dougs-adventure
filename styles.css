@@ -1,0 +1,14 @@
+body {
+  background-color:rgb(32, 31, 30);
+
+}
+
+#canvas-container {
+  width: 100%;
+}
+#gameWorld {
+  background: rgb(191, 191, 191);
+  display: block;
+  margin: auto;
+  align-self: center;
+}
