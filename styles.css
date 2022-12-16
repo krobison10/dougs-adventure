@@ -1,14 +1,25 @@
-body {
-  background-color:rgb(32, 31, 30);
+@font-face {
+  font-family: Andy-Bold;
+  src: url(ANDYB.TTF);
+}
 
+body {
+  background-color:rgb(35, 39, 46);
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  font-size: 50px;
+  font-family: Andy-Bold, serif;
 }
 
 #canvas-container {
   width: 100%;
 }
+
 #gameWorld {
-  background: rgb(191, 191, 191);
+  background: #ffffff;
   display: block;
   margin: auto;
-  align-self: center;
 }
