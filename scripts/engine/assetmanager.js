@@ -3,9 +3,25 @@
 class AssetManager {
 
     constructor() {
+        /**
+         * Number of successful downloads by the manager.
+         * @type {number}
+         */
         this.successCount = 0;
+        /**
+         * Number of failed downloads by the manager.
+         * @type {number}
+         */
         this.errorCount = 0;
-        this.cache = []; //Images live in here
+        /**
+         * Stores the asset images, accessible by path.
+         * @type {HTMLImageElement[]}
+         */
+        this.cache = [];
+        /**
+         * Stores the paths of the assets to be downloaded.
+         * @type {string[]}
+         */
         this.downloadQueue = [];
     }
 
@@ -18,12 +34,18 @@ class AssetManager {
         this.downloadQueue.push(path);
     }
 
+    /**
+     * @returns {boolean} true if all the downloads are complete.
+     */
     isDone() {
         return this.downloadQueue.length === this.successCount + this.errorCount;
     }
 
+    /**
+     * Starts downloads of all the assets added to the download queue.
+     * @param {function} callback function to be executed after the downloads are all complete (or failed).
+     */
     downloadAll(callback) {
-        if (this.downloadQueue.length === 0) setTimeout(callback, 10);
         for (let i = 0; i < this.downloadQueue.length; i++) {
             const img = new Image();
 
@@ -48,9 +70,8 @@ class AssetManager {
     }
 
     /**
-     * 
-     * @param {*} path the path of the asset.
-     * @returns the image asset.
+     * @param {string} path the path of the asset.
+     * @returns {HTMLImageElement} the image.
      */
     getAsset(path) {
         return this.cache[path];

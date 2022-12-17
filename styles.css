@@ -12,6 +12,7 @@ h1 {
   color: white;
   font-size: 50px;
   font-family: Andy-Bold, serif;
+  user-select: none;
 }
 
 #canvas-container {
@@ -19,7 +20,9 @@ h1 {
 }
 
 #gameWorld {
-  background: #ffffff;
+  outline: none;
+  border-radius: 5px;
+  background: #68bcfc;
   display: block;
   margin: auto;
 }
