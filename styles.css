@@ -19,6 +19,10 @@ h1 {
   width: 100%;
 }
 
+#test {
+  display: none;
+}
+
 #gameWorld {
   outline: none;
   border-radius: 5px;

@@ -79,6 +79,10 @@ class Player extends Character {
         }
     }
 
+    getCenter() {
+        return {x: this.x + 52/2, y: this.y + 72/2};
+    }
+
     drawAnim(ctx, animator) {
         animator.drawFrame(this.game.clockTick, ctx, this.x, this.y);
     }
