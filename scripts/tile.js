@@ -10,6 +10,6 @@ class Tile {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.sprite, this.x * 16, this.y * 16)
+        ctx.drawImage(this.sprite, this.x * 120, this.y * 120, 120, 120)
     }
 }

@@ -18,8 +18,8 @@ ASSET_MANAGER.downloadAll(() => {
 gameEngine.addEntity(new Player(gameEngine, 1024/2-52/2, 768/2-72/2,
 	ASSET_MANAGER.getAsset("../sprites/blondie_spritesheet.png")));
 
-for(let i = 0; i < 64; i++) {
-	for(let j = 0; j < 48; j++) {
+for(let i = 0; i < 9; i++) {
+	for(let j = 0; j < 7; j++) {
 		gameEngine.addEntity(new Tile(gameEngine, i, j, ASSET_MANAGER.getAsset("../sprites/grass.png")));
 	}
 }
