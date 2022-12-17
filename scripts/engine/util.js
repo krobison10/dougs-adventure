@@ -53,7 +53,7 @@ window.requestAnimFrame = (() => {
 
 /**
  * Returns distance from two points
- * @param {Number} p1 p2 Two objects with x and y coordinates
+ * @param {number} p1 p2 Two objects with x and y coordinates
  * @returns Distance between the two points
  */
 const getDistance = (p1, p2) => {
