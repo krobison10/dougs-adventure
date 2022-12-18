@@ -7,16 +7,29 @@ body {
   background-color:rgb(35, 39, 46);
 }
 
-h1 {
-  text-align: center;
+h1, h4 {
   color: white;
-  font-size: 50px;
   font-family: Andy-Bold, serif;
   user-select: none;
 }
 
+h1 {
+  text-align: center;
+  font-size: 50px;
+}
+
+h4 {
+  font-size: 24px;
+}
+
+#light-slider {
+  outline: none;
+}
+
 #canvas-container {
-  width: 100%;
+  width: 1024px;
+  display: block;
+  margin: auto;
 }
 
 #test {
@@ -27,6 +40,5 @@ h1 {
   outline: none;
   border-radius: 5px;
   background: #68bcfc;
-  display: block;
-  margin: auto;
+
 }

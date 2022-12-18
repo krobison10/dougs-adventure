@@ -17,7 +17,7 @@
     <script type="text/javascript" src="./scripts/tile.js"></script>
     <script type="text/javascript" src="./scripts/character.js"></script>
     <script type="text/javascript" src="./scripts/player.js"></script>
-    <script type="text/javascript" src="./scripts/main.js"></script>
+    <script type="text/javascript" src="./scripts/main.js" defer></script>
 
 
 </head>
@@ -25,6 +25,9 @@
     <h1>Insert Unoriginal Title Here</h1>
     <div id="canvas-container">
         <canvas id="gameWorld" width="1024" height="768" tabindex="0" autofocus></canvas>
+        <h4>Ambient light:</h4>
+        <label for="light-slider"></label>
+        <input id="light-slider" type="range" min="0" max="100" value="100" oninput="sliderChange()">
     </div>
 </body>
 </html>
