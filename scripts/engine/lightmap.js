@@ -1,6 +1,10 @@
 "use strict";
 
 
+/**
+ *
+ * @author Kyler Robison
+ */
 class LightMap {
 
     constructor() {
@@ -11,8 +15,8 @@ class LightMap {
         this.renderingCtx = this.lightmask.getContext("2d");
         this.renderingCtx.globalCompositeOperation = 'lighten';
 
+        this.color = new RGBColor(20, 20, 100);
         this.alpha = 1;
-
         this.setLightValue();
 
         this.lightSources = [];
@@ -23,7 +27,7 @@ class LightMap {
     }
 
     setLightValue() {
-        this.lightValue = rgba(20, 20, 100, this.alpha);
+        this.lightValue = rgba(this.color.r, this.color.g, this.color.b, this.alpha);
     }
 
     update() {

@@ -6,6 +6,7 @@ const HEIGHT = 768;
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();
+//const tileManager = new TileManager();
 
 
 
@@ -27,11 +28,13 @@ let player = new Player(gameEngine, WIDTH/2-52/2, HEIGHT/2-72/2,
 
 gameEngine.addEntity(player);
 
-lightMap.addLightSource(new LightSource(.9, 100, 100, null, new RGBColor(255, 199, 57)));
-lightMap.addLightSource(new LightSource(.9, 100, 400, null));
-lightMap.addLightSource(new LightSource(.7, 500, 100, null));
-lightMap.addLightSource(new LightSource(.5, 800, 100, null, new RGBColor(0, 97, 255)));
-lightMap.addLightSource(new LightSource(.7, 0, 0, player, new RGBColor(252, 204, 67)));
+lightMap.addLightSource(new LightSource(.7, 100, 100, null, new RGBColor(255, 199, 57)));
+lightMap.addLightSource(new LightSource(.5, 400, 100, null));
+lightMap.addLightSource(new LightSource(.4, 600, 100, null, new RGBColor(0, 97, 255), 50));
+lightMap.addLightSource(new LightSource(.2, 800, 100, null));
+lightMap.addLightSource(new LightSource(.7, 100, 400, null));
+
+lightMap.addLightSource(new LightSource(.8, 0, 0, player, new RGBColor(252, 204, 67)));
 
 for(let i = 0; i < 9; i++) {
 	for(let j = 0; j < 7; j++) {

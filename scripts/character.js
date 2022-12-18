@@ -7,7 +7,7 @@
  * @abstract
  * @author Kyler Robison
  */
-class Character {
+class Character extends GameObject {
     /**
      * @param {GameEngine} game reference to the game engine object.
      * @param {number} x initial x position.
@@ -15,10 +15,11 @@ class Character {
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
      */
     constructor(game, x, y, spritesheet) {
+        super(x, y);
         if(this.constructor === Character) {
             throw new Error("Character is an abstract class, cannot be instantiated");
         }
-        Object.assign(this, {game, x, y, spritesheet});
+        Object.assign(this, {game, spritesheet});
 
         //Makes default animation as forward facing single keyframe
         this.animation = new Animator(this.spritesheet, 0,0, 52, 72,
@@ -38,6 +39,6 @@ class Character {
      * @param {CanvasRenderingContext2D} ctx the rendering context.
      */
     draw(ctx) {
-        this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+        this.animation.drawFrame(this.game.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }

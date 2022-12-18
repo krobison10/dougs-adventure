@@ -1,8 +1,11 @@
 "use strict";
 
-class Tile {
+class Tile extends GameObject {
     constructor(game, x, y, sprite) {
-        Object.assign(this, {game, x, y, sprite});
+        super(x, y);
+        Object.assign(this, {game, sprite});
+        this.x *= 120;
+        this.y *= 120;
     }
 
     update() {
@@ -10,6 +13,6 @@ class Tile {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.sprite, this.x * 120, this.y * 120, 120, 120)
+        ctx.drawImage(this.sprite, this.getScreenPos().x, this.getScreenPos().y, 120, 120)
     }
 }

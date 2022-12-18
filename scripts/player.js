@@ -84,6 +84,6 @@ class Player extends Character {
     }
 
     drawAnim(ctx, animator) {
-        animator.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+        animator.drawFrame(this.game.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }
