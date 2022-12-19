@@ -65,3 +65,11 @@ class RGBColor {
         Object.assign(this, {r, g, b});
     }
 }
+
+const Layers = {
+    BACKGROUND: 0,
+    FOREGROUND: 1,
+    LIGHTMAP: 2,
+    GLOWING_ENTITIES: 3,
+    UI: 4
+}

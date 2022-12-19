@@ -5,9 +5,10 @@
  *
  * @author Kyler Robison
  */
-class LightMap {
+class LightMap extends Entity {
 
     constructor() {
+        super(0, 0);
         this.lightmask = document.createElement('canvas');
         this.lightmask.width = WIDTH;
         this.lightmask.height = HEIGHT;
@@ -15,7 +16,8 @@ class LightMap {
         this.renderingCtx = this.lightmask.getContext("2d");
         this.renderingCtx.globalCompositeOperation = 'lighten';
 
-        this.color = new RGBColor(20, 20, 100);
+        //this.color = new RGBColor(20, 20, 100);
+        this.color = new RGBColor(0, 0, 0);
         this.alpha = 1;
         this.setLightValue();
 

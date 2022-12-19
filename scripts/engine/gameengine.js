@@ -1,5 +1,6 @@
 "use strict";
 
+const NUM_LAYERS = 5;
 class GameEngine {
     
     constructor(options) {
@@ -8,7 +9,7 @@ class GameEngine {
         this.ctx = null;
 
         // Everything that will be updated and drawn each frame
-        this.entities = [];
+        this.entities = [[], [], [], [], []];
 
         // Information on the input
         this.click = null;
@@ -85,10 +86,14 @@ class GameEngine {
 
     /**
      * Adds a new entity to the engine.
-     * @param entity the entity to add.
+     * @param {Entity} entity the entity to add.
+     * @param {number} layer
      */
-    addEntity(entity) {
-        this.entities.push(entity);
+    addEntity(entity, layer = 1) {
+        if(layer < 0 || layer >= 5) {
+            throw new Error("GameEngine: invalid entity layer specified");
+        }
+        this.entities[layer].push(entity);
     }
 
     /**
@@ -99,9 +104,12 @@ class GameEngine {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // Draw the latest things first
-        for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.entities[i].draw(this.ctx, this);
+        for(let i = 0; i < NUM_LAYERS; i++ ) {
+            for (let j = this.entities[i].length - 1; j >= 0; j--) {
+                this.entities[i][j].draw(this.ctx, this);
+            }
         }
+
     }
 
 
@@ -109,19 +117,23 @@ class GameEngine {
      * Updates all the entities then removes them if necessary.
      */
     update() {
-        let entitiesCount = this.entities.length;
+        for(let layer of this.entities) {
+            let entitiesCount = layer.length;
 
-        for (let i = 0; i < entitiesCount; i++) {
-            let entity = this.entities[i];
+            for (let i = 0; i < entitiesCount; i++) {
+                let entity = layer[i];
 
-            if (!entity.removeFromWorld) {
-                entity.update();
+                if (!entity.removeFromWorld) {
+                    entity.update();
+                }
             }
         }
 
-        for (let i = this.entities.length - 1; i >= 0; --i) {
-            if (this.entities[i].removeFromWorld) {
-                this.entities.splice(i, 1); // Delete element at i
+        for(let layer of this.entities) {
+            for (let i = layer.length - 1; i >= 0; --i) {
+                if (layer[i].removeFromWorld) {
+                    layer.splice(i, 1); // Delete element at i
+                }
             }
         }
 

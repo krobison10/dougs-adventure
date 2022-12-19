@@ -4,7 +4,7 @@
  *
  * @author Kyler Robison
  */
-class LightSource extends GameObject{
+class LightSource extends Entity{
     /**
      * Creates a light source.
      * @param {number} magnitude the intensity of the light, influences the radius. Note that colors
@@ -22,7 +22,6 @@ class LightSource extends GameObject{
                 color = new RGBColor(255, 255, 255), scale = 80) {
         super(x, y);
         Object.assign(this, {magnitude, attachTo, color, scale});
-        this.removeFromWorld = false;
     }
 
     update() {

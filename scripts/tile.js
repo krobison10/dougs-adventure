@@ -1,9 +1,9 @@
 "use strict";
 
-class Tile extends GameObject {
-    constructor(game, x, y, sprite) {
+class Tile extends Entity {
+    constructor(x, y, sprite) {
         super(x, y);
-        Object.assign(this, {game, sprite});
+        this.sprite = sprite;
         this.x *= 120;
         this.y *= 120;
     }

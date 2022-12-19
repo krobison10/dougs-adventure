@@ -7,7 +7,7 @@
  * @abstract
  * @author Kyler Robison
  */
-class Character extends GameObject {
+class Character extends Entity {
     /**
      * @param {GameEngine} game reference to the game engine object.
      * @param {number} x initial x position.

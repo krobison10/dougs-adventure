@@ -6,7 +6,6 @@ class SceneManager {
         this.game.camera = this;
         this.x = 0;
         this.y = 0;
-
     }
 
     update() {

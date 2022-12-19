@@ -8,17 +8,19 @@
 
     <script type="text/javascript" src="./scripts/engine/assetmanager.js"></script>
     <script type="text/javascript" src="./scripts/engine/timer.js"></script>
+    <script type="text/javascript" src="scripts/engine/scenemanager.js"></script>
     <script type="text/javascript" src="./scripts/engine/gameengine.js"></script>
+    <script type="text/javascript" src="scripts/engine/entity.js"></script>
+
+
     <script type="text/javascript" src="./scripts/engine/util.js"></script>
     <script type="text/javascript" src="./scripts/engine/animator.js"></script>
+
     <script type="text/javascript" src="scripts/engine/lightmap.js"></script>
-    <script type="text/javascript" src="scripts/engine/scenemanager.js"></script>
-    <script type="text/javascript" src="scripts/engine/gameobject.js"></script>
     <script type="text/javascript" src="scripts/engine/lightsource.js"></script>
-    <script type="text/javascript" src="scripts/engine/tilemanager.js"></script>
-
-
     <script type="text/javascript" src="./scripts/tile.js"></script>
+    <script type="text/javascript" src="scripts/backgroundmanager.js"></script>
+
     <script type="text/javascript" src="./scripts/character.js"></script>
     <script type="text/javascript" src="./scripts/player.js"></script>
     <script type="text/javascript" src="./scripts/main.js" defer></script>
@@ -31,7 +33,7 @@
         <canvas id="gameWorld" width="1024" height="768" tabindex="0" autofocus></canvas>
         <h4>Ambient light:</h4>
         <label for="light-slider"></label>
-        <input id="light-slider" type="range" min="0" max="100" value="100" oninput="sliderChange()">
+        <input id="light-slider" type="range" min="0" max="100" value="100" oninput="sliderChange()"/>
     </div>
 </body>
 </html>

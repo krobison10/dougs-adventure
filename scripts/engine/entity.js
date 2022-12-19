@@ -6,12 +6,13 @@
  * @abstract
  * @author Kyler Robison
  */
-class GameObject {
+class Entity {
     constructor(x, y) {
-        if(this.constructor === GameObject) {
+        if(this.constructor === Entity) {
             throw new Error("Character is an abstract class, cannot be instantiated");
         }
         Object.assign(this, {x, y});
+        this.removeFromWorld = false;
         this.screenX = this.getScreenPos();
         this.screenY = this.getScreenPos();
     }
