@@ -86,7 +86,7 @@ class GameEngine {
 
     /**
      * Adds a new entity to the engine.
-     * @param {Entity} entity the entity to add.
+     * @param {Entity | LightMap | SceneManager} entity the entity to add.
      * @param {number} layer
      */
     addEntity(entity, layer = 1) {
@@ -111,7 +111,6 @@ class GameEngine {
         }
 
     }
-
 
     /**
      * Updates all the entities then removes them if necessary.

@@ -66,10 +66,31 @@ class RGBColor {
     }
 }
 
+/**
+ * Represents the layers of the game engine entities.
+ */
 const Layers = {
     BACKGROUND: 0,
     FOREGROUND: 1,
     LIGHTMAP: 2,
     GLOWING_ENTITIES: 3,
     UI: 4
+}
+
+/**
+ * Represents a vector with an x and y component.
+ */
+class Vec2 {
+    constructor(x, y) {
+        Object.assign(this, {x, y});
+    }
+}
+
+/**
+ * Represents a dimension containing a width and height field.
+ */
+class Dimension {
+    constructor(w, h) {
+        Object.assign(this, {w, h});
+    }
 }

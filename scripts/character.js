@@ -9,20 +9,19 @@
  */
 class Character extends Entity {
     /**
-     * @param {GameEngine} game reference to the game engine object.
-     * @param {number} x initial x position.
-     * @param {number} y initial y position.
+     * @param {Vec2 | Object} pos initial position, object must have an x and y field.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
+     * @param {Dimension | Object} size size of the sprite, object must have a 'w' and 'h' field.
      */
-    constructor(game, x, y, spritesheet) {
-        super(x, y);
+    constructor(pos, spritesheet, size) {
+        super(pos);
         if(this.constructor === Character) {
             throw new Error("Character is an abstract class, cannot be instantiated");
         }
-        Object.assign(this, {game, spritesheet});
+        Object.assign(this, {spritesheet, size});
 
         //Makes default animation as forward facing single keyframe
-        this.animation = new Animator(this.spritesheet, 0,0, 52, 72,
+        this.animation = new Animator(this.spritesheet, 0,0, size.w, size.h,
             1, 1, 0, false, true);
     }
 
@@ -39,6 +38,6 @@ class Character extends Entity {
      * @param {CanvasRenderingContext2D} ctx the rendering context.
      */
     draw(ctx) {
-        this.animation.drawFrame(this.game.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
+        this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }

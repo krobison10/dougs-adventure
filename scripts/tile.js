@@ -1,11 +1,11 @@
 "use strict";
 
 class Tile extends Entity {
-    constructor(x, y, sprite) {
-        super(x, y);
+    constructor(pos, sprite) {
+        super(pos);
         this.sprite = sprite;
-        this.x *= 120;
-        this.y *= 120;
+        this.pos.x *= TILE_SIZE;
+        this.pos.y *= TILE_SIZE;
     }
 
     update() {
@@ -13,6 +13,6 @@ class Tile extends Entity {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.sprite, this.getScreenPos().x, this.getScreenPos().y, 120, 120)
+        ctx.drawImage(this.sprite, this.getScreenPos().x, this.getScreenPos().y, TILE_SIZE, TILE_SIZE)
     }
 }

@@ -17,10 +17,13 @@ class BackgroundManager {
         this.sprites[2] = ASSET_MANAGER.getAsset("../sprites/sand.jpg");
     }
 
+    /**
+     * Adds all the background tiles as entities to the background layer of the game engine.
+     */
     addBackgroundTiles() {
         for(let row = 0; row < 100; row++) {
             for(let col = 0; col < 100; col++) {
-                gameEngine.addEntity(new Tile(col-this.height/2, row-this.width/2,
+                gameEngine.addEntity(new Tile({x: col-this.height/2, y: row-this.width/2},
                     this.sprites[this.data[col][row]]), Layers.BACKGROUND);
             }
         }
