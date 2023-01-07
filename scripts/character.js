@@ -10,11 +10,11 @@
 class Character extends Entity {
     /**
      * @param {Vec2 | Object} pos initial position, object must have an x and y field.
-     * @param {HTMLImageElement} spritesheet spritesheet of the player.
      * @param {Dimension | Object} size size of the sprite, object must have a 'w' and 'h' field.
+     * @param {HTMLImageElement} spritesheet spritesheet of the player.
      */
     constructor(pos, spritesheet, size) {
-        super(pos);
+        super(pos, size);
         if(this.constructor === Character) {
             throw new Error("Character is an abstract class, cannot be instantiated");
         }

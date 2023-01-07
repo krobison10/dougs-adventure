@@ -21,11 +21,13 @@ class Player extends Character {
         this._directionMem = 0;
 
         for(let i = 0; i < 4; i++) {
-            this.animations[i] = new Animator(this.spritesheet, 0, i * 72, 52, 72,
+            this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
+                this.size.w, this.size.h,
                 1, 1, 0, false, true);
         }
         for(let i = 0; i < 4; i++) {
-            this.animations[i + 4] = new Animator(this.spritesheet, 52, i * 72, 52, 72,
+            this.animations[i + 4] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
+                this.size.w, this.size.h,
                 2, .1, 0, false, true);
         }
     }
@@ -43,7 +45,7 @@ class Player extends Character {
 
         //If the resulting vector's magnitude exceeds the speed
         if(Math.sqrt(this._velocity.x * this._velocity.x + this._velocity.y * this._velocity.y) > this.speed) {
-            //Modify components so that vector's magnitude (total speed) matches actual speed
+            //Modify components so that vector's magnitude (total speed) matches desired speed
             this._velocity.x = this.speed/Math.sqrt(2) * this._velocity.x/this.speed;
             this._velocity.y = this.speed/Math.sqrt(2) * this._velocity.y/this.speed;
         }
@@ -51,12 +53,19 @@ class Player extends Character {
         this.pos.x += this._velocity.x * gameEngine.clockTick;
         this.pos.y += this._velocity.y * gameEngine.clockTick;
 
+        //To make sure tiles are drawn pretty, fractional pixels can make things get weird
+        this.pos.x = Math.round(this.pos.x);
+        this.pos.y = Math.round(this.pos.y);
+
         this.updateDebug();
     }
 
+    /**
+     * Updates the position label below the canvas
+     */
     updateDebug() {
-        const text = document.getElementById("position");
-        text.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
+        const label = document.getElementById("position");
+        label.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
     }
 
     draw(ctx) {
@@ -79,10 +88,6 @@ class Player extends Character {
         if(this._velocity.y === 0 && this._velocity.x === 0) {
             this.drawAnim(ctx, this.animations[this._directionMem]);
         }
-    }
-
-    getCenter() {
-        return {x: this.pos.x + this.size.w/2, y: this.pos.y + this.size.h/2};
     }
 
     drawAnim(ctx, animator) {

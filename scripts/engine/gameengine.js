@@ -119,9 +119,10 @@ class GameEngine {
         for(let layer of this.entities) {
             let entitiesCount = layer.length;
 
+            //layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
+
             for (let i = 0; i < entitiesCount; i++) {
                 let entity = layer[i];
-
                 if (!entity.removeFromWorld) {
                     entity.update();
                 }
@@ -137,7 +138,7 @@ class GameEngine {
         }
 
         //Definitely do not use this on the entire entity list
-        //this.entities.sort((entA, entB) => entA.positionY - entB.positionY);
+        //this.entities.sort;
     }
 
     /**

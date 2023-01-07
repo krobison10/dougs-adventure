@@ -14,7 +14,7 @@ class LightMap {
          * The alpha value of the mask, 1 is complete darkness and 0 is complete light.
          * @type {number}
          */
-        this.alpha = .9;
+        this.alpha = 0;
 
         this._lightmask = document.createElement('canvas');
         this._lightmask.width = WIDTH;
@@ -31,10 +31,10 @@ class LightMap {
 
     /**
      * Adds a light source to the map, light will be included on the next draw.
-     * @param {LightSource} lightSource the light source to be added.
+     * @param {LightSource} source the light source to be added.
      */
-    addLightSource(lightSource) {
-        this._lightSources.push(lightSource);
+    addLightSource(source) {
+        this._lightSources.push(source);
     }
 
     /**
@@ -69,7 +69,7 @@ class LightMap {
                 this._lightSources.splice(i, 1); // Delete element at i
             } else {
                 this._lightSources[i].update();
-                this._lightSources[i].draw(this.renderingCtx);
+                this._lightSources[i].drawLight(this.renderingCtx);
             }
         }
     }

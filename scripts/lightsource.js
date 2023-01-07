@@ -19,7 +19,8 @@ class LightSource extends Entity {
      */
     constructor(magnitude, pos = {x:0, y:0}, attachTo = null,
                 color = new RGBColor(255, 255, 255), scale = 80) {
-        super(pos);
+
+        super(pos, new Dimension(0, 0)); //0 size because position and center are the same in this case
         Object.assign(this, {magnitude, attachTo, color, scale});
     }
 
@@ -30,7 +31,11 @@ class LightSource extends Entity {
         }
     }
 
-    draw(ctx) {
+    draw() {
+        console.error("Light sources must be added to the lightmap, not the entity list");
+    }
+
+    drawLight(ctx) {
         let outerRadius = this.scale * Math.pow(this.magnitude + 1, 2);
 
         let gradient = ctx.createRadialGradient(this.getScreenPos().x, this.getScreenPos().y, 0,

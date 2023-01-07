@@ -2,6 +2,7 @@
 
 class BackgroundManager {
     constructor() {
+        //This is how to construct a 2d array in JS, yuck.
         this.data = [];
         for (let i = 0; i < 100; i++) {
             this.data.push([]);
@@ -12,19 +13,30 @@ class BackgroundManager {
         this.width = 100;
         this.height = 100;
 
-        this.sprites = [];
-        this.sprites[1] = ASSET_MANAGER.getAsset("../sprites/grass.png");
-        this.sprites[2] = ASSET_MANAGER.getAsset("../sprites/sand.jpg");
+        this.tilemap = ASSET_MANAGER.getAsset("../sprites/tiles.png");
     }
 
     /**
      * Adds all the background tiles as entities to the background layer of the game engine.
      */
     addBackgroundTiles() {
-        for(let row = 0; row < 100; row++) {
-            for(let col = 0; col < 100; col++) {
-                gameEngine.addEntity(new Tile({x: col-this.height/2, y: row-this.width/2},
-                    this.sprites[this.data[col][row]]), Layers.BACKGROUND);
+        for(let i = -50; i < 50; i++) {
+            gameEngine.addEntity(new BackgroundTile({x: -5, y: i},
+                new Dimension(16, 16),
+                this.tilemap, {x:7, y:10}),  Layers.BACKGROUND);
+            gameEngine.addEntity(new BackgroundTile({x: -4, y: i},
+                new Dimension(16, 16),
+                this.tilemap, {x:8, y:10}),  Layers.BACKGROUND);
+            gameEngine.addEntity(new BackgroundTile({x: -3, y: i},
+                new Dimension(16, 16),
+                this.tilemap, {x:9, y:10}),  Layers.BACKGROUND);
+        }
+
+        for(let row = 0; row < this.height; row++) {
+            for(let col = 0; col < this.width; col++) {
+                gameEngine.addEntity(new BackgroundTile({x: col-this.height/2, y: row-this.height/2},
+                    new Dimension(16, 16),
+                    this.tilemap, {x:5, y:0}),  Layers.BACKGROUND);
             }
         }
     }
@@ -33,12 +45,13 @@ class BackgroundManager {
         let ctr = 1;
         for(let row = 0; row < 100; row++) {
             for(let col = 0; col < 100; col++) {
-                this.data[col][row] = text[ctr++];
+                this.data[row][col] = text[ctr++];
             }
             ctr++;
         }
     }
 }
+
 const mapData =
 `
 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111

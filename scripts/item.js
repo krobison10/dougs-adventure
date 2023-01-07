@@ -9,18 +9,13 @@ class Item extends Entity {
      * @param lightSource a light source object to attach to this item, light source will be removed with this item.
      */
     constructor(pos, sprite, size, lightSource = null) {
-        super(pos);
+        super(pos, size);
         Object.assign(this, {sprite, size, lightSource});
 
         if(lightSource) {
             lightSource.attachTo = this;
             lightMap.addLightSource(lightSource);
         }
-    }
-
-    //Could refactor entity to put this method there
-    getCenter() {
-        return {x: this.pos.x + this.size.w/2, y: this.pos.y + this.size.h/2}
     }
 
     draw(ctx) {
