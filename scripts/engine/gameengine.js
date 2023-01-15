@@ -119,7 +119,7 @@ class GameEngine {
         for(let layer of this.entities) {
             let entitiesCount = layer.length;
 
-            //layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
+            layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
 
             for (let i = 0; i < entitiesCount; i++) {
                 let entity = layer[i];

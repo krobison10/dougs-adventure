@@ -11,8 +11,9 @@ const lightMap = new LightMap();
 //Downloads here
 ASSET_MANAGER.queueDownload("../sprites/blondie_spritesheet.png");
 ASSET_MANAGER.queueDownload("../sprites/crystal.png");
+ASSET_MANAGER.queueDownload("../sprites/tilemaps_forest01.png");
+ASSET_MANAGER.queueDownload("../sprites/tree_01.png");
 
-//This tilemap has some problems, we'll look for a new one
 ASSET_MANAGER.queueDownload("../sprites/tiles.png");
 
 ASSET_MANAGER.downloadAll(() => {
@@ -31,6 +32,10 @@ lightMap.addLightSource(new LightSource(.7, {x:0, y:0},
 
 let testLight = new LightSource(.6, {x:300, y:300},
 	null, new RGBColor(252, 204, 67));
+
+gameEngine.addEntity(new Obstacle(new Vec2(100, 100), new Dimension(120 / 2, 168 / 2),
+	ASSET_MANAGER.getAsset("../sprites/tree_01.png"), true, new Vec2(0, 0), new Dimension(120, 168)));
+
 
 //Light sources must be added to the lightmap
 lightMap.addLightSource(testLight);

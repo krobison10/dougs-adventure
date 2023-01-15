@@ -23,20 +23,20 @@ class BackgroundManager {
         for(let i = -50; i < 50; i++) {
             gameEngine.addEntity(new BackgroundTile({x: -5, y: i},
                 new Dimension(16, 16),
-                this.tilemap, {x:7, y:10}),  Layers.BACKGROUND);
+                this.tilemap, {x:0, y:1}),  Layers.BACKGROUND);
             gameEngine.addEntity(new BackgroundTile({x: -4, y: i},
                 new Dimension(16, 16),
-                this.tilemap, {x:8, y:10}),  Layers.BACKGROUND);
+                this.tilemap, {x:1, y:1}),  Layers.BACKGROUND);
             gameEngine.addEntity(new BackgroundTile({x: -3, y: i},
                 new Dimension(16, 16),
-                this.tilemap, {x:9, y:10}),  Layers.BACKGROUND);
+                this.tilemap, {x:2, y:1}),  Layers.BACKGROUND);
         }
 
         for(let row = 0; row < this.height; row++) {
             for(let col = 0; col < this.width; col++) {
                 gameEngine.addEntity(new BackgroundTile({x: col-this.height/2, y: row-this.height/2},
                     new Dimension(16, 16),
-                    this.tilemap, {x:5, y:0}),  Layers.BACKGROUND);
+                    this.tilemap, {x:5, y:3}),  Layers.BACKGROUND);
             }
         }
     }
