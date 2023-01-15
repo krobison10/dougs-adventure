@@ -33,8 +33,18 @@ lightMap.addLightSource(new LightSource(.7, {x:0, y:0},
 let testLight = new LightSource(.6, {x:300, y:300},
 	null, new RGBColor(252, 204, 67));
 
-gameEngine.addEntity(new Obstacle(new Vec2(100, 100), new Dimension(120 / 2, 168 / 2),
-	ASSET_MANAGER.getAsset("../sprites/tree_01.png"), true, new Vec2(0, 0), new Dimension(120, 168)));
+
+let ob = new Obstacle(
+	new Vec2(100, 100),
+	new Dimension(120 / 2, 168 / 2),
+	ASSET_MANAGER.getAsset("../sprites/tree_01.png"),
+	true,
+	new Vec2(0, 0),
+	new Dimension(120, 168));
+
+ob.boundingBox = new BoundingBox(new Vec2(110, 142), new Dimension(40, 42));
+
+gameEngine.addEntity(ob);
 
 
 //Light sources must be added to the lightmap
