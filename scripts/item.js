@@ -3,9 +3,9 @@
 class Item extends Entity {
     /**
      * Creates a new item.
-     * @param {Vec2 | Object} pos any object with an x and y field to represent the position of the item in game.
+     * @param {Vec2} pos
      * @param {HTMLImageElement} sprite of the item.
-     * @param {Dimension | Object} size any object with a W and H field to represent the width and height.
+     * @param {Dimension} size
      * @param lightSource a light source object to attach to this item, light source will be removed with this item.
      */
     constructor(pos, sprite, size, lightSource = null) {

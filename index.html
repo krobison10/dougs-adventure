@@ -23,7 +23,8 @@
 
     <script type="text/javascript" src="./scripts/item.js"></script>
     <script type="text/javascript" src="./scripts/character.js"></script>
-    <script type="text/javascript" src="./scripts/player.js"></script>
+    <script type="text/javascript" src="scripts/doug.js"></script>
+    <script type="text/javascript" src="scripts/healthbar.js"></script>
     <script type="text/javascript" src="./scripts/main.js" defer></script>
 
 
@@ -36,6 +37,11 @@
             <h4>Ambient light:</h4>
             <label for="light-slider"></label>
             <input id="light-slider" type="range" min="0" max="100" value="100" oninput="sliderChange()"/>
+        </div>
+        <div>
+            <h4>Collision boxes</h4>
+            <label for="toggle-boxes"></label>
+            <input id="toggle-boxes" type="checkbox" onclick="toggleBoxes()"/>
         </div>
         <div>
             <h4>Position:</h4>

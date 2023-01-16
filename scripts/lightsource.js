@@ -7,12 +7,12 @@
 class LightSource extends Entity {
     /**
      * Creates a light source.
-     * @param {number} magnitude the intensity of the light, influences the radius. Note that colors
-     * other than white will appear to be dimmer, because rgb is additive.
-     * @param {Vec2 | Object} pos the position of the light, object must have an x and y field.
-     * @param {Object} attachTo the object to attach the light to, light will follow it dynamically.
+     * @param {number} magnitude the intensity of the light, influences the radius.
+     * @param {Vec2} pos the position of the light.
+     * @param {Entity} attachTo the object to attach the light to, light will follow it dynamically.
      * The object must implement a getCenter() method.
-     * @param {RGBColor | object} color color of the light source, object must have an r, g, and b field.
+     * @param {RGBColor} color color of the light source. Note that using colors
+     * other than white will appear to be dimmer, because rgb is additive. Update magnitude accordingly.
      * @param {number} scale influences the radius of the light. Higher values than the default will cause
      * the light to be more spread out and softer while smaller values will make the light smaller
      * and harder. It's best to leave this default unless there is a good reason not to.

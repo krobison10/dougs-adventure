@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ * Needs serious updating
+ */
 class BackgroundManager {
     constructor() {
         //This is how to construct a 2d array in JS, yuck.
@@ -32,11 +35,17 @@ class BackgroundManager {
                 this.tilemap, {x:2, y:1}),  Layers.BACKGROUND);
         }
 
+        // for(let row = 0; row < this.height; row++) {
+        //     for(let col = 0; col < this.width; col++) {
+        //         gameEngine.addEntity(new BackgroundTile({x: col-this.height/2, y: row-this.height/2},
+        //             new Dimension(16, 16),
+        //             this.tilemap, {x:5, y:3}),  Layers.BACKGROUND);
+        //     }
+        // }
         for(let row = 0; row < this.height; row++) {
             for(let col = 0; col < this.width; col++) {
-                gameEngine.addEntity(new BackgroundTile({x: col-this.height/2, y: row-this.height/2},
-                    new Dimension(16, 16),
-                    this.tilemap, {x:5, y:3}),  Layers.BACKGROUND);
+                gameEngine.addEntity(new GrassTile({x: col-this.height/2, y: row-this.height/2},
+                    new Dimension(16, 16)),  Layers.BACKGROUND);
             }
         }
     }
@@ -49,6 +58,23 @@ class BackgroundManager {
             }
             ctr++;
         }
+    }
+}
+
+class GrassTile extends Entity{
+    constructor(pos, size) {
+        super(pos, size);
+        this.sprite = ASSET_MANAGER.getAsset("../sprites/grass_1.png")
+        this.pos.x *= TILE_SIZE;
+        this.pos.y *= TILE_SIZE;
+    }
+
+    draw(ctx) {
+        ctx.drawImage(this.sprite, 0, 0, 192, 192, this.getScreenPos().x, this.getScreenPos().y, TILE_SIZE, TILE_SIZE);
+    }
+
+    update() {
+
     }
 }
 

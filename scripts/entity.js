@@ -9,8 +9,8 @@
 class Entity {
     /**
      * Constructs an abstract entity
-     * @param {Vec2 | Object} pos the position of the entity.
-     * @param {Dimension | Object} size the size of the entity.
+     * @param {Vec2} pos the position of the entity.
+     * @param {Dimension} size the size of the entity.
      */
     constructor(pos, size) {
         if(this.constructor === Entity) {

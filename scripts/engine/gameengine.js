@@ -136,9 +136,6 @@ class GameEngine {
                 }
             }
         }
-
-        //Definitely do not use this on the entire entity list
-        //this.entities.sort;
     }
 
     /**

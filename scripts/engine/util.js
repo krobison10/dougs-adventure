@@ -53,7 +53,8 @@ window.requestAnimFrame = (() => {
 
 /**
  * Returns distance from two points
- * @param {number} p1 p2 Two objects with x and y coordinates
+ * @param {Vec2} p1 first point.
+ * @param {Vec2} p2 second point.
  * @returns Distance between the two points
  */
 const getDistance = (p1, p2) => {
@@ -92,5 +93,14 @@ class Vec2 {
 class Dimension {
     constructor(w, h) {
         Object.assign(this, {w, h});
+    }
+}
+
+/**
+ * Represents padding
+ */
+class Padding {
+    constructor(top = 0, right = 0, bottom = 0, left = 0) {
+        Object.assign(this, {top, right, bottom, left});
     }
 }

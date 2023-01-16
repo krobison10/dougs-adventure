@@ -3,10 +3,10 @@
 class BackgroundTile extends Entity {
     /**
      *
-     * @param {Vec2 | Object} pos position of the tile, object must have an x and y field.
-     * @param {Vec2 | Object} size size of the tile, object must have a w and h field.
+     * @param {Vec2} pos position of the tile, object must have an x and y field.
+     * @param {Dimension} size size of the tile, object must have a w and h field.
      * @param {HTMLImageElement} sprite the sprite image.
-     * @param {Vec2 | Object} tilemapPos
+     * @param {Vec2} tilemapPos
      */
     constructor(pos, size, sprite, tilemapPos) {
         super(pos, size);

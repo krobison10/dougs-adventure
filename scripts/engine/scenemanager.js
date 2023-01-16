@@ -10,8 +10,8 @@ class SceneManager {
     update() {
         let midpointX = WIDTH/2;
         let midpointY = HEIGHT/2;
-        this.pos.x = player.getCenter().x - midpointX;
-        this.pos.y = player.getCenter().y - midpointY;
+        this.pos.x = doug.getCenter().x - midpointX;
+        this.pos.y = doug.getCenter().y - midpointY;
     }
 
     //Don't delete

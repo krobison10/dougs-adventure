@@ -9,16 +9,20 @@
  */
 class Character extends Entity {
     /**
-     * @param {Vec2 | Object} pos initial position, object must have an x and y field.
-     * @param {Dimension | Object} size size of the sprite, object must have a 'w' and 'h' field.
+     * @param {Vec2} pos initial position.
+     * @param {Dimension} size size of the sprite.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
+     * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      */
-    constructor(pos, spritesheet, size) {
+    constructor(pos, spritesheet, size,
+                spritePadding = new Padding()) {
         super(pos, size);
         if(this.constructor === Character) {
             throw new Error("Character is an abstract class, cannot be instantiated");
         }
-        Object.assign(this, {spritesheet, size});
+        Object.assign(this, {spritesheet, spritePadding});
+
+        this.velocity = new Vec2(0, 0);
 
         //Makes default animation as forward facing single keyframe
         this.animation = new Animator(this.spritesheet, 0,0, size.w, size.h,
@@ -26,11 +30,42 @@ class Character extends Entity {
     }
 
     /**
+     * Checks for a collision in a certain direction by using the current velocity and creating a test bounding
+     * box created by mo
+     * @param dir
+     * @returns {boolean}
+     */
+    checkCollide(dir) {
+
+        let futurePos = {};
+        futurePos.x = this.pos.x + (dir === 'lateral' ? this.velocity.x * gameEngine.clockTick : 0);
+        futurePos.y = this.pos.y + (dir === 'vertical' ? this.velocity.y * gameEngine.clockTick : 0);
+        let box = Character.createBB(new Vec2(futurePos.x, futurePos.y), this.size, this.spritePadding);
+
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+        for(const entity of entities) {
+            if(entity.boundingBox) {
+                if(entity !== this && box.collide(entity.boundingBox)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    static createBB(pos, size, padding) {
+        return new BoundingBox(
+            new Vec2( pos.x + padding.left, pos.y + padding.top),
+            new Dimension(size.w - (padding.left + padding.right), size.h - (padding.top + padding.bottom))
+        );
+    }
+
+    /**
      * Executes updates that should occur each frame.
      * @abstract
      */
     update() {
-        throw new Error("Method is abstract, must be implemented in subclass");
+        console.error("Method is abstract, must be implemented in subclass");
     }
 
     /**

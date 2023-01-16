@@ -16,16 +16,17 @@ class LightMap {
          */
         this.alpha = 0;
 
-        this._lightmask = document.createElement('canvas');
-        this._lightmask.width = WIDTH;
-        this._lightmask.height = HEIGHT;
+        this.lightmask = document.createElement('canvas');
+        this.lightmask.width = WIDTH;
+        this.lightmask.height = HEIGHT;
 
-        this.renderingCtx = this._lightmask.getContext("2d");
+        this.renderingCtx = this.lightmask.getContext("2d");
         this.renderingCtx.globalCompositeOperation = 'lighten';
 
-        this._lightSources = [];
+        this.lightSources = [];
 
-        this.setColor(new RGBColor(20, 20, 100));
+        //this.setColor(new RGBColor(20, 20, 100));
+        this.setColor(new RGBColor(20, 20, 40));
         this.setLightValue();
     }
 
@@ -34,7 +35,7 @@ class LightMap {
      * @param {LightSource} source the light source to be added.
      */
     addLightSource(source) {
-        this._lightSources.push(source);
+        this.lightSources.push(source);
     }
 
     /**
@@ -42,7 +43,7 @@ class LightMap {
      * @param {LightSource} lightSource the lightsource to remove.
      */
     removeLightSource(lightSource) {
-        this._lightSources.splice(this._lightSources.indexOf(lightSource), 1);
+        this.lightSources.splice(this.lightSources.indexOf(lightSource), 1);
     }
 
 
@@ -64,19 +65,19 @@ class LightMap {
         this.renderingCtx.fillStyle = this.lightValue;
         this.renderingCtx.fillRect(0 ,0, WIDTH, HEIGHT);
 
-        for (let i = this._lightSources.length - 1; i >= 0; --i) {
-            if (this._lightSources[i].removeFromWorld) {
-                this._lightSources.splice(i, 1); // Delete element at i
+        for (let i = this.lightSources.length - 1; i >= 0; --i) {
+            if (this.lightSources[i].removeFromWorld) {
+                this.lightSources.splice(i, 1); // Delete element at i
             } else {
-                this._lightSources[i].update();
-                this._lightSources[i].drawLight(this.renderingCtx);
+                this.lightSources[i].update();
+                this.lightSources[i].drawLight(this.renderingCtx);
             }
         }
     }
 
     draw(ctx) {
         ctx.globalCompositeOperation = 'multiply';
-        ctx.drawImage(this._lightmask, 0, 0);
+        ctx.drawImage(this.lightmask, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
     }
 
