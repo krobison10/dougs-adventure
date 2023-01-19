@@ -29,7 +29,7 @@
                             let y = screenPos.y + this.agent.size.h;
                             ctx.drawImage(item.image, x, y, this.width / this.agent.hotbar.length, this.height);
                         }
-                
+               
                         ctx.strokeStyle = rgba(40, 40, 40, 1);
                         ctx.lineWidth = '2.5';
                 
