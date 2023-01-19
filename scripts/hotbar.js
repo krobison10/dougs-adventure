@@ -1,4 +1,3 @@
-
  class Hotbar extends Entities {
                     constructor(player) {
                         super(new Vec2(0, 0), new Dimension(0, 0));
