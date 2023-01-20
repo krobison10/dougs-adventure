@@ -11,11 +11,13 @@ const lightMap = new LightMap();
 
 //Downloads here
 ASSET_MANAGER.queueDownload("../sprites/blondie_spritesheet.png");
+ASSET_MANAGER.queueDownload("../sprites/bat_spritesheet.png");
 ASSET_MANAGER.queueDownload("../sprites/crystal.png");
 ASSET_MANAGER.queueDownload("../sprites/tilemaps_forest01.png");
 ASSET_MANAGER.queueDownload("../sprites/tree_00.png");
 ASSET_MANAGER.queueDownload("../sprites/grass_1.png");
 ASSET_MANAGER.queueDownload("../sprites/campfire.png");
+
 
 ASSET_MANAGER.queueDownload("../sprites/tiles.png");
 
@@ -33,23 +35,26 @@ let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("../sprites/blondie_s
 lightMap.addLightSource(new LightSource(.6, new Vec2(0, 0),
  	doug, new RGBColor(252, 204, 67)));
 
+let bat = new Bat(new Vec2(10, 10), ASSET_MANAGER.getAsset("../sprites/bat_spritesheet.png"),
+ 	new Dimension(32, 32), new Padding(0, 0, 0, 0));
+
 makeTree(new Vec2(3, 8));
-makeTree(new Vec2(21, -3));
-makeTree(new Vec2(20, -12));
-makeTree(new Vec2(-13, -16));
-makeTree(new Vec2(-19, -1));
-makeTree(new Vec2(11, -7));
-makeTree(new Vec2(-12, 11));
-makeTree(new Vec2(5, -11));
-makeTree(new Vec2(-13, -5));
-makeTree(new Vec2(18, 3));
-makeTree(new Vec2(13, 11));
-makeTree(new Vec2(6, 10));
-makeTree(new Vec2(4, 1));
-makeTree(new Vec2(5, 15));
-makeTree(new Vec2(10, 6));
-makeTree(new Vec2(-1, -6));
-makeTree(new Vec2(-10, 2));
+// makeTree(new Vec2(21, -3));
+// makeTree(new Vec2(20, -12));
+// makeTree(new Vec2(-13, -16));
+// makeTree(new Vec2(-19, -1));
+// makeTree(new Vec2(11, -7));
+// makeTree(new Vec2(-12, 11));
+// makeTree(new Vec2(5, -11));
+// makeTree(new Vec2(-13, -5));
+// makeTree(new Vec2(18, 3));
+// makeTree(new Vec2(13, 11));
+// makeTree(new Vec2(6, 10));
+// makeTree(new Vec2(4, 1));
+// makeTree(new Vec2(5, 15));
+// makeTree(new Vec2(10, 6));
+// makeTree(new Vec2(-1, -6));
+// makeTree(new Vec2(-10, 2));
 
 
 
@@ -75,6 +80,8 @@ gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 
 //Entities exist in layers in the engine, the layers are enumerated in a Layers object that can be found in util.js
 gameEngine.addEntity(doug);
+gameEngine.addEntity(bat);
+
 
 gameEngine.addEntity(new HealthBar(doug), Layers.GLOWING_ENTITIES);
 

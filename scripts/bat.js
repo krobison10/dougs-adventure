@@ -3,10 +3,10 @@
 /**
  * Represents the player character.
  *
- * @author Kyler Robison
+ * @author Cameron Lempitsky
  *
  */
-class Doug extends Character {
+class Bat extends Character {
     /**
      * @param {Vec2} pos initial position of the player.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
@@ -44,45 +44,42 @@ class Doug extends Character {
      */
     update() {
 
-        this.velocity.x = this.velocity.y = 0;
+        // this.velocity.x = this.velocity.y = 0;
 
-        if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
-        if(gameEngine.keys["d"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"]) this.velocity.y -= this.speed;
-        if(gameEngine.keys["s"]) this.velocity.y += this.speed;
+        
 
-        //If the resulting vector's magnitude exceeds the speed
-        if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
-            //Modify components so that vector's magnitude (total speed) matches desired speed
-            this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant code
-            this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
-        }
+        // //If the resulting vector's magnitude exceeds the speed
+        // if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
+        //     //Modify components so that vector's magnitude (total speed) matches desired speed
+        //     this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant code
+        //     this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
+        // }
 
         /**
          * Check for collision, we do two separate checks so that if a player is colliding in one axis
          * they can still possibly be able to move on the other axis.
          */
-        const collisionLat = this.checkCollide("lateral");
-        const collisionVert = this.checkCollide("vertical")
-        if(!collisionLat) {
-            this.pos.x += this.velocity.x * gameEngine.clockTick;
-        }
-        if(!collisionVert) {
-            this.pos.y += this.velocity.y * gameEngine.clockTick;
-        }
+        //const collisionLat = this.checkCollide("lateral");
+        //const collisionVert = this.checkCollide("vertical")
+        // if(!collisionLat) {
+        //     this.pos.x += this.velocity.x * gameEngine.clockTick;
+        // }
+        // if(!collisionVert) {
+        //     this.pos.y += this.velocity.y * gameEngine.clockTick;
+        // }
 
-        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        // this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
-        this.updateDebug();
+        // this.updateDebug();
     }
 
     /**
      * Updates the position label below the canvas
      */
-    updateDebug() {
-        const label = document.getElementById("position");
-        label.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
-    }
+    // updateDebug() {
+    //     const label = document.getElementById("position");
+    //     label.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
+    // }
 
     draw(ctx) {
         if(this.velocity.x < 0) {
@@ -108,7 +105,7 @@ class Doug extends Character {
         this.boundingBox.draw(ctx);
     }
 
-    drawAnim(ctx, animator) {
-        animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
-    }
+     drawAnim(ctx, animator) {
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
+     }
 }
