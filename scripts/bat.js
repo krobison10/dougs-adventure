@@ -20,10 +20,11 @@ class Bat extends Character {
         this.maxHitPoints = 100;
 
         //Change to see health bar
-        this.hitPoints = 99;
+        this.hitPoints = 100;
+        this.damage = 12;
 
         this.speed = 250;
-        this.velocity = new Vec2(0, 0);
+        this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
@@ -44,68 +45,70 @@ class Bat extends Character {
      */
     update() {
 
-        // this.velocity.x = this.velocity.y = 0;
-
+        //this.velocity.x = this.velocity.y = 0;
         
+        if (this.pos.x >= 200 && this.pos.y >= 200) {
+            this.velocity.x = 0;
+            this.velocity.y = -this.speed;
+        }
 
-        // //If the resulting vector's magnitude exceeds the speed
-        // if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
-        //     //Modify components so that vector's magnitude (total speed) matches desired speed
-        //     this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant code
-        //     this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
-        // }
+        if (this.pos.x >= 200 && this.pos.y <=0) {
+            this.velocity.y = 0;
+            this.velocity.x = -this.speed;
+        }
+
+        if (this.pos.x <= 0 && this.pos.y <= 0) {
+            this.velocity.x = 0;
+            this.velocity.y = this.speed;
+        }
+
+        if(this.pos.x <= 0 && this.pos.y >= 200) {
+            this.velocity.x = this.speed;
+            this.velocity.y = 0;
+        }
+
+        this.pos.x += this.velocity.x * gameEngine.clockTick;
+        this.pos.y += this.velocity.y * gameEngine.clockTick;
+
 
         /**
-         * Check for collision, we do two separate checks so that if a player is colliding in one axis
-         * they can still possibly be able to move on the other axis.
+         * Check for collision, we do two separate checks
          */
-        //const collisionLat = this.checkCollide("lateral");
-        //const collisionVert = this.checkCollide("vertical")
-        // if(!collisionLat) {
-        //     this.pos.x += this.velocity.x * gameEngine.clockTick;
-        // }
-        // if(!collisionVert) {
-        //     this.pos.y += this.velocity.y * gameEngine.clockTick;
-        // }
+        const collisionLat = this.checkCollide("lateral");
+        const collisionVert = this.checkCollide("vertical")
 
-        // this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
-        // this.updateDebug();
+        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+
     }
 
-    /**
-     * Updates the position label below the canvas
-     */
-    // updateDebug() {
-    //     const label = document.getElementById("position");
-    //     label.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
-    // }
-
     draw(ctx) {
-        if(this.velocity.x < 0) {
-            this.drawAnim(ctx, this.animations[5]);
+
+
+        if(this.velocity.x < 0) {//left
+            this.drawAnim(ctx, this.animations[7]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0) {
-            this.drawAnim(ctx, this.animations[6]);
+        if(this.velocity.x > 0) {//right
+            this.drawAnim(ctx, this.animations[5]);
             this.directionMem = 2;
         }
-        if(this.velocity.y === this.speed) {
+        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
             this.drawAnim(ctx, this.animations[4]);
             this.directionMem = 0;
         }
-        if(this.velocity.y === -this.speed) {
-            this.drawAnim(ctx, this.animations[7]);
+        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+            this.drawAnim(ctx, this.animations[6]);
             this.directionMem = 3;
         }
         if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[this.directionMem]);
+            this.drawAnim(ctx, this.animations[5]);
         }
 
         this.boundingBox.draw(ctx);
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
      }
 }

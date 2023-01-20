@@ -35,7 +35,7 @@ let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("../sprites/blondie_s
 lightMap.addLightSource(new LightSource(.6, new Vec2(0, 0),
  	doug, new RGBColor(252, 204, 67)));
 
-let bat = new Bat(new Vec2(10, 10), ASSET_MANAGER.getAsset("../sprites/bat_spritesheet.png"),
+let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("../sprites/bat_spritesheet.png"),
  	new Dimension(32, 32), new Padding(0, 0, 0, 0));
 
 makeTree(new Vec2(3, 8));
