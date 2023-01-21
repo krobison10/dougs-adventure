@@ -17,9 +17,16 @@ class Doug extends Character {
         super(pos, spritesheet, size, spritePadding);
         this.animations = [];
 
+        /**
+         * Represents the maximum hitpoints of doug
+         * @type {number}
+         */
         this.maxHitPoints = 100;
 
-        //Change to see health bar
+        /**
+         * Represents the health of doug. Should not exceed 400 because the health bar will break.
+         * @type {number}
+         */
         this.hitPoints = 100;
 
         this.speed = 250;
