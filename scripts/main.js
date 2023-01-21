@@ -16,6 +16,7 @@ ASSET_MANAGER.queueDownload("../sprites/grass_1.png");
 ASSET_MANAGER.queueDownload("../sprites/campfire.png");
 ASSET_MANAGER.queueDownload("../sprites/tiles.png");
 ASSET_MANAGER.queueDownload("../sprites/heart.png");
+ASSET_MANAGER.queueDownload("../sprites/star.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	new BackgroundManager().addBackgroundTiles();
@@ -65,6 +66,7 @@ gameEngine.addEntity(fire);
 
 gameEngine.addEntity(new Hotbar(), Layers.UI);
 gameEngine.addEntity(new Health(), Layers.UI);
+gameEngine.addEntity(new Mana(), Layers.UI);
 
 
 

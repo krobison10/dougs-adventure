@@ -21,13 +21,17 @@ class Doug extends Character {
          * Represents the maximum hitpoints of doug
          * @type {number}
          */
-        this.maxHitPoints = 100;
+        this.maxHitPoints = 400;
+
+        this.maxMana = 200;
 
         /**
          * Represents the health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
-        this.hitPoints = 100;
+        this.hitPoints = 370;
+
+        this.manaLevel = 190;
 
         this.speed = 250;
         this.velocity = new Vec2(0, 0);

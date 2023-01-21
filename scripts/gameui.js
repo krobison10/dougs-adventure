@@ -7,7 +7,7 @@
  */
 class Hotbar extends Entity {
     constructor() {
-        super(new Vec2(20, 20), new Dimension(0, 0));
+        super(new Vec2(15, 30), new Dimension(0, 0));
         /**
          * Slots of the hotbar
          * @type {HotbarSlot[]}
@@ -24,6 +24,13 @@ class Hotbar extends Entity {
          */
         this.selectedIndex = 0;
         this.slots[this.selectedIndex].selected = true;
+
+        this.label = new UIText(new Vec2(this.pos.x - 3, 5), "Selected Item",
+            22, new RGBColor(129, 53, 184));
+        this.label.updateFn = () => {
+            this.label.content = `Slot ${this.selectedIndex + 1}`;
+        }
+        gameEngine.addEntity(this.label, Layers.UI);
 
     }
                 
@@ -90,7 +97,7 @@ class HotbarSlot {
     }
 
     draw(ctx) {
-        ctx.fillStyle = rgba(50, 50, 50, 0.7);
+        ctx.fillStyle = rgba(60, 60, 60, 0.6);
         ctx.fillRect(this.pos.x, this.pos.y, this.size.w, this.size.h);
 
         if(this.selected) {
@@ -100,7 +107,7 @@ class HotbarSlot {
                 this.size.w + 2 * HotbarSlot.swell, this.size.h + 2 * HotbarSlot.swell)
         }
         else {
-            ctx.strokeStyle = rgba(40, 40, 40, .8);
+            ctx.strokeStyle = rgba(50, 50, 50, .65);
             ctx.lineWidth = HotbarSlot.borderSize;
             ctx.strokeRect(this.pos.x, this.pos.y, this.size.w, this.size.h);
         }
@@ -127,7 +134,7 @@ class HotbarSlot {
  */
 class Health extends Entity {
     constructor() {
-        super(new Vec2(WIDTH - 300, 20), new Dimension(0, 0));
+        super(new Vec2(WIDTH - 300, 30), new Dimension(0, 0));
         /**
          * Slots of the hotbar
          * @type {Heart[]}
@@ -137,6 +144,12 @@ class Health extends Entity {
         for(let i = 0; i < 20; i++) {
             this.hearts.push(new Heart(this, i));
         }
+
+        this.label = new UIText(new Vec2(this.pos.x, 7), "Life", 20, new RGBColor(255, 255, 255));
+        this.label.updateFn = function() {
+            this.content = `Life: ${doug.hitPoints}/${doug.maxHitPoints}`;
+        }
+        gameEngine.addEntity(this.label, Layers.UI);
 
     }
 
@@ -213,5 +226,142 @@ class Heart {
             alpha = 0;
         }
         return alpha;
+    }
+}
+
+
+
+/**
+ * Represents the player's health in the UI
+ *
+ * @author Kyler Robison
+ */
+class Mana extends Entity {
+    constructor() {
+        super(new Vec2(WIDTH - 38, 30), new Dimension(0, 0));
+        /**
+         * Slots of the hotbar
+         * @type {ManaStar[]}
+         */
+        this.manaStars = [];
+
+        for(let i = 0; i < 10; i++) {
+            this.manaStars.push(new ManaStar(this, i));
+        }
+
+        this.label = new UIText(new Vec2(this.pos.x - 10, 7), "Mana", 20,
+            new RGBColor(255, 255, 255));
+        gameEngine.addEntity(this.label, Layers.UI);
+
+    }
+
+    update() {
+        this.manaStars.forEach((manaStar) => manaStar.update());
+    }
+
+
+    draw(ctx) {
+        this.manaStars.forEach((manaStar) => manaStar.draw(ctx));
+    }
+
+}
+
+/**
+ * Represents a heart in the health bar
+ *
+ * @author Kyler Robison
+ */
+class ManaStar {
+    /**
+     * Total size of the slot
+     * @type {number}
+     */
+    static size = 22;
+    /**
+     * Horizontal gap between slots
+     * @type {number}
+     */
+    static gap = 2;
+
+
+    constructor(mana, index) {
+        /**
+         * Index of the heart in the health bar
+         * @type {Number}
+         */
+        this.index = index;
+        this.size = new Dimension(ManaStar.size, ManaStar.size);
+        this.pos = ManaStar.getPos(mana, index);
+    }
+
+    static getPos(mana, index) {
+        return new Vec2(mana.pos.x, mana.pos.y + ManaStar.size * index + ManaStar.gap * index);
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        ctx.globalAlpha = this.getAlpha();
+        ctx.drawImage(ASSET_MANAGER.getAsset("../sprites/star.png"),
+            0, 0, 22, 22, this.pos.x, this.pos.y, 22, 22);
+
+        ctx.globalAlpha = 1;
+    }
+
+    getAlpha() {
+        let alpha;
+        if(Math.floor(doug.manaLevel / 20) > this.index) {
+            alpha = 1;
+        }
+        else if(Math.floor(doug.manaLevel / 20) === this.index) {
+            alpha = (doug.manaLevel % 20) / 20;
+        }
+        else {
+            alpha = 0;
+        }
+        return alpha;
+    }
+}
+
+/**
+ * Represents a piece of text to be part of the in canvas UI
+ *
+ * @author Kyler Robison
+ */
+class UIText extends Entity{
+    /**
+     * Default font
+     * @type {string}
+     */
+    static font = 'Andy-Bold';
+
+    /**
+     * Creates UI Text
+     * @param pos {Vec2} position of the text on the screen.
+     * @param text {string} content of the text.
+     * @param size {Number} font size of the text in pixels.
+     * @param color {RGBColor} color of the text, defaults to white.
+     */
+    constructor(pos, text = 'text', size = 12,
+                color = new RGBColor(255, 255, 255)) {
+        super(pos, null);
+        this.content = text;
+        this.font = `${size}px ${UIText.font}`;
+        this.fillStyle = rgba(color.r, color.g, color.b, 1);
+        this.textBaseline = 'top';
+        this.updateFn = () => {};
+    }
+
+    draw(ctx) {
+        ctx.font = this.font;
+        ctx.fillStyle = this.fillStyle;
+        ctx.textBaseline = this.textBaseline;
+        ctx.fillText(this.content, this.pos.x, this.pos.y);
+    }
+
+    update() {
+        this.updateFn();
     }
 }
