@@ -14,7 +14,7 @@ class LightMap {
          * The alpha value of the mask, 1 is complete darkness and 0 is complete light.
          * @type {number}
          */
-        this.alpha = 0;
+        this.alpha = 1;
 
         this.lightmask = document.createElement('canvas');
         this.lightmask.width = WIDTH;

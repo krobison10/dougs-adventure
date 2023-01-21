@@ -13,11 +13,14 @@ const lightMap = new LightMap();
 ASSET_MANAGER.queueDownload("../sprites/blondie_spritesheet.png");
 ASSET_MANAGER.queueDownload("../sprites/tree_00.png");
 ASSET_MANAGER.queueDownload("../sprites/grass_1.png");
-ASSET_MANAGER.queueDownload("../sprites/campfire.png");
+ASSET_MANAGER.queueDownload("../sprites/firepit.png");
 ASSET_MANAGER.queueDownload("../sprites/tiles.png");
 ASSET_MANAGER.queueDownload("../sprites/heart.png");
 ASSET_MANAGER.queueDownload("../sprites/star.png");
 ASSET_MANAGER.queueDownload("../sprites/items.png");
+ASSET_MANAGER.queueDownload("../sprites/fires/torch_stem.png")
+ASSET_MANAGER.queueDownload("../sprites/fires/orange/loops/burning_loop_1.png");
+ASSET_MANAGER.queueDownload("../sprites/fires/orange/loops/burning_loop_3.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	new BackgroundManager().addBackgroundTiles();
@@ -30,8 +33,8 @@ ASSET_MANAGER.downloadAll(() => {
 
 let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("../sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
-lightMap.addLightSource(new LightSource(.6, new Vec2(0, 0),
- 	doug, new RGBColor(252, 204, 67)));
+lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
+	doug, new RGBColor(252, 204, 67)));
 
 makeTree(new Vec2(3, 8));
 makeTree(new Vec2(21, -3));
@@ -52,20 +55,24 @@ makeTree(new Vec2(-1, -6));
 makeTree(new Vec2(-10, 2));
 
 
+const fire = new CampFire(new Vec2(13 * TILE_SIZE, TILE_SIZE));
+// const fire = new Obstacle(
+// 	new Vec2(13 * TILE_SIZE, TILE_SIZE),
+// 	new Dimension(64, 64),
+// 	ASSET_MANAGER.getAsset("../sprites/campfire.png"),
+// 	true,
+// 	new FlickeringLightSource(.8, new Vec2(0, 0), null, new RGBColor(252, 146, 83)),
+// 	new Vec2(0, 0),
+// 	new Dimension(1216, 1216)
+// 	);
 
-const fire = new Obstacle(
-	new Vec2(13 * TILE_SIZE, TILE_SIZE),
-	new Dimension(64, 64),
-	ASSET_MANAGER.getAsset("../sprites/campfire.png"),
-	true,
-	new LightSource(.8, new Vec2(0, 0), null, new RGBColor(252, 146, 83)),
-	new Vec2(0, 0),
-	new Dimension(1216, 1216)
-	);
+
+placeTorches();
 
 gameEngine.addEntity(fire);
 
-gameEngine.addEntity(new Hotbar(), Layers.UI);
+const hotbar = new Hotbar();
+gameEngine.addEntity(hotbar, Layers.UI);
 gameEngine.addEntity(new Health(), Layers.UI);
 gameEngine.addEntity(new Mana(), Layers.UI);
 
@@ -84,7 +91,12 @@ gameEngine.addEntity(doug);
 
 
 
-
+function placeTorches() {
+	for(let y = 45; y >= -45; y -= 6) {
+		gameEngine.addEntity(new Torch(new Vec2(-6.5 * TILE_SIZE, y * TILE_SIZE)));
+		gameEngine.addEntity(new Torch(new Vec2(-1.5 * TILE_SIZE, (y - 3) * TILE_SIZE)));
+	}
+}
 
 function makeTree(pos) {
 	let tree1 = new Obstacle(
@@ -113,3 +125,4 @@ const toggleBoxes = () => {
 	const box = document.getElementById("toggle-boxes");
 	boundingBoxes = box.checked;
 }
+

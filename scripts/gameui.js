@@ -85,7 +85,7 @@ class HotbarSlot {
      * How much bigger the selected slot will be on all sides
      * @type {number}
      */
-    static swell = 2;
+    static swell = 1;
 
 
     constructor(hotbar, index) {
