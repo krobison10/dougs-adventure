@@ -26,11 +26,18 @@ class Hotbar extends Entity {
         this.slots[this.selectedIndex].selected = true;
 
         this.label = new UIText(new Vec2(this.pos.x - 3, 5), "Selected Item",
-            22, new RGBColor(129, 53, 184));
+            22, /*new RGBColor(129, 53, 184)*/);
         this.label.updateFn = () => {
-            this.label.content = `Slot ${this.selectedIndex + 1}`;
+            let id = this.slots[this.selectedIndex].itemID;
+            let text = Item.itemNames[id];
+            this.label.content = id ? `${text}: ${id}` : "";
         }
         gameEngine.addEntity(this.label, Layers.UI);
+
+        this.slots[0].itemID = 336;
+        this.slots[1].itemID = 76;
+        this.slots[2].itemID = 246;
+        this.slots[3].itemID = 85;
 
     }
                 
@@ -85,10 +92,10 @@ class HotbarSlot {
         this.size = new Dimension(HotbarSlot.slotSize, HotbarSlot.slotSize);
         this.pos = new Vec2(hotbar.pos.x + HotbarSlot.slotSize * index + HotbarSlot.slotGap * index, hotbar.pos.y);
         /**
-         * Item contained by the hotbar
-         * @type {Item}
+         * ID of the item contained by the slot
+         * @type {number}
          */
-        this.item = null;
+        this.itemID = 0;
         /**
          * Whether the current slot is selected or not
          * @type {boolean}
@@ -112,17 +119,25 @@ class HotbarSlot {
             ctx.strokeRect(this.pos.x, this.pos.y, this.size.w, this.size.h);
         }
 
-        if(this.item) this.drawItem(ctx);
+        if(this.itemID) this.drawItem(ctx);
     }
 
 
     drawItem(ctx) {
-        // draw in the item image
-        // ctx.drawImage(
-        //     this.pos.x + HotbarSlot.borderSize,
-        //     this.pos.y + HotbarSlot.borderSize,
-        //
-        //     )
+        let sheetPos = Item.getItemSpriteLocById(this.itemID);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+            ASSET_MANAGER.getAsset("../sprites/items.png"),
+            sheetPos.x,
+            sheetPos.y,
+            sheetPos.size,
+            sheetPos.size,
+            this.pos.x + HotbarSlot.borderSize,
+            this.pos.y + HotbarSlot.borderSize,
+            32,
+            32
+            );
+        ctx.imageSmoothingEnabled = true;
     }
 }
 

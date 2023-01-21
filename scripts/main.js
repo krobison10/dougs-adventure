@@ -17,6 +17,7 @@ ASSET_MANAGER.queueDownload("../sprites/campfire.png");
 ASSET_MANAGER.queueDownload("../sprites/tiles.png");
 ASSET_MANAGER.queueDownload("../sprites/heart.png");
 ASSET_MANAGER.queueDownload("../sprites/star.png");
+ASSET_MANAGER.queueDownload("../sprites/items.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	new BackgroundManager().addBackgroundTiles();
