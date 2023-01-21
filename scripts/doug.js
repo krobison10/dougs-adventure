@@ -44,6 +44,10 @@ class Doug extends Character {
      */
     update() {
 
+        if(this.hitPoints <= 0) {
+            this.hitPoints = 0;
+        }
+
         this.velocity.x = this.velocity.y = 0;
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
@@ -62,17 +66,34 @@ class Doug extends Character {
          * Check for collision, we do two separate checks so that if a player is colliding in one axis
          * they can still possibly be able to move on the other axis.
          */
+        
+
         const collisionLat = this.checkCollide("lateral");
-        const collisionVert = this.checkCollide("vertical")
+        const collisionVert = this.checkCollide("vertical");
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
+        
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-
+        //handling collisions between doug and all other types of entities
+        //just have 
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+        for(const entity of entities) {
+             if (entity instanceof Bat && this.boundingBox.collide(entity.boundingBox)) {
+                     this.pos.x += this.velocity.x * gameEngine.clockTick;
+                     this.pos.y += this.velocity.y * gameEngine.clockTick;
+                     this.hitPoints = this.hitPoints - entity.damage;
+                     
+            }
+            // if (entity instanceof Obstacle && this.boundingBox.collide(entity.boundingBox)) {
+                
+                
+            // }
+        }
         this.updateDebug();
     }
 

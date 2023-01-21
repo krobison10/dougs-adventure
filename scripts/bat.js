@@ -6,7 +6,7 @@
  * @author Cameron Lempitsky
  *
  */
-class Bat extends Character {
+class Bat extends Enemy {
     /**
      * @param {Vec2} pos initial position of the player.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
