@@ -109,6 +109,15 @@ class Padding {
 }
 
 /**
+ * @param timeA
+ * @param timeB
+ * @returns {number} time in seconds between the two times.
+ */
+function timeInSecondsBetween(timeA, timeB) {
+    return Math.abs(timeA - timeB) / 1000;
+}
+
+/**
  * Returns whether the entity should be drawn in the essence of performance.
  * @param {Entity} entity the entity to check.
  * @returns {boolean} true if should be drawn

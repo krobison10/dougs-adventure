@@ -41,11 +41,6 @@ class LightMap {
         this.setLightValue();
 
         /**
-         * Indicates whether it is day or night.
-         * @type {boolean}
-         */
-        this.dayTime = true;
-        /**
          * Represents the time at which the last update of lightmap occurred.
          * @type {number}
          */
@@ -75,8 +70,6 @@ class LightMap {
      */
     update() {
         this.updateTime();
-
-        //comment this out and set the alpha in the constructor if you want to cancel day/night cycle
         this.updateAlpha();
 
         this.renderingCtx.clearRect(0, 0, WIDTH, HEIGHT);

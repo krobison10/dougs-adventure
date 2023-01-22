@@ -25,6 +25,10 @@ class Entity {
         this.removeFromWorld = false;
     }
 
+    draw(ctx) {}
+
+    update() {}
+
     /**
      * @returns {Vec2} the center point of the entity
      */
@@ -38,24 +42,5 @@ class Entity {
      */
     getScreenPos() {
         return new Vec2(this.pos.x - gameEngine.camera.pos.x, this.pos.y - gameEngine.camera.pos.y);
-    }
-}
-
-class InvisibleBorder extends Entity {
-    constructor(pos, size) {
-        super(pos, size);
-        pos.x = pos.x * TILE_SIZE;
-        pos.y = pos.y * TILE_SIZE;
-        size.w = size.w * TILE_SIZE;
-        size.h = size.h * TILE_SIZE;
-        this.boundingBox = Character.createBB(pos, size, new Padding(0, 0, 0 ,0));
-    }
-
-    draw(ctx) {
-        this.boundingBox.draw(ctx);
-    }
-
-    update() {
-
     }
 }

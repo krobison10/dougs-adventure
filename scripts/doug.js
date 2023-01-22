@@ -154,7 +154,7 @@ class Doug extends Character {
         //If the resulting vector's magnitude exceeds the speed
         if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
             //Modify components so that vector's magnitude (total speed) matches desired speed
-            this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant code
+            this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant
             this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
         }
 
@@ -308,13 +308,4 @@ class Doug extends Character {
     drawAnim(ctx, animator) {
         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
-}
-
-/**
- * @param timeA
- * @param timeB
- * @returns {number} time in seconds between the two times.
- */
-function timeInSecondsBetween(timeA, timeB) {
-    return Math.abs(timeA - timeB) / 1000;
 }

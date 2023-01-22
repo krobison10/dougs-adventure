@@ -7,12 +7,8 @@
  */
 class SceneManager {
     constructor(game) {
-        /**
-         * Reference to the game engine
-         */
-        this.game = game;
-        this.game.camera = this;
-        this.pos = new Vec2(0 ,0);
+        game.camera = this;
+        this.pos = new Vec2(0, 0);
     }
 
     /**

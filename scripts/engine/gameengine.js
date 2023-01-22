@@ -1,10 +1,5 @@
 "use strict";
 
-/**
- * The number of layers within the entities array
- * @type {number}
- */
-const NUM_LAYERS = 5;
 
 /**
  * @author Chris Marriott
@@ -26,7 +21,7 @@ class GameEngine {
         this.keys = {};
 
         this.camera = new SceneManager(this);
-        this.addEntity(this.camera);
+        this.addEntity(this.camera, Layers.UI);
 
         // Options and the Details
         this.options = options || {
@@ -114,6 +109,7 @@ class GameEngine {
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
 
         //----Code to draw each layer individually for performance control----//
 

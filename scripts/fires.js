@@ -31,10 +31,6 @@ class Torch extends Entity {
         lightMap.addLightSource(this.lightSource);
     }
 
-    update() {
-
-    }
-
     draw(ctx) {
         ctx.drawImage(ASSET_MANAGER.getAsset("../sprites/fires/torch_stem.png"),
             0, 0, 4, 16,
@@ -72,10 +68,6 @@ class CampFire extends Entity{
             new RGBColor(252, 146, 83), 60);
 
         lightMap.addLightSource(this.lightSource);
-    }
-
-    update() {
-
     }
 
     draw(ctx) {

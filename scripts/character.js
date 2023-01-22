@@ -50,7 +50,7 @@ class Character extends Entity {
 
         const entities = gameEngine.entities[Layers.FOREGROUND];
         for(const entity of entities) {
-            if(entity.boundingBox && getDistance(this.pos, entity.pos) < 600) {
+            if(entity.boundingBox) {
                 if(entity !== this && box.collide(entity.boundingBox)) {
                     return true;
                 }

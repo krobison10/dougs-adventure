@@ -15,10 +15,6 @@ class HealthBar extends Entity {
         this.innerPadding = 1;
     }
 
-    update() {
-
-    }
-
     draw(ctx) {
         let healthLevel = this.agent.hitPoints / this.agent.maxHitPoints;
         if(healthLevel >= 1) {
@@ -49,7 +45,6 @@ class HealthBar extends Entity {
         ctx.strokeRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h,
             this.size.w * healthLevel, this.size.h);
     }
-
 }
 
 /**

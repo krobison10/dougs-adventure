@@ -1,6 +1,6 @@
 "use strict";
 
-class Item extends Entity {
+class Item {
     //Number of cols in the spritesheet
     static spriteSheetCols = 16;
     //Number of rows in the spritesheet
@@ -15,18 +15,6 @@ class Item extends Entity {
         85: 'Candle',
         246: 'Healing Potion',
         336: 'Iron Sword'
-    }
-
-    constructor() {
-        super(null, null);
-    }
-
-    draw(ctx) {
-
-    }
-
-    update() {
-
     }
 
     /**

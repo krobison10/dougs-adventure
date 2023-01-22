@@ -1,4 +1,5 @@
-"use strict";
+'use strict'
+
 const TILE_SIZE = 32;
 const WIDTH = 1024;
 const HEIGHT = 768;
@@ -14,7 +15,7 @@ const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();
 
-//Downloads here
+//Add paths of assets to be downloaded here
 declareAssets([
 	"../sprites/blondie_spritesheet.png",
 	"../sprites/tree_00.png",
@@ -43,7 +44,6 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 
 
 let hotbar;
-new BackgroundManager().addBackgroundTiles();
 buildWorld();
 buildUI();
 
@@ -52,6 +52,10 @@ gameEngine.addEntity(doug);
 
 
 function buildWorld() {
+	//Background tiles, border walls and border trees
+	new MapBuilder().build();
+
+	//Random trees near spawn
 	makeTree(new Vec2(3, 8));
 	makeTree(new Vec2(21, -3));
 	makeTree(new Vec2(20, -12));
@@ -70,8 +74,10 @@ function buildWorld() {
 	makeTree(new Vec2(-1, -6));
 	makeTree(new Vec2(-10, 2));
 
+	//Torch line along path
 	placeTorches();
 
+	//Cute campfire
 	const fire = new CampFire(new Vec2(13 * TILE_SIZE, TILE_SIZE));
 	gameEngine.addEntity(fire);
 }

@@ -3,7 +3,7 @@
 /**
  * Needs serious updating, like seriously
  */
-class BackgroundManager {
+class MapBuilder {
     /*Could be 150, will start will 100 * 128 makes for 12800 px wide map,
         also need to be the same now because I wrote junk code that relies on a
         square map.
@@ -17,7 +17,7 @@ class BackgroundManager {
     /**
      * Adds all the background tiles as entities to the background layer of the game engine.
      */
-    addBackgroundTiles() {
+    build() {
         //Entities for that path
         for(let i = -200; i < 200; i++) {
             gameEngine.addEntity(new BackgroundTile(new Vec2(-5, i),
@@ -32,17 +32,18 @@ class BackgroundManager {
         }
 
         //Entities for the grass tiles
-        for(let row = 0; row < BackgroundManager.height; row++) {
-            for(let col = 0; col < BackgroundManager.width; col++) {
-                gameEngine.addEntity(new GrassTile({x: col-BackgroundManager.height/2, y: row-BackgroundManager.height/2},
+        for(let row = 0; row < MapBuilder.height; row++) {
+            for(let col = 0; col < MapBuilder.width; col++) {
+                gameEngine.addEntity(new GrassTile({x: col-MapBuilder.height/2, y: row-MapBuilder.height/2},
                     new Dimension(128, 128)),  Layers.BACKGROUND);
             }
         }
+
         addBorderWalls();
     }
 }
 
-class GrassTile extends Entity{
+class GrassTile extends Entity {
     constructor(pos, size) {
         super(pos, size);
         this.sprite = ASSET_MANAGER.getAsset("../sprites/grass_1.png")
@@ -51,12 +52,7 @@ class GrassTile extends Entity{
     }
 
     draw(ctx) {
-        if(getDistance(this.pos, doug.pos) >= 800) return;
         ctx.drawImage(this.sprite, 0, 0, 128, 128, this.getScreenPos().x, this.getScreenPos().y, 128, 128);
-    }
-
-    update() {
-
     }
 }
 
@@ -65,9 +61,9 @@ function addBorderWalls() {
     const edgeBuffer = 20;
     const segmentSize = 12;
     const grassTileSize = 4;
-    const rightEdgeCoord = BackgroundManager.width * grassTileSize / 2;
+    const rightEdgeCoord = MapBuilder.width * grassTileSize / 2;
     const leftEdgeCoord = -rightEdgeCoord;
-    const bottomEdgeCoord = BackgroundManager.height * grassTileSize / 2;
+    const bottomEdgeCoord = MapBuilder.height * grassTileSize / 2;
     const topEdgeCoord = -bottomEdgeCoord;
 
     //left and right walls
@@ -99,8 +95,6 @@ function addBorderWalls() {
         drawTreePatch(new Vec2(rightEdgeCoord - 10, i));
         drawTreePatch(new Vec2(rightEdgeCoord - 20, i));
     }
-
-    drawTreePatch(new Vec2(5, -40));
 }
 
 function drawTreePatch(tilePos) {

@@ -169,10 +169,6 @@ class Health extends Entity {
 
     }
 
-    update() {
-        this.hearts.forEach((heart) => heart.update());
-    }
-
 
     draw(ctx) {
         this.hearts.forEach((heart) => heart.draw(ctx));
@@ -216,10 +212,6 @@ class Heart {
             return new Vec2(health.pos.x + Heart.size * (index - 10) + Heart.gap * (index - 10),
                 health.pos.y + Heart.size + Heart.gap);
         }
-    }
-
-    update() {
-
     }
 
     draw(ctx) {
@@ -275,11 +267,6 @@ class Mana extends Entity {
 
     }
 
-    update() {
-        this.manaStars.forEach((manaStar) => manaStar.update());
-    }
-
-
     draw(ctx) {
         this.manaStars.forEach((manaStar) => manaStar.draw(ctx));
     }
@@ -316,10 +303,6 @@ class ManaStar {
 
     static getPos(mana, index) {
         return new Vec2(mana.pos.x, mana.pos.y + ManaStar.size * index + ManaStar.gap * index);
-    }
-
-    update() {
-
     }
 
     draw(ctx) {
