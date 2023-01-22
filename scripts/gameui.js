@@ -162,7 +162,7 @@ class Health extends Entity {
 
         this.label = new UIText(new Vec2(this.pos.x, 7), "Life", 20, new RGBColor(255, 255, 255));
         this.label.updateFn = function() {
-            this.content = `Life: ${doug.hitPoints}/${doug.maxHitPoints}`;
+            this.content = `Life: ${Math.round(doug.hitPoints)}/${doug.maxHitPoints}`;
         }
         gameEngine.addEntity(this.label, Layers.UI);
 

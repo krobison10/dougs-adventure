@@ -79,12 +79,12 @@ class FlickeringLightSource extends LightSource {
      * the light to be more spread out and softer while smaller values will make the light smaller
      * and harder. It's best to leave this default unless there is a good reason not to.
      */
-    constructor(magnitude, pos = {x:0, y:0}, attachTo = null,
+    constructor(magnitude, pos = new Vec2(0, 0), attachTo = null,
                 color = new RGBColor(255, 255, 255), scale = 80) {
         super(magnitude, pos, attachTo, color, scale);
 
         this.targetMagnitude = this.magnitude;
-        this.growSpeed = 0.11;
+        this.growSpeed = 0.12;
         this.shrinkSpeed = .03;
         this.maxMagnitude = this.magnitude * 1.05;
         this.minMagnitude = this.magnitude * 0.93;

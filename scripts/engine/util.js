@@ -85,6 +85,9 @@ class Vec2 {
     constructor(x, y) {
         Object.assign(this, {x, y});
     }
+    netVelocity() {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
 }
 
 /**

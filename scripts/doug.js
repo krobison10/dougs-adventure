@@ -7,6 +7,37 @@
  */
 class Doug extends Character {
     /**
+     * Delay in seconds before health regen will begin
+     * @type {number}
+     */
+    static regenDelay = 10;
+    /**
+     * Amount of time in seconds before doug can take damage again.
+     * @type {number}
+     */
+    static immunityDuration = 0.2
+    /**
+     * The base regeneration rate in terms of hit points per second.
+     * @type {number}
+     */
+    static healthRegen = 2;
+    /**
+     * The base regeneration rate in terms of hit points per second.
+     * @type {number}
+     */
+    static baseManaRegen = 5;
+    /**
+     * Multiplier for the exponential growth of mana regeneration.
+     * @type {number}
+     */
+    static manaRegenMultiplier = 1.015;
+    /**
+     * Time before respawning in seconds.
+     * @type {number}
+     */
+    static respawnTime = 10;
+
+    /**
      * @param {Vec2} pos initial position of the player.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
      * @param {Dimension} size size of the sprite.
@@ -22,20 +53,50 @@ class Doug extends Character {
          */
         this.maxHitPoints = 400;
         /**
+         * The current health of doug. Should not exceed 400 because the health bar will break.
+         * @type {number}
+         */
+        this.hitPoints = 400;
+        /**
+         * The time of the last health regeneration frame.
+         * @type {number}
+         */
+        this.lastHealthRegen = Date.now();
+        /**
+         * Time that the last damage frame occurred.
+         * @type {number}
+         */
+        this.lastDamage = Date.now();
+        /**
+         * Pretty self-explanatory
+         * @type {boolean}
+         */
+        this.dead = false;
+        /**
+         * Time of last death.
+         * @type {undefined}
+         */
+        this.deathTime = undefined;
+        /**
          * The maximum mana level of doug.
          * @type {number}
          */
         this.maxMana = 200;
         /**
-         * The current health of doug. Should not exceed 400 because the health bar will break.
-         * @type {number}
-         */
-        this.hitPoints = 370;
-        /**
          * The current mana level of doug.
          * @type {number}
          */
         this.manaLevel = 190;
+        /**
+         * The time of the last mana regeneration frame.
+         * @type {number}
+         */
+        this.lastManaRegen = Date.now();
+        /**
+         * Represents the current rate of mana regen that is increased the longer mana isn't used.
+         * @type {number}
+         */
+        this.curManaRegen = Doug.baseManaRegen;
         /**
          * Speed of the player.
          * @type {number}
@@ -76,6 +137,14 @@ class Doug extends Character {
      */
     update() {
         this.velocity.x = this.velocity.y = 0;
+        if(this.dead) {
+            if(timeInSecondsBetween(this.deathTime, Date.now()) >= Doug.respawnTime) {
+                this.respawn();
+            }
+            else {
+                return;
+            }
+        }
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
         if(gameEngine.keys["d"]) this.velocity.x += this.speed;
@@ -104,7 +173,102 @@ class Doug extends Character {
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
+        this.regen();
+
         this.updateDebug();
+    }
+
+    /**
+     * Takes mana away from doug and makes necessary updates. If doug does not have enough mana, none will be taken.
+     * @param amount the amount to take away.
+     * @returns {boolean} True if there was enough mana, false if there was not.
+     */
+    useMana(amount) {
+        if(amount > this.manaLevel) return false;
+
+        this.manaLevel -= amount;
+        this.curManaRegen = Doug.baseManaRegen;
+        return true;
+    }
+
+    takeDamage(amount) {
+        if(timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.immunityDuration) {
+            this.lastDamage = Date.now();
+            this.hitPoints -= amount;
+            if(this.hitPoints <= 0) {
+                this.hitPoints = 0;
+                this.die();
+            }
+        }
+    }
+
+    /**
+     * Takes steps to kill doug
+     */
+    die() {
+        this.dead = true;
+        this.deathTime = Date.now();
+
+        const bigText = new UIText(
+            new Vec2(this.getScreenPos().x - 48, this.getScreenPos().y + 20),
+            "Doug Ded",
+            40,
+            new RGBColor(255, 81, 101));
+        bigText.updateFn = function () {
+            if(!doug.dead) this.removeFromWorld = true;
+        }
+
+        const counterText = new UIText(new Vec2(this.getScreenPos().x - 42, this.getScreenPos().y + 70),
+            "Respawning in...",
+            20,
+            new RGBColor(255, 81, 101));
+        counterText.updateFn = () => {
+            if(!doug.dead) {
+                counterText.removeFromWorld = true;
+            } else {
+                let timeToRespawn = Doug.respawnTime - Math.round(timeInSecondsBetween(doug.deathTime, Date.now()));
+                counterText.content = "Respawning in... " + timeToRespawn;
+            }
+        }
+        gameEngine.addEntity(bigText, Layers.UI);
+        gameEngine.addEntity(counterText, Layers.UI);
+
+    }
+
+    respawn() {
+        this.pos = new Vec2(0, 0);
+        this.dead = false;
+        this.hitPoints = this.maxHitPoints;
+        this.manaLevel = this.maxMana;
+        this.directionMem = 0;
+
+    }
+
+    /**
+     * Attempts to regenerate the player's health and mana
+     */
+    regen() {
+        if(this.hitPoints < this.maxHitPoints && timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.regenDelay) {
+            if(timeInSecondsBetween(this.lastHealthRegen, Date.now()) >= 1 / Doug.healthRegen) {
+                if(this.velocity.netVelocity() !== 0) {
+                    this.hitPoints += 1;
+                }
+                else {
+                    this.hitPoints += 2;
+                }
+
+                if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+
+                this.lastHealthRegen = Date.now();
+            }
+        }
+        if(this.manaLevel < this.maxMana) {
+            if(timeInSecondsBetween(this.lastManaRegen, Date.now()) >= 1 / this.curManaRegen) {
+                this.manaLevel += 1;
+                this.lastManaRegen = Date.now();
+                this.curManaRegen *= Doug.manaRegenMultiplier;
+            }
+        }
     }
 
     /**
@@ -116,6 +280,8 @@ class Doug extends Character {
     }
 
     draw(ctx) {
+        if(this.dead) return;
+
         if(this.velocity.x < 0) {
             this.drawAnim(ctx, this.animations[5]);
             this.directionMem = 1;
@@ -142,4 +308,13 @@ class Doug extends Character {
     drawAnim(ctx, animator) {
         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
+}
+
+/**
+ * @param timeA
+ * @param timeB
+ * @returns {number} time in seconds between the two times.
+ */
+function timeInSecondsBetween(timeA, timeB) {
+    return Math.abs(timeA - timeB) / 1000;
 }
