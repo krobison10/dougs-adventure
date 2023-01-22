@@ -1,5 +1,10 @@
 'use strict'
 
+/**
+ * Represents an obstacle in the game world.
+ *
+ * @author Kyler Robison
+ */
 class Obstacle extends Entity {
     /**
      * Creates a new obstacle that represents a stationary, potentially collidable object in came

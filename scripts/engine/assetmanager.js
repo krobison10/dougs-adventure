@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * Manages the game assets (downloads and stores)
+ *
+ * @author Chris Marriott
+ */
 class AssetManager {
 
     constructor() {
@@ -126,7 +131,7 @@ class AssetManager {
 
     /**
      * Sets the volume of all the audio assets.
-     * @param {number} volume FINISH DOC
+     * @param {number} volume the new volume.
      */
     setVolume(volume) {
         for (let key in this.cache) {

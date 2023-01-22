@@ -4,7 +4,6 @@
  * Represents the player character.
  *
  * @author Kyler Robison
- *
  */
 class Doug extends Character {
     /**
@@ -18,31 +17,53 @@ class Doug extends Character {
         this.animations = [];
 
         /**
-         * Represents the maximum hitpoints of doug
+         * The maximum hit points of doug
          * @type {number}
          */
         this.maxHitPoints = 400;
-
-        this.maxMana = 200;
-
         /**
-         * Represents the health of doug. Should not exceed 400 because the health bar will break.
+         * The maximum mana level of doug.
+         * @type {number}
+         */
+        this.maxMana = 200;
+        /**
+         * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
         this.hitPoints = 370;
-
+        /**
+         * The current mana level of doug.
+         * @type {number}
+         */
         this.manaLevel = 190;
-
+        /**
+         * Speed of the player.
+         * @type {number}
+         */
         this.speed = 250;
+        /**
+         * Current velocity of the player.
+         * @type {Vec2}
+         */
         this.velocity = new Vec2(0, 0);
+        /**
+         * Memory for the direction of the player.
+         * @type {number}
+         */
         this.directionMem = 0;
+        /**
+         * Current bounding box of the player.
+         * @type {BoundingBox}
+         */
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
+        //Create still animations
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
                 this.size.w, this.size.h,
                 1, 1, 0, false, true);
         }
+        //Create walking animations
         for(let i = 0; i < 4; i++) {
             this.animations[i + 4] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
@@ -54,7 +75,6 @@ class Doug extends Character {
      * Updates the player for the frame.
      */
     update() {
-
         this.velocity.x = this.velocity.y = 0;
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;

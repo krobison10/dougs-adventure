@@ -1,6 +1,14 @@
 "use strict";
 
+/**
+ * The number of layers within the entities array
+ * @type {number}
+ */
 const NUM_LAYERS = 5;
+
+/**
+ * @author Chris Marriott
+ */
 class GameEngine {
     
     constructor(options) {
@@ -119,6 +127,7 @@ class GameEngine {
         for(let layer of this.entities) {
             let entitiesCount = layer.length;
 
+            //Sort entities by Y coord
             layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
 
             for (let i = 0; i < entitiesCount; i++) {
@@ -129,6 +138,7 @@ class GameEngine {
             }
         }
 
+        //Delete eligible entities
         for(let layer of this.entities) {
             for (let i = layer.length - 1; i >= 0; --i) {
                 if (layer[i].removeFromWorld) {

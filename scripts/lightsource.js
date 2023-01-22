@@ -31,15 +31,13 @@ class LightSource extends Entity {
         }
     }
 
-    draw() {
+    draw(ctx) {
         console.error("Light sources must be added to the lightmap, not the entity list");
     }
 
     drawLight(ctx) {
         //Hack line for doug's candle
         if(this.attachTo instanceof Doug && hotbar.slots[hotbar.selectedIndex].itemID !== 85) return;
-
-
 
         let outerRadius = this.scale * Math.pow(this.magnitude + 1, 2);
 
@@ -63,6 +61,11 @@ class LightSource extends Entity {
     }
 }
 
+/**
+ * A light source that pulses, to be used for anything that burns.
+ *
+ * @author Kyler Robison
+ */
 class FlickeringLightSource extends LightSource {
     /**
      * Creates a flickering light source.
@@ -113,11 +116,19 @@ class FlickeringLightSource extends LightSource {
         }
     }
 
+    /**
+     * Picks a magnitude to shrink to in the lower half of the range allowed by the parameters of the light.
+     * @returns {number}
+     */
     pickShrinkTarget() {
         let range = (this.maxMagnitude - this.minMagnitude) / 2;
         return this.minMagnitude + Math.random() * range;
     }
 
+    /**
+     * Picks a magnitude to grow to in the upper half of the range allowed by the parameters of the light.
+     * @returns {number}
+     */
     pickGrowTarget() {
         let range = (this.maxMagnitude - this.minMagnitude) / 2;
         return this.maxMagnitude - Math.random() * range;

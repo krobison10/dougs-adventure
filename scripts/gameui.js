@@ -229,6 +229,10 @@ class Heart {
         ctx.globalAlpha = 1;
     }
 
+    /**
+     * Calculates the alpha of the heart.
+     * @returns {number}
+     */
     getAlpha() {
         let alpha;
         if(Math.floor(doug.hitPoints / 20) > this.index) {
@@ -325,6 +329,10 @@ class ManaStar {
         ctx.globalAlpha = 1;
     }
 
+    /**
+     * Caclulates the alpha of the mana star.
+     * @returns {number}
+     */
     getAlpha() {
         let alpha;
         if(Math.floor(doug.manaLevel / 20) > this.index) {
@@ -369,6 +377,10 @@ class UIText extends Entity{
         this.updateFn = () => {};
     }
 
+    /**
+     * Draws the text.
+     * @param ctx
+     */
     draw(ctx) {
         ctx.font = this.font;
         ctx.fillStyle = this.fillStyle;

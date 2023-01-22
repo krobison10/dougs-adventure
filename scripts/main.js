@@ -56,15 +56,6 @@ makeTree(new Vec2(-10, 2));
 
 
 const fire = new CampFire(new Vec2(13 * TILE_SIZE, TILE_SIZE));
-// const fire = new Obstacle(
-// 	new Vec2(13 * TILE_SIZE, TILE_SIZE),
-// 	new Dimension(64, 64),
-// 	ASSET_MANAGER.getAsset("../sprites/campfire.png"),
-// 	true,
-// 	new FlickeringLightSource(.8, new Vec2(0, 0), null, new RGBColor(252, 146, 83)),
-// 	new Vec2(0, 0),
-// 	new Dimension(1216, 1216)
-// 	);
 
 
 placeTorches();

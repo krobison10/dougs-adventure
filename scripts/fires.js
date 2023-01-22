@@ -1,7 +1,13 @@
 'use strict'
 
-
+/**
+ * @author Kyler Robison
+ */
 class Torch extends Entity {
+    /**
+     * Creates a torch at the given position.
+     * @param pos
+     */
     constructor(pos) {
         super(pos, new Dimension(30, 48));
         this.animation = new Animator(ASSET_MANAGER.getAsset(
@@ -37,8 +43,14 @@ class Torch extends Entity {
     }
 }
 
-
+/**
+ * @author Kyler Robison
+ */
 class CampFire extends Entity{
+    /**
+     * Creates a campfire at the given position
+     * @param pos
+     */
     constructor(pos) {
         super(pos, new Dimension(48, 64));
         this.animation = new Animator(ASSET_MANAGER.getAsset(

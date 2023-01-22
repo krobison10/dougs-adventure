@@ -1,8 +1,11 @@
 "use strict";
 
 class Item extends Entity {
+    //Number of cols in the spritesheet
     static spriteSheetCols = 16;
+    //Number of rows in the spritesheet
     static spriteSheetRows = 22;
+    //Size of the sprites in the sheet
     static spriteSize = 16;
     /**
      * Stores the names of items by id

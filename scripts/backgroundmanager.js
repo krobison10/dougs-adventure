@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Needs serious updating
+ * Needs serious updating, like seriously
  */
 class BackgroundManager {
     constructor() {

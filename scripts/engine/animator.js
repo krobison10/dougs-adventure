@@ -3,6 +3,8 @@
 /**
  * Creates an animation that can step through keyframes and draw the appropriate
  * frame when asked.
+ *
+ * @author Kyler Robison
  */
 class Animator {
 
@@ -25,12 +27,21 @@ class Animator {
         Object.assign(this, {spritesheet, xStart, yStart, width, height,
             frameCount, frameDuration, framePadding, reverse, loop});
 
+        /**
+         * The amount of elapsed time for the total animation (resets on loop).
+         * @type {number}
+         */
         this.elapsedTime = 0;
+        /**
+         * How long the entire animation takes.
+         * @type {number}
+         */
         this.totalTime = this.frameCount * this.frameDuration;
 
     }
 
     /**
+     * Draws the current frame of the animation.
      *
      * @param {number} tick the elapsed time since the last tick
      * @param {CanvasRenderingContext2D} ctx
