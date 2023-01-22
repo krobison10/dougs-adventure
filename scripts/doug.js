@@ -213,7 +213,7 @@ class Doug extends Character {
             new Vec2(this.getScreenPos().x - 48, this.getScreenPos().y + 20),
             "Doug Ded",
             40,
-            new RGBColor(255, 81, 101));
+            new RGBColor(255, 45, 45));
         bigText.updateFn = function () {
             if(!doug.dead) this.removeFromWorld = true;
         }
@@ -221,7 +221,7 @@ class Doug extends Character {
         const counterText = new UIText(new Vec2(this.getScreenPos().x - 42, this.getScreenPos().y + 70),
             "Respawning in...",
             20,
-            new RGBColor(255, 81, 101));
+            new RGBColor(255, 45, 45));
         counterText.updateFn = () => {
             if(!doug.dead) {
                 counterText.removeFromWorld = true;

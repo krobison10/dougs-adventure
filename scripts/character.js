@@ -50,7 +50,7 @@ class Character extends Entity {
 
         const entities = gameEngine.entities[Layers.FOREGROUND];
         for(const entity of entities) {
-            if(entity.boundingBox) {
+            if(entity.boundingBox && getDistance(this.pos, entity.pos) < 600) {
                 if(entity !== this && box.collide(entity.boundingBox)) {
                     return true;
                 }
@@ -85,6 +85,7 @@ class Character extends Entity {
      * @param {CanvasRenderingContext2D} ctx the rendering context.
      */
     draw(ctx) {
+
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }

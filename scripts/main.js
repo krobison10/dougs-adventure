@@ -4,6 +4,9 @@ const WIDTH = 1024;
 const HEIGHT = 768;
 let boundingBoxes = false;
 
+const dontDrawDistance = 1000;
+const dontUpdateDistance = 2000;
+
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();

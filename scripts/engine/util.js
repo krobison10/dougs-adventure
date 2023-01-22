@@ -107,3 +107,11 @@ class Padding {
         Object.assign(this, {top, right, bottom, left});
     }
 }
+
+function shouldDraw(entity) {
+    return getDistance(entity.pos, doug.pos) > dontDrawDistance;
+}
+
+function shouldUpdate(entity) {
+    return getDistance(entity.pos, doug.pos) > dontUpdateDistance;
+}

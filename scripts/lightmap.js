@@ -106,7 +106,7 @@ class LightMap {
      * Updates the game time, 1 real life second equals 2 in game minutes.
      */
     updateTime() {
-        this.gameTime = this.gameTime + (Date.now() - this.lastTime) / 500;
+        this.gameTime = this.gameTime + (Date.now() - this.lastTime) / 250;
         this.lastTime = Date.now();
         if(this.gameTime > (24 * 60)) {
             this.gameTime = 0;
