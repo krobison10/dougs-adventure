@@ -1,5 +1,6 @@
 'use strict'
 
+
 /**
  * Represents the hotbar that contains the player's items
  *

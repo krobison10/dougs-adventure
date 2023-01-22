@@ -41,11 +41,6 @@ class LightMap {
         this.setLightValue();
 
         /**
-         * The current time of the game in minutes, starts at 0 = 1:00am, resets back to 0 in 24 hours.
-         * @type {number}
-         */
-        this.gameTime = 4.5 * 60;
-        /**
          * Indicates whether it is day or night.
          * @type {boolean}
          */
@@ -106,10 +101,10 @@ class LightMap {
      * Updates the game time, 1 real life second equals 2 in game minutes.
      */
     updateTime() {
-        this.gameTime = this.gameTime + (Date.now() - this.lastTime) / 250;
+        gameTime = gameTime + (Date.now() - this.lastTime) / 250;
         this.lastTime = Date.now();
-        if(this.gameTime > (24 * 60)) {
-            this.gameTime = 0;
+        if(gameTime > (24 * 60)) {
+            gameTime = 0;
         }
     }
 
@@ -125,25 +120,25 @@ class LightMap {
         const fade = 30;
 
         //Update the flag that indicates day/night
-        this.dayTime = (this.gameTime >= sunrise && this.gameTime <= sunset);
+        this.dayTime = (gameTime >= sunrise && gameTime <= sunset);
 
-        if(this.gameTime >= sunrise + fade && this.gameTime <= sunset - fade) {
+        if(gameTime >= sunrise + fade && gameTime <= sunset - fade) {
             //complete day
             this.alpha = 0;
         }
-        else if (this.gameTime > sunset + fade || this.gameTime < sunrise - fade) {
+        else if (gameTime > sunset + fade || gameTime < sunrise - fade) {
             //complete night
             this.alpha = 1;
         }
         else {
             //transition
-            if(this.gameTime >= sunrise - fade && this.gameTime <= sunrise + fade) {
+            if(gameTime >= sunrise - fade && gameTime <= sunrise + fade) {
                 //sunrise
-                this.alpha = (sunrise + fade - this.gameTime) / (2 * fade);
+                this.alpha = (sunrise + fade - gameTime) / (2 * fade);
             }
             else {
                 //sunset
-                this.alpha = 1 - (sunset + fade - this.gameTime) / (2 * fade);
+                this.alpha = 1 - (sunset + fade - gameTime) / (2 * fade);
             }
         }
     }

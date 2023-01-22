@@ -19,7 +19,7 @@ class BackgroundManager {
      */
     addBackgroundTiles() {
         //Entities for that path
-        for(let i = -50; i < 50; i++) {
+        for(let i = -200; i < 200; i++) {
             gameEngine.addEntity(new BackgroundTile(new Vec2(-5, i),
                 new Dimension(16, 16),
                 this.tilemap, new Vec2(0, 1)),  Layers.BACKGROUND);

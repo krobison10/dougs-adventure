@@ -108,10 +108,20 @@ class Padding {
     }
 }
 
+/**
+ * Returns whether the entity should be drawn in the essence of performance.
+ * @param {Entity} entity the entity to check.
+ * @returns {boolean} true if should be drawn
+ */
 function shouldDraw(entity) {
-    return getDistance(entity.pos, doug.pos) > dontDrawDistance;
+    return getDistance(entity.pos, doug.pos) < dontDrawDistance;
 }
 
+/**
+ * Returns whether the entity should be updated in the essence of performance.
+ * @param {Entity} entity the entity to check.
+ * @returns {boolean} true if should be updated
+ */
 function shouldUpdate(entity) {
-    return getDistance(entity.pos, doug.pos) > dontUpdateDistance;
+    return getDistance(entity.pos, doug.pos) < dontUpdateDistance;
 }
