@@ -82,7 +82,7 @@ class LightMap {
         this.updateTime();
 
         //comment this out and set the alpha in the constructor if you want to cancel day/night cycle
-        //this.updateAlpha();
+        this.updateAlpha();
 
         this.renderingCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
