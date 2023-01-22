@@ -83,7 +83,7 @@ class Doug extends Character {
         //just have 
         const entities = gameEngine.entities[Layers.FOREGROUND];
         for(const entity of entities) {
-             if (entity instanceof Bat && this.boundingBox.collide(entity.boundingBox)) {
+             if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
                      this.pos.x += this.velocity.x * gameEngine.clockTick;
                      this.pos.y += this.velocity.y * gameEngine.clockTick;
                      this.hitPoints = this.hitPoints - entity.damage;

@@ -1,27 +1,27 @@
 "use strict";
 
 /**
- * Represents the player character.
+ * Represents the bat enemy.
  *
  * @author Cameron Lempitsky
  *
  */
 class Bat extends Enemy {
     /**
-     * @param {Vec2} pos initial position of the player.
-     * @param {HTMLImageElement} spritesheet spritesheet of the player.
-     * @param {Dimension} size size of the sprite.
+     * @param {Vec2} pos initial position of the bat.
+     * @param {HTMLImageElement} spritesheet spritesheet of the bat.
+     * @param {Dimension} size size of the bat.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      */
-    constructor(pos, spritesheet, size, spritePadding) {
-        super(pos, spritesheet, size, spritePadding);
+    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
+        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
         this.animations = [];
 
         this.maxHitPoints = 100;
 
         //Change to see health bar
         this.hitPoints = 100;
-        this.damage = 12;
+        this.damage = 1;
 
         this.speed = 250;
         this.velocity = new Vec2(0,0);
