@@ -11,7 +11,7 @@ class Torch extends Entity {
             30,
             48,
             6,
-            0.1,
+            0.12,
             0,
             false,
             true);
@@ -47,8 +47,8 @@ class CampFire extends Entity{
             0,
             48,
             64,
-            6,
-            0.1,
+            8,
+            0.12,
             0,
             false,
             true);

@@ -14,7 +14,7 @@ class LightMap {
          * The alpha value of the mask, 1 is complete darkness and 0 is complete light.
          * @type {number}
          */
-        this.alpha = 1;
+        this.alpha = 0;
 
         this.lightmask = document.createElement('canvas');
         this.lightmask.width = WIDTH;
@@ -28,6 +28,10 @@ class LightMap {
         //this.setColor(new RGBColor(20, 20, 100));
         this.setColor(new RGBColor(20, 20, 40));
         this.setLightValue();
+
+        this.gameTime = 4.5 * 60;
+        this.dayTime = true;
+        this.lastTime = Date.now();
     }
 
     /**
@@ -52,10 +56,10 @@ class LightMap {
      * removal, it will be excluded from the next draw.
      */
     update() {
-        //Skip update if nothing will be shown
-        if(this.alpha === 0) {
-            return;
-        }
+        this.updateTime();
+
+        //comment this out and set the alpha in the constructor if you want to cancel day/night cycle
+        //this.updateAlpha();
 
         this.renderingCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -72,6 +76,44 @@ class LightMap {
                 this.lightSources[i].update();
                 this.lightSources[i].drawLight(this.renderingCtx);
             }
+        }
+    }
+
+    updateTime() {
+        this.gameTime = this.gameTime + (Date.now() - this.lastTime) / 500;
+        this.lastTime = Date.now();
+        if(this.gameTime > (24 * 60)) {
+            this.gameTime = 0;
+        }
+    }
+
+    updateAlpha() {
+        const sunrise = 4 * 60;
+        const sunset = 20 * 60;
+        const fade = 30;
+
+        this.dayTime = (this.gameTime >= sunrise && this.gameTime <= sunset);
+        console.log("Day: " + this.dayTime);
+
+        if(this.gameTime >= sunrise + fade && this.gameTime <= sunset - fade) {
+            //complete day
+            this.alpha = 0;
+        }
+        else if (this.gameTime > sunset + fade || this.gameTime < sunrise - fade) {
+            //complete night
+            this.alpha = 1;
+        }
+        else {
+            //transition
+            if(this.gameTime >= sunrise - fade && this.gameTime <= sunrise + fade) {
+                //sunrise
+                this.alpha = (sunrise + fade - this.gameTime) / (2 * fade);
+            }
+            else {
+                //sunset
+                this.alpha = 1 - (sunset + fade - this.gameTime) / (2 * fade);
+            }
+
         }
     }
 

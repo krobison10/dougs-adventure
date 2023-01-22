@@ -75,6 +75,24 @@ const hotbar = new Hotbar();
 gameEngine.addEntity(hotbar, Layers.UI);
 gameEngine.addEntity(new Health(), Layers.UI);
 gameEngine.addEntity(new Mana(), Layers.UI);
+const clock = new UIText(new Vec2(WIDTH - 300, 90), "Time: ", 20);
+clock.updateFn = () => {
+	const gameTime = Math.round(lightMap.gameTime);
+	let hour = Math.floor((gameTime + 60) / 60);
+	let ext = 'AM';
+	if (hour > 12) {
+		hour -= 12
+	}
+	if(gameTime >= 660 && gameTime < 23*60) {
+		ext = 'PM';
+	}
+	let minute = gameTime % 60;
+	if(minute < 10) {
+		minute = `0${minute}`;
+	}
+	clock.content = `${hour}:${minute} ${ext}`;
+}
+gameEngine.addEntity(clock, Layers.UI);
 
 
 
@@ -113,16 +131,8 @@ function makeTree(pos) {
 	gameEngine.addEntity(tree1);
 }
 
-// For the slider that controls the amount of daylight
-const sliderChange = () => {
-	const rangeInput = document.getElementById("light-slider");
-	lightMap.alpha = 1 - rangeInput.value / 100;
-}
-document.getElementById("light-slider").value = `${100 - lightMap.alpha * 100}`;
-
 //Handles a click on the collision boxes checkbox
 const toggleBoxes = () => {
 	const box = document.getElementById("toggle-boxes");
 	boundingBoxes = box.checked;
 }
-
