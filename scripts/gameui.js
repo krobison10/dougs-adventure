@@ -128,7 +128,7 @@ class HotbarSlot {
         let sheetPos = Item.getItemSpriteLocById(this.itemID);
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(
-            ASSET_MANAGER.getAsset("../sprites/items.png"),
+            ASSET_MANAGER.getAsset("sprites/items.png"),
             sheetPos.x,
             sheetPos.y,
             sheetPos.size,
@@ -216,7 +216,7 @@ class Heart {
 
     draw(ctx) {
         ctx.globalAlpha = this.getAlpha();
-        ctx.drawImage(ASSET_MANAGER.getAsset("../sprites/heart.png"),
+        ctx.drawImage(ASSET_MANAGER.getAsset("sprites/heart.png"),
             0, 0, 22, 22, this.pos.x, this.pos.y, 22, 22);
 
         ctx.globalAlpha = 1;
@@ -307,7 +307,7 @@ class ManaStar {
 
     draw(ctx) {
         ctx.globalAlpha = this.getAlpha();
-        ctx.drawImage(ASSET_MANAGER.getAsset("../sprites/star.png"),
+        ctx.drawImage(ASSET_MANAGER.getAsset("sprites/star.png"),
             0, 0, 22, 22, this.pos.x, this.pos.y, 22, 22);
 
         ctx.globalAlpha = 1;

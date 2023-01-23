@@ -110,16 +110,15 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-
         //----Code to draw each layer individually for performance control----//
 
         let i = Layers.BACKGROUND;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
-            this.entities[i][j].draw(this.ctx);
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
         }
         i = Layers.FOREGROUND;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
-            this.entities[i][j].draw(this.ctx);
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
         }
         i = Layers.LIGHTMAP;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
@@ -127,7 +126,7 @@ class GameEngine {
         }
         i = Layers.GLOWING_ENTITIES;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
-            this.entities[i][j].draw(this.ctx);
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
         }
         i = Layers.UI;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
@@ -202,6 +201,8 @@ class GameEngine {
      * Basic functions to be executed for each frame.
      */
     loop() {
+        //Sets the focus of the canvas so that clicking it won't be required
+        this.ctx.canvas.focus();
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();

@@ -17,17 +17,17 @@ const lightMap = new LightMap();
 
 //Add paths of assets to be downloaded here
 declareAssets([
-	"../sprites/blondie_spritesheet.png",
-	"../sprites/tree_00.png",
-	"../sprites/grass_1.png",
-	"../sprites/firepit.png",
-	"../sprites/tiles.png",
-	"../sprites/heart.png",
-	"../sprites/star.png",
-	"../sprites/items.png",
-	"../sprites/fires/torch_stem.png",
-	"../sprites/fires/orange/loops/burning_loop_1.png",
-	"../sprites/fires/orange/loops/burning_loop_3.png"
+	"sprites/blondie_spritesheet.png",
+	"sprites/tree_00.png",
+	"sprites/grass_1.png",
+	"sprites/firepit.png",
+	"sprites/tiles.png",
+	"sprites/heart.png",
+	"sprites/star.png",
+	"sprites/items.png",
+	"sprites/fires/torch_stem.png",
+	"sprites/fires/orange/loops/burning_loop_1.png",
+	"sprites/fires/orange/loops/burning_loop_3.png"
 ]);
 
 ASSET_MANAGER.downloadAll(() => {
@@ -37,7 +37,7 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.start();
 });
 
-let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("../sprites/blondie_spritesheet.png"),
+let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
@@ -123,7 +123,7 @@ function makeTree(pos) {
 	let tree1 = new Obstacle(
 		new Vec2(pos.x * TILE_SIZE, pos.y * TILE_SIZE),
 		new Dimension(467/5, 627/5),
-		ASSET_MANAGER.getAsset("../sprites/tree_00.png"),
+		ASSET_MANAGER.getAsset("sprites/tree_00.png"),
 		true,
 		null,
 		new Vec2(0, 0),

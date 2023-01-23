@@ -11,7 +11,7 @@ class MapBuilder {
     static width = 100;
     static height = 100;
     constructor() {
-        this.tilemap = ASSET_MANAGER.getAsset("../sprites/tiles.png");
+        this.tilemap = ASSET_MANAGER.getAsset("sprites/tiles.png");
     }
 
     /**
@@ -46,7 +46,7 @@ class MapBuilder {
 class GrassTile extends Entity {
     constructor(pos, size) {
         super(pos, size);
-        this.sprite = ASSET_MANAGER.getAsset("../sprites/grass_1.png")
+        this.sprite = ASSET_MANAGER.getAsset("sprites/grass_1.png")
         this.pos.x *= 128;
         this.pos.y *= 128;
     }
@@ -111,7 +111,7 @@ function drawTreePatch(tilePos) {
         let tree1 = new Obstacle(
             new Vec2(tilePos.x * TILE_SIZE, tilePos.y * TILE_SIZE),
             new Dimension(467/5, 627/5),
-            ASSET_MANAGER.getAsset("../sprites/tree_00.png"),
+            ASSET_MANAGER.getAsset("sprites/tree_00.png"),
             false,
             null,
             new Vec2(0, 0),
