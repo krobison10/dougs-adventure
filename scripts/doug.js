@@ -10,12 +10,12 @@ class Doug extends Character {
      * Delay in seconds before health regen will begin
      * @type {number}
      */
-    static regenDelay = 10;
+    static regenDelay = 1;
     /**
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
      */
-    static immunityDuration = 0.2
+    static immunityDuration = 0.75;
     /**
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
@@ -159,11 +159,9 @@ class Doug extends Character {
         }
 
         /**
-         * Check for collision, we do two separate checks so that if a player is colliding in one axis
+         * Check for collision with an obstacle, we do two separate checks so that if a player is colliding in one axis
          * they can still possibly be able to move on the other axis.
          */
-        
-
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical");
         if(!collisionLat) {
@@ -172,24 +170,23 @@ class Doug extends Character {
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
+
+
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+            for(const entity of entities) {
+                 if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
+                     this.takeDamage(entity.damage)                     
+            }
+        }
+
+        
+            
         
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         //handling collisions between doug and all other types of entities
         //just have 
-        const entities = gameEngine.entities[Layers.FOREGROUND];
-        for(const entity of entities) {
-             if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
-                     this.pos.x += this.velocity.x * gameEngine.clockTick;
-                     this.pos.y += this.velocity.y * gameEngine.clockTick;
-                     this.hitPoints = this.hitPoints - entity.damage;
-                     
-            }
-            // if (entity instanceof Obstacle && this.boundingBox.collide(entity.boundingBox)) {
-                
-                
-            // }
-        }
+        
 
         this.regen();
 

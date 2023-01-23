@@ -21,7 +21,7 @@ class Bat extends Enemy {
 
         //Change to see health bar
         this.hitPoints = 100;
-        this.damage = 1;
+        this.damage = 10;
 
         this.speed = 250;
         this.velocity = new Vec2(0,0);
@@ -47,6 +47,23 @@ class Bat extends Enemy {
 
         //this.velocity.x = this.velocity.y = 0;
         
+        //this.move();
+
+        this.pos.x += this.velocity.x * gameEngine.clockTick;
+        this.pos.y += this.velocity.y * gameEngine.clockTick;
+
+
+        /**
+         * Check for collision, we do two separate checks
+         */
+        const collisionLat = this.checkCollide("lateral");
+        const collisionVert = this.checkCollide("vertical")
+
+
+        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+
+    }
+    move() {
         if (this.pos.x >= 200 && this.pos.y >= 200) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
@@ -66,22 +83,7 @@ class Bat extends Enemy {
             this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
-
-        this.pos.x += this.velocity.x * gameEngine.clockTick;
-        this.pos.y += this.velocity.y * gameEngine.clockTick;
-
-
-        /**
-         * Check for collision, we do two separate checks
-         */
-        const collisionLat = this.checkCollide("lateral");
-        const collisionVert = this.checkCollide("vertical")
-
-
-        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-
     }
-
     draw(ctx) {
 
 
