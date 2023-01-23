@@ -14,20 +14,37 @@ class LightMap {
          * The alpha value of the mask, 1 is complete darkness and 0 is complete light.
          * @type {number}
          */
-        this.alpha = 0;
-
+        this.alpha = 1;
+        /**
+         * The light mask entity that applies darkness to the world
+         * @type {HTMLCanvasElement}
+         */
         this.lightmask = document.createElement('canvas');
         this.lightmask.width = WIDTH;
         this.lightmask.height = HEIGHT;
 
+        /**
+         * Rendering context for adding light sources to the light mask
+         * @type {CanvasRenderingContext2D}
+         */
         this.renderingCtx = this.lightmask.getContext("2d");
         this.renderingCtx.globalCompositeOperation = 'lighten';
 
+        /**
+         * The light sources of the game
+         * @type {LightSource[]}
+         */
         this.lightSources = [];
 
         //this.setColor(new RGBColor(20, 20, 100));
         this.setColor(new RGBColor(20, 20, 40));
         this.setLightValue();
+
+        /**
+         * Represents the time at which the last update of lightmap occurred.
+         * @type {number}
+         */
+        this.lastTime = Date.now();
     }
 
     /**
@@ -52,10 +69,8 @@ class LightMap {
      * removal, it will be excluded from the next draw.
      */
     update() {
-        //Skip update if nothing will be shown
-        if(this.alpha === 0) {
-            return;
-        }
+        this.updateTime();
+        this.updateAlpha();
 
         this.renderingCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -75,6 +90,56 @@ class LightMap {
         }
     }
 
+    /**
+     * Updates the game time, 1 real life second equals 2 in game minutes.
+     */
+    updateTime() {
+        gameTime = gameTime + (Date.now() - this.lastTime) / 250;
+        this.lastTime = Date.now();
+        if(gameTime > (24 * 60)) {
+            gameTime = 0;
+        }
+    }
+
+    /**
+     * Updates the alpha of the lightmap based on the game time.
+     */
+    updateAlpha() {
+        //Sunrise time (5am)
+        const sunrise = 4 * 60;
+        //Sunset time (9pm)
+        const sunset = 20 * 60;
+        //Amount of minutes around sunrise and sunset that the lighting will transition during.
+        const fade = 30;
+
+        //Update the flag that indicates day/night
+        this.dayTime = (gameTime >= sunrise && gameTime <= sunset);
+
+        if(gameTime >= sunrise + fade && gameTime <= sunset - fade) {
+            //complete day
+            this.alpha = 0;
+        }
+        else if (gameTime > sunset + fade || gameTime < sunrise - fade) {
+            //complete night
+            this.alpha = 1;
+        }
+        else {
+            //transition
+            if(gameTime >= sunrise - fade && gameTime <= sunrise + fade) {
+                //sunrise
+                this.alpha = (sunrise + fade - gameTime) / (2 * fade);
+            }
+            else {
+                //sunset
+                this.alpha = 1 - (sunset + fade - gameTime) / (2 * fade);
+            }
+        }
+    }
+
+    /**
+     * Draws the lightmap on to the actual game canvas
+     * @param ctx
+     */
     draw(ctx) {
         ctx.globalCompositeOperation = 'multiply';
         ctx.drawImage(this.lightmask, 0, 0);

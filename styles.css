@@ -10,16 +10,20 @@ body {
 h1, h4 {
   color: white;
   font-family: Andy-Bold, serif;
+  margin: 10px;
 }
 
 h1, h4, #gameWorld, #toggle-boxes, #light-slider {
   user-select: none;
   outline: none;
+  width: max-content;
 }
 
 h1 {
   text-align: center;
   font-size: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #canvas-container {
@@ -28,12 +32,18 @@ h1 {
   margin: auto;
 }
 
+#canvas-container > div {
+  width: 100px;
+}
+
 #gameWorld {
   border-radius: 5px;
 }
 
 h4 {
   font-size: 24px;
+  margin-left: 0;
+
 }
 
 #canvas-container div {

@@ -16,11 +16,8 @@ class BackgroundTile extends Entity {
         this.tilemapPos = tilemapPos;
     }
 
-    update() {
-
-    }
-
     draw(ctx) {
+        if(getDistance(this.pos, doug.pos) >= 800) return;
         ctx.drawImage(this.sprite, this.tilemapPos.x * 16, this.tilemapPos.y * 16, 16, 16,
             this.getScreenPos().x, this.getScreenPos().y, TILE_SIZE + 1, TILE_SIZE + 1);
     }

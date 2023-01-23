@@ -4,7 +4,6 @@
  * Abstract class that represents characters in game such as
  * the Player, NPCs, or Enemies, that need keyframe animation.
  *
- * @abstract
  * @author Kyler Robison
  */
 class Character extends Entity {
@@ -22,6 +21,13 @@ class Character extends Entity {
         }
         Object.assign(this, {spritesheet, spritePadding});
 
+        this.hitPoints = undefined;
+        this.maxHitPoints = undefined;
+
+        /**
+         * The velocity of the character
+         * @type {Vec2}
+         */
         this.velocity = new Vec2(0, 0);
 
         //Makes default animation as forward facing single keyframe
@@ -53,6 +59,12 @@ class Character extends Entity {
         return false;
     }
 
+    /**
+     * @param {Vec2} pos position of the bounding box.
+     * @param {Dimension} size size of the parent.
+     * @param {Padding} padding padding between size of parent and the bounding box.
+     * @returns {BoundingBox} the bounding box created by these parameters.
+     */
     static createBB(pos, size, padding) {
         return new BoundingBox(
             new Vec2( pos.x + padding.left, pos.y + padding.top),
@@ -73,6 +85,7 @@ class Character extends Entity {
      * @param {CanvasRenderingContext2D} ctx the rendering context.
      */
     draw(ctx) {
+
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }

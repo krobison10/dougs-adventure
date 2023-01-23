@@ -1,15 +1,18 @@
+/**
+ * A health bar to be placed under entities.
+ *
+ * @author Kyler Robison
+ */
 class HealthBar extends Entity {
+    /**
+     * Creates a new health bar.
+     * @param {Character} agent the entity to attach it to.
+     */
     constructor(agent) {
-        super(new Vec2(0, 0), new Dimension(0, 0));
+        super(agent.pos, new Dimension(50, 10));
         this.agent = agent;
-        this.width = 50;
-        this.height = 10;
-        this.offset = this.agent.size.w - this.width;
+        this.offset = this.agent.size.w - this.size.w;
         this.innerPadding = 1;
-    }
-
-    update() {
-
     }
 
     draw(ctx) {
@@ -27,24 +30,27 @@ class HealthBar extends Entity {
         ctx.fillRect(
             screenPos.x + this.offset / 2 + this.innerPadding,
             screenPos.y + this.agent.size.h + this.innerPadding,
-            this.width - 2 * this.innerPadding, this.height - 2 * this.innerPadding);
+            this.size.w - 2 * this.innerPadding, this.size.h - 2 * this.innerPadding);
 
 
         ctx.fillStyle = rgba(c.r, c.g, c.b, 1);
 
         ctx.fillRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h,
-            this.width * healthLevel, this.height);
+            this.size.w * healthLevel, this.size.h);
 
 
         ctx.strokeStyle = rgba(40, 40, 40, 1);
         ctx.lineWidth = '2.5';
 
         ctx.strokeRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h,
-            this.width * healthLevel, this.height);
+            this.size.w * healthLevel, this.size.h);
     }
-
 }
 
+/**
+ * @param {number} ratio of health to max health.
+ * @returns {RGBColor} color of the health bar.
+ */
 function getHealthColor(ratio) {
     if(ratio > 1) ratio = 1;
     if(ratio < 0) ratio = 0;

@@ -10,15 +10,16 @@
     <script type="text/javascript" src="./scripts/engine/assetmanager.js"></script>
     <script type="text/javascript" src="./scripts/engine/timer.js"></script>
     <script type="text/javascript" src="./scripts/engine/animator.js"></script>
-    <script type="text/javascript" src="scripts/engine/lightmap.js"></script>
+    <script type="text/javascript" src="scripts/lightmap.js"></script>
     <script type="text/javascript" src="scripts/engine/scenemanager.js"></script>
     <script type="text/javascript" src="./scripts/engine/gameengine.js"></script>
-    <script type="text/javascript" src="./scripts/boundingbox.js"></script>
     <script type="text/javascript" src="scripts/entity.js"></script>
+    <script type="text/javascript" src="./scripts/boundingbox.js"></script>
+    <script type="text/javascript" src="scripts/gameui.js"></script>
     <script type="text/javascript" src="scripts/obstacle.js"></script>
     <script type="text/javascript" src="scripts/lightsource.js"></script>
     <script type="text/javascript" src="scripts/backgroundtile.js"></script>
-    <script type="text/javascript" src="scripts/backgroundmanager.js"></script>
+    <script type="text/javascript" src="scripts/mapbuilder.js"></script>
 
 
     <script type="text/javascript" src="./scripts/item.js"></script>
@@ -27,6 +28,7 @@
     <script type="text/javascript" src="scripts/doug.js"></script>
     <script type="text/javascript" src="scripts/bat.js"></script>
     <script type="text/javascript" src="scripts/healthbar.js"></script>
+    <script type="text/javascript" src="scripts/fires.js"></script>
     <script type="text/javascript" src="./scripts/main.js" defer></script>
 
 
@@ -35,11 +37,6 @@
     <h1>Doug's Down Bad</h1>
     <div id="canvas-container">
         <canvas id="gameWorld" width="1024" height="768" tabindex="0" autofocus></canvas>
-        <div>
-            <h4>Ambient light:</h4>
-            <label for="light-slider"></label>
-            <input id="light-slider" type="range" min="0" max="100" value="100" oninput="sliderChange()"/>
-        </div>
         <div>
             <h4>Collision boxes</h4>
             <label for="toggle-boxes"></label>

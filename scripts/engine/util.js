@@ -85,6 +85,9 @@ class Vec2 {
     constructor(x, y) {
         Object.assign(this, {x, y});
     }
+    netVelocity() {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
 }
 
 /**
@@ -103,4 +106,31 @@ class Padding {
     constructor(top = 0, right = 0, bottom = 0, left = 0) {
         Object.assign(this, {top, right, bottom, left});
     }
+}
+
+/**
+ * @param timeA
+ * @param timeB
+ * @returns {number} time in seconds between the two times.
+ */
+function timeInSecondsBetween(timeA, timeB) {
+    return Math.abs(timeA - timeB) / 1000;
+}
+
+/**
+ * Returns whether the entity should be drawn in the essence of performance.
+ * @param {Entity} entity the entity to check.
+ * @returns {boolean} true if should be drawn
+ */
+function shouldDraw(entity) {
+    return getDistance(entity.pos, doug.pos) < dontDrawDistance;
+}
+
+/**
+ * Returns whether the entity should be updated in the essence of performance.
+ * @param {Entity} entity the entity to check.
+ * @returns {boolean} true if should be updated
+ */
+function shouldUpdate(entity) {
+    return getDistance(entity.pos, doug.pos) < dontUpdateDistance;
 }

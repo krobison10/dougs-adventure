@@ -1,6 +1,9 @@
 "use strict";
 
-const NUM_LAYERS = 5;
+
+/**
+ * @author Chris Marriott
+ */
 class GameEngine {
     
     constructor(options) {
@@ -18,12 +21,16 @@ class GameEngine {
         this.keys = {};
 
         this.camera = new SceneManager(this);
-        this.addEntity(this.camera);
+        this.addEntity(this.camera, Layers.UI);
 
         // Options and the Details
         this.options = options || {
             debugging: false,
         }
+
+        this.fps = 0;
+        this.frameCount = 0;
+        this.startCount = Date.now();
     }
 
     init(ctx) {
@@ -103,32 +110,84 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-        // Draw the latest things first
-        for(let i = 0; i < NUM_LAYERS; i++ ) {
-            for (let j = this.entities[i].length - 1; j >= 0; j--) {
-                this.entities[i][j].draw(this.ctx, this);
-            }
-        }
+        //----Code to draw each layer individually for performance control----//
 
+        let i = Layers.BACKGROUND;
+        for (let j = this.entities[i].length - 1; j >= 0; j--) {
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
+        }
+        i = Layers.FOREGROUND;
+        for (let j = this.entities[i].length - 1; j >= 0; j--) {
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
+        }
+        i = Layers.LIGHTMAP;
+        for (let j = this.entities[i].length - 1; j >= 0; j--) {
+            this.entities[i][j].draw(this.ctx);
+        }
+        i = Layers.GLOWING_ENTITIES;
+        for (let j = this.entities[i].length - 1; j >= 0; j--) {
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
+        }
+        i = Layers.UI;
+        for (let j = this.entities[i].length - 1; j >= 0; j--) {
+            this.entities[i][j].draw(this.ctx);
+        }
     }
 
     /**
      * Updates all the entities then removes them if necessary.
      */
     update() {
-        for(let layer of this.entities) {
-            let entitiesCount = layer.length;
+        //----Code to draw each layer individually for performance control----//
 
-            layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
+        let layer = this.entities[Layers.BACKGROUND];
+        let entitiesCount = layer.length;
+        //No updates for background tiles until necessary
+        // for (let i = 0; i < entitiesCount; i++) {
+        //     let entity = layer[i];
+        // }
 
-            for (let i = 0; i < entitiesCount; i++) {
-                let entity = layer[i];
-                if (!entity.removeFromWorld) {
-                    entity.update();
-                }
+        layer = this.entities[Layers.FOREGROUND];
+        entitiesCount = layer.length;
+        //Sort entities by Y coord, backwards because of drawing oder in draw()
+        layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = layer[i];
+            if (!entity.removeFromWorld) {
+                entity.update();
             }
         }
 
+        layer = this.entities[Layers.LIGHTMAP];
+        entitiesCount = layer.length;
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = layer[i];
+            //Always update, lightmap will never be removed
+            entity.update();
+        }
+
+        layer = this.entities[Layers.GLOWING_ENTITIES];
+        entitiesCount = layer.length;
+        //Sort commented out until need to sort arises
+        //layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = layer[i];
+            if (!entity.removeFromWorld) {
+                entity.update();
+            }
+        }
+
+        layer = this.entities[Layers.UI];
+        entitiesCount = layer.length;
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = layer[i];
+            if (!entity.removeFromWorld) {
+                entity.update();
+            }
+        }
+
+
+        //Delete eligible entities
         for(let layer of this.entities) {
             for (let i = layer.length - 1; i >= 0; --i) {
                 if (layer[i].removeFromWorld) {
@@ -142,9 +201,20 @@ class GameEngine {
      * Basic functions to be executed for each frame.
      */
     loop() {
+        //Sets the focus of the canvas so that clicking it won't be required
+        this.ctx.canvas.focus();
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
+        this.countFPS();
     }
 
+    countFPS() {
+        this.frameCount++;
+        if(timeInSecondsBetween(Date.now(), this.startCount) >= 1) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.startCount = Date.now();
+        }
+    }
 }

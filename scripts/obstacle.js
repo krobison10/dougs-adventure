@@ -1,5 +1,10 @@
 'use strict'
 
+/**
+ * Represents an obstacle in the game world.
+ *
+ * @author Kyler Robison
+ */
 class Obstacle extends Entity {
     /**
      * Creates a new obstacle that represents a stationary, potentially collidable object in came
@@ -30,12 +35,19 @@ class Obstacle extends Entity {
 
         if(this.collidable) this.boundingBox.draw(ctx);
     }
+}
 
-    update() {
-        if(this.removeFromWorld) {
-            if(this.lightSource) {
-                lightMap.removeLightSource(this.lightSource);
-            }
-        }
+class InvisibleBorder extends Entity {
+    constructor(pos, size) {
+        super(pos, size);
+        pos.x = pos.x * TILE_SIZE;
+        pos.y = pos.y * TILE_SIZE;
+        size.w = size.w * TILE_SIZE;
+        size.h = size.h * TILE_SIZE;
+        this.boundingBox = Character.createBB(pos, size, new Padding(0, 0, 0 ,0));
+    }
+
+    draw(ctx) {
+        this.boundingBox.draw(ctx);
     }
 }

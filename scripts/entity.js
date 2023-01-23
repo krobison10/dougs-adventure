@@ -18,8 +18,16 @@ class Entity {
         }
         Object.assign(this, {pos, size});
 
+        /**
+         * Whether the entity should be removed from the world on the next update.
+         * @type {boolean}
+         */
         this.removeFromWorld = false;
     }
+
+    draw(ctx) {}
+
+    update() {}
 
     /**
      * @returns {Vec2} the center point of the entity
@@ -29,7 +37,7 @@ class Entity {
     }
 
     /**
-     * Returns the position of the entity on the screen, rather than it's true game location.
+     * Returns the position of the entity on the screen, rather than its true game location.
      * @returns {Vec2}
      */
     getScreenPos() {
