@@ -18,6 +18,7 @@ const lightMap = new LightMap();
 //Add paths of assets to be downloaded here
 declareAssets([
 	"sprites/blondie_spritesheet.png",
+	"sprites/bat_spritesheet.png",
 	"sprites/tree_00.png",
 	"sprites/grass_1.png",
 	"sprites/firepit.png",
@@ -36,14 +37,14 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.init(ctx);
 	gameEngine.start();
 });
-//ASSET_MANAGER.queueDownload("../sprites/bat_spritesheet.png");
-//let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("../sprites/bat_spritesheet.png"),
-//new Dimension(32, 32), new Padding(0, 0, 0, 0));
+
 let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
+let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"), 
+	new Dimension(32, 32), new Padding(0, 0, 0, 0));
 
 let hotbar;
 buildWorld();
