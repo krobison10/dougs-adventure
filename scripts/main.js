@@ -19,6 +19,7 @@ const lightMap = new LightMap();
 declareAssets([
 	"sprites/blondie_spritesheet.png",
 	"sprites/bat_spritesheet.png",
+	"sprites/slime01.png",
 	"sprites/tree_00.png",
 	"sprites/grass_1.png",
 	"sprites/firepit.png",
@@ -45,6 +46,9 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"), 
 	new Dimension(32, 32), new Padding(0, 0, 0, 0));
+
+let slime = new Slime(new Vec2(100,100), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+	new Dimension(180, 170), new Padding(0, 0, 0, 0));
 
 let hotbar;
 buildWorld();

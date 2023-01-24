@@ -1,12 +1,12 @@
 "use strict";
 
 /**
- * Represents the bat enemy.
+ * Represents the slime enemy.
  *
  * @author Cameron Lempitsky
  *
  */
-class Bat extends Enemy {
+class slime extends Enemy {
     /**
      * @param {Vec2} pos initial position of the bat.
      * @param {HTMLImageElement} spritesheet spritesheet of the bat.
@@ -40,7 +40,7 @@ class Bat extends Enemy {
     }
 
     /**
-     * Updates the bat for the frame.
+     * Updates the slime for the frame.
      */
     update() {
 
@@ -63,12 +63,13 @@ class Bat extends Enemy {
 
     }
     route() {
-        if (this.pos.x >= 200 && this.pos.y >= 200) {
+        let x = 200;
+        if (this.pos.x >= x && this.pos.y >= x) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
         }
 
-        if (this.pos.x >= 200 && this.pos.y <=0) {
+        if (this.pos.x >= x && this.pos.y <=0) {
             this.velocity.y = 0;
             this.velocity.x = -this.speed;
         }
@@ -78,35 +79,35 @@ class Bat extends Enemy {
             this.velocity.y = this.speed;
         }
 
-        if(this.pos.x <= 0 && this.pos.y >= 200) {
+        if(this.pos.x <= 0 && this.pos.y >= x) {
             this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
     }
     draw(ctx) {
 
+            this.drawAnim(ctx,this.animations[1]);
+        // if(this.velocity.x < 0) {//left
+        //     this.drawAnim(ctx, this.animations[7]);
+        //     this.directionMem = 1;
+        // }
+        // if(this.velocity.x > 0) {//right
+        //     this.drawAnim(ctx, this.animations[5]);
+        //     this.directionMem = 2;
+        // }
+        // if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+        //     this.drawAnim(ctx, this.animations[4]);
+        //     this.directionMem = 0;
+        // }
+        // if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+        //     this.drawAnim(ctx, this.animations[6]);
+        //     this.directionMem = 3;
+        // }
+        // if(this.velocity.y === 0 && this.velocity.x === 0) {
+        //     this.drawAnim(ctx, this.animations[5]);
+        // }
 
-        if(this.velocity.x < 0) {//left
-            this.drawAnim(ctx, this.animations[7]);
-            this.directionMem = 1;
-        }
-        if(this.velocity.x > 0) {//right
-            this.drawAnim(ctx, this.animations[5]);
-            this.directionMem = 2;
-        }
-        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
-            this.drawAnim(ctx, this.animations[4]);
-            this.directionMem = 0;
-        }
-        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
-            this.drawAnim(ctx, this.animations[6]);
-            this.directionMem = 3;
-        }
-        if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[5]);
-        }
-
-        this.boundingBox.draw(ctx);
+        //this.boundingBox.draw(ctx);
     }
 
      drawAnim(ctx, animator) {
