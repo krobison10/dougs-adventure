@@ -17,7 +17,7 @@ class Wolf extends Enemy {
         this.hitPoints = this.maxHitPoints;
         this.damage = damage;
 
-        this.speed = 200;
+        this.setSpeed();
         this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
@@ -27,6 +27,7 @@ class Wolf extends Enemy {
 
     update() {
         this.route();
+        this.setSpeed();
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -125,5 +126,13 @@ class Wolf extends Enemy {
             384, 288,                   //Start Positions
             64, 32,                     //Dimensions
             4, 0.2, 0, false, true);    //Frame Stats
+    }
+
+    setSpeed() {
+        if(lightMap.dayTime) {
+            this.speed = 100;
+        } else {
+            this.speed = 250;
+        }
     }
 }
