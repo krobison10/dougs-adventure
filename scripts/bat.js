@@ -12,6 +12,8 @@ class Bat extends Enemy {
      * @param {HTMLImageElement} spritesheet spritesheet of the bat.
      * @param {Dimension} size size of the bat.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
+     * @param {number} damage how much damage the entity deals to the player
+     * @param {number} hitPoints maximum health of the enemy.
      */
     constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
@@ -27,11 +29,6 @@ class Bat extends Enemy {
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
-        // for(let i = 0; i < 4; i++) {
-        //     this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
-        //         this.size.w, this.size.h,
-        //         1, 1, 0, false, true);
-        // }
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
@@ -43,13 +40,7 @@ class Bat extends Enemy {
      * Updates the bat for the frame.
      */
     update() {
-
-        //this.velocity.x = this.velocity.y = 0;
-        
         this.route();
-        /**
-         * Check for collision, we do two separate checks
-         */
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -59,9 +50,23 @@ class Bat extends Enemy {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
 
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+        // for(const entity of entities) {
+        //      if (entity instanceof Doug && this.boundingBox.collide(entity.boundingBox)) {
+        //          this.hitPoints = 0;
+        //     }
+        // }
+        if (this.hitPoints <= 0) {
+            
+            console.log("1");
+
+            this.removeFromWorld = true;
+        }
+
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
     }
+
     route() {
         let x = 200;
         if (this.pos.x >= x && this.pos.y >= x) {
@@ -84,6 +89,7 @@ class Bat extends Enemy {
             this.velocity.y = 0;
         }
     }
+
     draw(ctx) {
 
         //this.drawAnim(ctx, this.animations[7]);

@@ -93,10 +93,17 @@ class Slime extends Enemy {
     die() {
         if (this.hitPoints <= 0) {
             if (this.parent) {
+<<<<<<< HEAD
                 let slime = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
                     new Dimension(55, 37), new Padding(0, 15, 10, 5), 10, 100, false, .75)
                 let slime2 = new Slime(new Vec2(-7,-20), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
                     new Dimension(55, 37), new Padding(0, 15, 10, 5), 10, 100, false, .75)
+=======
+                let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+                    new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false, .75)
+                let slime2 = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+                    new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false, .75)
+>>>>>>> main
                 
                 let slime1Bar = new HealthBar(slime);
                 let slime2Bar = new HealthBar(slime2);

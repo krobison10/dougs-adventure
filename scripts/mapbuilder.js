@@ -5,7 +5,7 @@
  */
 class MapBuilder {
     /*Could be 150, will start will 100 * 128 makes for 12800 px wide map,
-        also need to be the same now because I wrote junk code that relies on a
+        also need to be square now because I think I wrote junk code that relies on a
         square map.
      */
     static width = 100;
@@ -18,7 +18,18 @@ class MapBuilder {
      * Adds all the background tiles as entities to the background layer of the game engine.
      */
     build() {
-        //Entities for that path
+        placeRandomTrees();
+        this.placePath();
+        this.placeGrassTiles();
+        placeBorderWallsAndTrees();
+    }
+
+    placePath() {
+        //Entities for the path
+        removeTreesFromArea(new BoundingBox(
+            new Vec2(-7 * TILE_SIZE, -200 * TILE_SIZE),
+            new Dimension(7 * TILE_SIZE, 400 * TILE_SIZE)));
+
         for(let i = -200; i < 200; i++) {
             gameEngine.addEntity(new BackgroundTile(new Vec2(-5, i),
                 new Dimension(16, 16),
@@ -30,7 +41,9 @@ class MapBuilder {
                 new Dimension(16, 16),
                 this.tilemap, new Vec2(2, 1)),  Layers.BACKGROUND);
         }
+    }
 
+    placeGrassTiles() {
         //Entities for the grass tiles
         for(let row = 0; row < MapBuilder.height; row++) {
             for(let col = 0; col < MapBuilder.width; col++) {
@@ -38,10 +51,9 @@ class MapBuilder {
                     new Dimension(128, 128)),  Layers.BACKGROUND);
             }
         }
-
-        addBorderWalls();
     }
 }
+
 
 class GrassTile extends Entity {
     constructor(pos, size) {
@@ -56,7 +68,89 @@ class GrassTile extends Entity {
     }
 }
 
-function addBorderWalls() {
+function placeRandomTrees() {
+    const numTrees = 2500;
+    const numGrass = 1000;
+    const trees = [];
+    const grass = [];
+
+    const edgeBuffer = 20;
+    const grassTileSize = 4;
+    let rightBound = (MapBuilder.width * grassTileSize / 2 - edgeBuffer) * TILE_SIZE;
+    const leftBound = -rightBound;
+    rightBound -= 50;
+    let bottomBound = (MapBuilder.height * grassTileSize / 2 - edgeBuffer) * TILE_SIZE;
+    const topBound = -bottomBound;
+    bottomBound -= 100;
+
+    for(let i = 0; i < numTrees; i++) {
+        let newTree;
+        let valid = false;
+        do {
+            //Create potential tree
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newTree = {
+                box: new BoundingBox(new Vec2(x, y), new Dimension(467 / 5, 627 / 5)),
+                remove: false
+            }
+
+            valid = true;
+            //check among others
+            for(let tree of trees) {
+                if(newTree.box.collide(tree.box)) {
+                    valid = false;
+                }
+            }
+        } while(!valid)
+        trees.push(newTree);
+    }
+
+
+    for(let i = 0; i < numGrass; i++) {
+        let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+        let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+        //Grass size
+        //grass.push(Character.createBB(new Vec2(x, y), new Dimension(467/5, 627/5), new Padding()));
+    }
+
+    //Place grass, remove grass that overlaps with other trees or grass
+
+    //Add these trees to the actual engine with correct bounding boxes
+    trees.forEach(tree => {
+        const realTree = new Obstacle(
+            tree.box.pos,
+            new Dimension(467/5, 627/5),
+            ASSET_MANAGER.getAsset("sprites/tree_00.png"),
+            true,
+            null,
+            new Vec2(0, 0),
+            new Dimension(467, 627)
+        );
+        realTree.boundingBox =
+            Character.createBB(realTree.pos, realTree.size, new Padding(50, 20, 0 ,20));
+        gameEngine.addEntity(realTree);
+    })
+
+    //remove trees from certain areas using new function
+    let bb = new BoundingBox(
+        new Vec2(-10 * TILE_SIZE, -10 * TILE_SIZE),
+        new Dimension(30 * TILE_SIZE, 20 * TILE_SIZE));
+    removeTreesFromArea(bb);
+}
+
+function removeTreesFromArea(boundingBox) {
+    for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
+        if(entity.spritesheet === ASSET_MANAGER.getAsset("sprites/tree_00.png")
+            && boundingBox.collide(entity.boundingBox)) {
+
+            entity.removeFromWorld = true;
+        }
+    }
+}
+
+
+function placeBorderWallsAndTrees() {
     //Distance to place border wall from edge in terms of tiles
     const edgeBuffer = 20;
     const segmentSize = 12;
