@@ -48,9 +48,10 @@ let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_sprite
 	new Dimension(32, 32), new Padding(10, -15, 0, 5));
 
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-	new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, true, 1.5);
+	new Dimension(55, 37), new Padding(0, -20, -20, 5), 15, 150, true, 1.5);
 
-let healthBar = new HealthBar(slime);
+let slimeHealthBar = new HealthBar(slime);
+let batHealthBar = new HealthBar(bat);
 
 let hotbar;
 buildWorld();
@@ -59,8 +60,9 @@ buildUI();
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(bat);
+gameEngine.addEntity(batHealthBar);
 gameEngine.addEntity(slime);
-gameEngine.addEntity(healthBar,4);
+gameEngine.addEntity(slimeHealthBar,4);
 
 
 
