@@ -15,6 +15,7 @@ const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();
 
+
 //Add paths of assets to be downloaded here
 declareAssets([
 	"sprites/blondie_spritesheet.png",
@@ -39,7 +40,12 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.start();
 });
 
-let doug = new Doug(new Vec2(-140, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
+
+
+//------ Build Game ------//
+
+const spawnPoint = new Vec2(-140, 0);
+let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
@@ -67,28 +73,11 @@ gameEngine.addEntity(slimeHealthBar,4);
 
 
 
+//------ Functions ------//
+
 function buildWorld() {
 	//Background tiles, border walls and border trees
 	new MapBuilder().build();
-
-	//Random trees near spawn
-	makeTree(new Vec2(3, 8));
-	makeTree(new Vec2(21, -3));
-	makeTree(new Vec2(20, -12));
-	makeTree(new Vec2(-13, -16));
-	makeTree(new Vec2(-19, -1));
-	makeTree(new Vec2(11, -7));
-	makeTree(new Vec2(-12, 11));
-	makeTree(new Vec2(5, -11));
-	makeTree(new Vec2(-13, -5));
-	makeTree(new Vec2(18, 3));
-	makeTree(new Vec2(13, 11));
-	makeTree(new Vec2(6, 10));
-	//makeTree(new Vec2(4, 1));
-	makeTree(new Vec2(5, 15));
-	makeTree(new Vec2(10, 6));
-	makeTree(new Vec2(-1, -6));
-	makeTree(new Vec2(-10, 2));
 
 	//Torch line along path
 	placeTorches();
@@ -129,25 +118,10 @@ function buildUI() {
 }
 
 function placeTorches() {
-	for(let y = 45; y >= -45; y -= 6) {
+	for(let y = 180; y >= -180; y -= 6) {
 		gameEngine.addEntity(new Torch(new Vec2(-6.5 * TILE_SIZE, y * TILE_SIZE)));
 		gameEngine.addEntity(new Torch(new Vec2(-1.5 * TILE_SIZE, (y - 3) * TILE_SIZE)));
 	}
-}
-
-function makeTree(pos) {
-	let tree1 = new Obstacle(
-		new Vec2(pos.x * TILE_SIZE, pos.y * TILE_SIZE),
-		new Dimension(467/5, 627/5),
-		ASSET_MANAGER.getAsset("sprites/tree_00.png"),
-		true,
-		null,
-		new Vec2(0, 0),
-		new Dimension(467, 627)
-	);
-	tree1.boundingBox = Character.createBB(tree1.pos, tree1.size, new Padding(50, 20, 0 ,20));
-
-	gameEngine.addEntity(tree1);
 }
 
 function declareAssets(paths) {
