@@ -5,7 +5,7 @@
  */
 class MapBuilder {
     /*Could be 150, will start will 100 * 128 makes for 12800 px wide map,
-        also need to be the same now because I wrote junk code that relies on a
+        also need to be square now because I think I wrote junk code that relies on a
         square map.
      */
     static width = 100;
@@ -20,12 +20,12 @@ class MapBuilder {
     build() {
         placeRandomTrees();
         this.placePath();
-        this.placeGrass();
+        this.placeGrassTiles();
         placeBorderWallsAndTrees();
     }
 
     placePath() {
-        //Entities for that path
+        //Entities for the path
         removeTreesFromArea(new BoundingBox(
             new Vec2(-7 * TILE_SIZE, -200 * TILE_SIZE),
             new Dimension(7 * TILE_SIZE, 400 * TILE_SIZE)));
@@ -43,7 +43,7 @@ class MapBuilder {
         }
     }
 
-    placeGrass() {
+    placeGrassTiles() {
         //Entities for the grass tiles
         for(let row = 0; row < MapBuilder.height; row++) {
             for(let col = 0; col < MapBuilder.width; col++) {
@@ -52,9 +52,7 @@ class MapBuilder {
             }
         }
     }
-
 }
-
 
 
 class GrassTile extends Entity {
@@ -131,15 +129,13 @@ function placeRandomTrees() {
         );
         realTree.boundingBox =
             Character.createBB(realTree.pos, realTree.size, new Padding(50, 20, 0 ,20));
-
         gameEngine.addEntity(realTree);
-        console.log("add");
     })
 
     //remove trees from certain areas using new function
     let bb = new BoundingBox(
-        new Vec2(-6 * TILE_SIZE, -6 * TILE_SIZE),
-        new Dimension(26 * TILE_SIZE, 12 * TILE_SIZE));
+        new Vec2(-10 * TILE_SIZE, -10 * TILE_SIZE),
+        new Dimension(30 * TILE_SIZE, 20 * TILE_SIZE));
     removeTreesFromArea(bb);
 }
 
