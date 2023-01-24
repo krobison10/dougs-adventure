@@ -49,22 +49,25 @@ class Slime extends Enemy {
         
         this.route();
 
-        this.pos.x += this.velocity.x * gameEngine.clockTick;
-        this.pos.y += this.velocity.y * gameEngine.clockTick;
-
+        
 
         /**
          * Check for collision, we do two separate checks
          */
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
-
+        if(!collisionLat) {
+            this.pos.x += this.velocity.x * gameEngine.clockTick;
+        }
+        if(!collisionVert) {
+            this.pos.y += this.velocity.y * gameEngine.clockTick;
+        }
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
     }
     route() {
-        let x = 200;
+        let x = 120;
         if (this.pos.x >= x && this.pos.y >= x) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
@@ -108,7 +111,7 @@ class Slime extends Enemy {
             this.drawAnim(ctx, this.animations[1]);
         }
 
-        //this.boundingBox.draw(ctx);
+        this.boundingBox.draw(ctx);
     }
 
      drawAnim(ctx, animator) {

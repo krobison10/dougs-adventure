@@ -33,7 +33,7 @@ class Bat extends Enemy {
         //         1, 1, 0, false, true);
         // }
         for(let i = 0; i < 4; i++) {
-            this.animations[i + 4] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
+            this.animations[i] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
                 3, .1, 0, false, true);
         }
@@ -47,17 +47,17 @@ class Bat extends Enemy {
         //this.velocity.x = this.velocity.y = 0;
         
         this.route();
-
-        this.pos.x += this.velocity.x * gameEngine.clockTick;
-        this.pos.y += this.velocity.y * gameEngine.clockTick;
-
-
         /**
          * Check for collision, we do two separate checks
          */
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
-
+        if(!collisionLat) {
+            this.pos.x += this.velocity.x * gameEngine.clockTick;
+        }
+        if(!collisionVert) {
+            this.pos.y += this.velocity.y * gameEngine.clockTick;
+        }
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
@@ -89,23 +89,23 @@ class Bat extends Enemy {
         //this.drawAnim(ctx, this.animations[7]);
 
         if(this.velocity.x < 0) {//left
-            this.drawAnim(ctx, this.animations[7]);
+            this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 1;
         }
         if(this.velocity.x > 0) {//right
-            this.drawAnim(ctx, this.animations[5]);
+            this.drawAnim(ctx, this.animations[1]);
             this.directionMem = 2;
         }
         if(this.velocity.y > 0 && this.velocity.x === 0) {//down
-            this.drawAnim(ctx, this.animations[4]);
+            this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 0;
         }
         if(this.velocity.y < 0 && this.velocity.x === 0) {//up
-            this.drawAnim(ctx, this.animations[6]);
+            this.drawAnim(ctx, this.animations[2]);
             this.directionMem = 3;
         }
         if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[5]);
+            this.drawAnim(ctx, this.animations[3]);
         }
 
         this.boundingBox.draw(ctx);
