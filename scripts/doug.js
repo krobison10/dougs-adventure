@@ -10,7 +10,7 @@ class Doug extends Character {
      * Delay in seconds before health regen will begin
      * @type {number}
      */
-    static regenDelay = 1;
+    static regenDelay = 10;
     /**
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
@@ -158,7 +158,7 @@ class Doug extends Character {
             this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
         }
 
-        /**
+        /*
          * Check for collision with an obstacle, we do two separate checks so that if a player is colliding in one axis
          * they can still possibly be able to move on the other axis.
          */
@@ -175,21 +175,13 @@ class Doug extends Character {
         const entities = gameEngine.entities[Layers.FOREGROUND];
             for(const entity of entities) {
                  if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
-                     this.takeDamage(entity.damage)                     
+                     this.takeDamage(entity.damage);
             }
         }
 
-        
-            
-        
-
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-        //handling collisions between doug and all other types of entities
-        //just have 
-        
 
         this.regen();
-
         this.updateDebug();
     }
 

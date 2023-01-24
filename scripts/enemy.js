@@ -4,6 +4,8 @@ class Enemy extends Character {
      * @param {Dimension} size size of the sprite.
      * @param {HTMLImageElement} spritesheet spritesheet of the enemy.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
+     * @param {number} damage how much damage the entity deals to the player
+     * @param {number} hitPoints maximum health of the enemy.
      */
     constructor(pos, spritesheet, size, spritePadding = new Padding(), damage, hitPoints) {
         super(pos, spritesheet, size, spritePadding);
@@ -12,14 +14,6 @@ class Enemy extends Character {
         }
         Object.assign(this, {damage, hitPoints});
 
-    }
-
-    /**
-     * Executes updates that should occur each frame.
-     * @abstract
-     */
-    update() {
-        console.error("Method is abstract, must be implemented in subclass");
     }
 
     /**

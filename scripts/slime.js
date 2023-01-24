@@ -27,33 +27,19 @@ class Slime extends Enemy {
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
-        // for(let i = 0; i < 4; i++) {
-        //     this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
-        //         this.size.w, this.size.h,
-        //         1, 1, 0, false, true);
-        // }
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, 13, i * this.size.h + 8,
                 this.size.w, this.size.h,
                 3, .5, 0, false, true);
         }
-        
     }
 
     /**
      * Updates the slime for the frame.
      */
     update() {
-
-        //this.velocity.x = this.velocity.y = 0;
-        
         this.route();
 
-        
-
-        /**
-         * Check for collision, we do two separate checks
-         */
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -64,7 +50,6 @@ class Slime extends Enemy {
         }
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-
     }
     route() {
         let x = 120;
