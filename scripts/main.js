@@ -44,8 +44,8 @@ ASSET_MANAGER.downloadAll(() => {
 
 //------ Build Game ------//
 
-
-let doug = new Doug(new Vec2(-140, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
+const spawnPoint = new Vec2(-140, 0);
+let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
