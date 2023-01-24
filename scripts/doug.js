@@ -15,7 +15,7 @@ class Doug extends Character {
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
      */
-    static immunityDuration = 0.2
+    static immunityDuration = 0.2;
     /**
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
@@ -51,12 +51,12 @@ class Doug extends Character {
          * The maximum hit points of doug
          * @type {number}
          */
-        this.maxHitPoints = 400;
+        this.maxHitPoints = 100;
         /**
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
-        this.hitPoints = 400;
+        this.hitPoints = 100;
         /**
          * The time of the last health regeneration frame.
          * @type {number}
@@ -81,12 +81,12 @@ class Doug extends Character {
          * The maximum mana level of doug.
          * @type {number}
          */
-        this.maxMana = 200;
+        this.maxMana = 20;
         /**
          * The current mana level of doug.
          * @type {number}
          */
-        this.manaLevel = 190;
+        this.manaLevel = 20;
         /**
          * The time of the last mana regeneration frame.
          * @type {number}
@@ -158,12 +158,12 @@ class Doug extends Character {
             this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
         }
 
-        /**
-         * Check for collision, we do two separate checks so that if a player is colliding in one axis
+        /*
+         * Check for collision with an obstacle, we do two separate checks so that if a player is colliding in one axis
          * they can still possibly be able to move on the other axis.
          */
         const collisionLat = this.checkCollide("lateral");
-        const collisionVert = this.checkCollide("vertical")
+        const collisionVert = this.checkCollide("vertical");
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
         }
@@ -171,10 +171,17 @@ class Doug extends Character {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
 
+
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+            for(const entity of entities) {
+                 if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
+                     this.takeDamage(entity.damage);
+            }
+        }
+
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
         this.regen();
-
         this.updateDebug();
     }
 
@@ -236,7 +243,7 @@ class Doug extends Character {
     }
 
     respawn() {
-        this.pos = new Vec2(0, 0);
+        this.pos = new Vec2(spawnPoint.x, spawnPoint.y);
         this.dead = false;
         this.hitPoints = this.maxHitPoints;
         this.manaLevel = this.maxMana;

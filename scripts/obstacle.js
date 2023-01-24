@@ -37,14 +37,14 @@ class Obstacle extends Entity {
     }
 }
 
-class InvisibleBorder extends Entity {
+class InvisibleBorder extends Obstacle {
     constructor(pos, size) {
-        super(pos, size);
+        super(pos, size, null, true, null, null, null);
         pos.x = pos.x * TILE_SIZE;
         pos.y = pos.y * TILE_SIZE;
         size.w = size.w * TILE_SIZE;
         size.h = size.h * TILE_SIZE;
-        this.boundingBox = Character.createBB(pos, size, new Padding(0, 0, 0 ,0));
+        this.boundingBox = new BoundingBox(pos, size);
     }
 
     draw(ctx) {
