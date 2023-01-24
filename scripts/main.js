@@ -39,16 +39,19 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.start();
 });
 
-let doug = new Doug(new Vec2(0, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
+let doug = new Doug(new Vec2(-140, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
-let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"), 
+let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
 	new Dimension(32, 32), new Padding(10, -15, 0, 5));
 
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-	new Dimension(55, 37), new Padding(0, -20, -20, 5));
+	new Dimension(55, 37), new Padding(0, -20, -20, 5), 15, 150, true, 1.5);
+
+let slimeHealthBar = new HealthBar(slime);
+let batHealthBar = new HealthBar(bat);
 
 let hotbar;
 buildWorld();
@@ -57,7 +60,9 @@ buildUI();
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(bat);
+gameEngine.addEntity(batHealthBar);
 gameEngine.addEntity(slime);
+gameEngine.addEntity(slimeHealthBar,4);
 
 
 
