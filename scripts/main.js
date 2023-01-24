@@ -57,11 +57,8 @@ let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_sprite
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
 	new Dimension(55, 37), new Padding(0, -20, -20, 5));
 
-let wolfVertical = new Wolf(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.pn"),
+let wolf = new Wolf(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
 	new Dimension(32, 64), new Padding(10, -15, 0, 5));
-	
-let wolfHorizontal = new Wolf(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.pn"),
-	new Dimension(64, 32), new Padding(10, -15, 0, 5));
 
 let hotbar;
 buildWorld();
@@ -71,8 +68,7 @@ gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(bat);
 gameEngine.addEntity(slime);
-gameEngine.addEntity(wolfVertical);
-gameEngine.addEntity(wolfHorizontal);
+gameEngine.addEntity(wolf);
 
 
 
