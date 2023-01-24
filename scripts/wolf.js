@@ -10,6 +10,8 @@ class Wolf extends Enemy {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
         this.animations = [];
 
+        this.xStart = pos.x;
+        this.yStart = pos.y;
         this.maxHitPoints = hitPoints;
 
         this.hitPoints = this.maxHitPoints;
@@ -62,28 +64,31 @@ class Wolf extends Enemy {
     }
 
     route() {
-        let x = 200;
+        let xMax = 200;
+        let xMin = 100;
+        let yMax = 200;
+        let yMin = -100;
         
         //Bottom right
-        if (this.pos.x >= x && this.pos.y >= x) {
+        if (this.pos.x >= xMax && this.pos.y >= yMax) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
         }
         
         //Top Right
-        if (this.pos.x >= x && this.pos.y <=0) {
+        if (this.pos.x >= xMax && this.pos.y <= yMin) {
             this.velocity.y = 0;
             this.velocity.x = -this.speed;
         }
 
         //Top Left
-        if (this.pos.x <= 0 && this.pos.y <= 0) {
+        if (this.pos.x <= xMin && this.pos.y <= yMin) {
             this.velocity.x = 0;
             this.velocity.y = this.speed;
         }
 
         //Bottom Left
-        if(this.pos.x <= 0 && this.pos.y >= x) {
+        if(this.pos.x <= xMin && this.pos.y >= yMax) {
             this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
