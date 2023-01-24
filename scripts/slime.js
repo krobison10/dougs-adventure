@@ -7,20 +7,23 @@
  *
  */
 class Slime extends Enemy {
+    //static parent = TRUE;
+
     /**
-     * @param {Vec2} pos initial position of the bat.
-     * @param {HTMLImageElement} spritesheet spritesheet of the bat.
-     * @param {Dimension} size size of the bat.
+     * @param {Vec2} pos initial position of the slime.
+     * @param {HTMLImageElement} spritesheet spritesheet of the slime.
+     * @param {Dimension} size size of the slime.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
+    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints, parent, scale) {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+        Object.assign(this, {parent, scale});
         this.animations = [];
-
+       // this.gameEngine = gameEngine;
         this.maxHitPoints = 100;
 
-        this.hitPoints = 100;
-        this.damage = 10;
+        //this.hitPoints = 100;
+        //dthis.damage = 10;
 
         this.speed = 250;
         this.velocity = new Vec2(0,0);
@@ -42,13 +45,31 @@ class Slime extends Enemy {
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
+       // var that = this;
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+        for(const entity of entities) {
+             if (entity instanceof Doug && this.boundingBox.collide(entity.boundingBox)) {
+                 this.hitPoints -= 3;
+            }
+        }
+        if (this.hitPoints <= 0) {
+            if (this.parent) {
+                let slime = new Slime(new Vec2(0,0), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+                    new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false, .75)
+                    let slime2 = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+                    new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false, .75)
+                gameEngine.addEntity(slime);
+                gameEngine.addEntity(slime2);
+            }
+            
+            this.removeFromWorld = true;
+        }
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
     route() {
@@ -100,6 +121,6 @@ class Slime extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, this.scale);
      }
 }

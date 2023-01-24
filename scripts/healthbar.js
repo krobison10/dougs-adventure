@@ -44,6 +44,10 @@ class HealthBar extends Entity {
 
         ctx.strokeRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h,
             this.size.w * healthLevel, this.size.h);
+
+        if (this.agent.hitPoints <= 0) {
+            this.removeFromWorld = true;
+        }
     }
 }
 
