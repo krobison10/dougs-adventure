@@ -15,7 +15,7 @@ class Doug extends Character {
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
      */
-    static immunityDuration = 0.2
+    static immunityDuration = 0.75;
     /**
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
@@ -158,12 +158,12 @@ class Doug extends Character {
             this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
         }
 
-        /**
-         * Check for collision, we do two separate checks so that if a player is colliding in one axis
+        /*
+         * Check for collision with an obstacle, we do two separate checks so that if a player is colliding in one axis
          * they can still possibly be able to move on the other axis.
          */
         const collisionLat = this.checkCollide("lateral");
-        const collisionVert = this.checkCollide("vertical")
+        const collisionVert = this.checkCollide("vertical");
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
         }
@@ -171,10 +171,17 @@ class Doug extends Character {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
 
+
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+            for(const entity of entities) {
+                 if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
+                     this.takeDamage(entity.damage);
+            }
+        }
+
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
         this.regen();
-
         this.updateDebug();
     }
 
