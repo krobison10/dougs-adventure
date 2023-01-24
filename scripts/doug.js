@@ -51,12 +51,12 @@ class Doug extends Character {
          * The maximum hit points of doug
          * @type {number}
          */
-        this.maxHitPoints = 400;
+        this.maxHitPoints = 100;
         /**
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
-        this.hitPoints = 400;
+        this.hitPoints = 100;
         /**
          * The time of the last health regeneration frame.
          * @type {number}
@@ -81,12 +81,12 @@ class Doug extends Character {
          * The maximum mana level of doug.
          * @type {number}
          */
-        this.maxMana = 200;
+        this.maxMana = 20;
         /**
          * The current mana level of doug.
          * @type {number}
          */
-        this.manaLevel = 190;
+        this.manaLevel = 20;
         /**
          * The time of the last mana regeneration frame.
          * @type {number}
