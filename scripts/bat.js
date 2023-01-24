@@ -22,20 +22,20 @@ class Bat extends Enemy {
         this.hitPoints = 100;
         this.damage = 10;
 
-        this.speed = 250;
+        this.speed = 200;
         this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
-        for(let i = 0; i < 4; i++) {
-            this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
-                this.size.w, this.size.h,
-                1, 1, 0, false, true);
-        }
+        // for(let i = 0; i < 4; i++) {
+        //     this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
+        //         this.size.w, this.size.h,
+        //         1, 1, 0, false, true);
+        // }
         for(let i = 0; i < 4; i++) {
             this.animations[i + 4] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
-                2, .1, 0, false, true);
+                3, .1, 0, false, true);
         }
     }
 
@@ -46,7 +46,7 @@ class Bat extends Enemy {
 
         //this.velocity.x = this.velocity.y = 0;
         
-        //this.route();
+        this.route();
 
         this.pos.x += this.velocity.x * gameEngine.clockTick;
         this.pos.y += this.velocity.y * gameEngine.clockTick;
@@ -63,12 +63,13 @@ class Bat extends Enemy {
 
     }
     route() {
-        if (this.pos.x >= 200 && this.pos.y >= 200) {
+        let x = 200;
+        if (this.pos.x >= x && this.pos.y >= x) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
         }
 
-        if (this.pos.x >= 200 && this.pos.y <=0) {
+        if (this.pos.x >= x && this.pos.y <=0) {
             this.velocity.y = 0;
             this.velocity.x = -this.speed;
         }
@@ -78,13 +79,14 @@ class Bat extends Enemy {
             this.velocity.y = this.speed;
         }
 
-        if(this.pos.x <= 0 && this.pos.y >= 200) {
+        if(this.pos.x <= 0 && this.pos.y >= x) {
             this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
     }
     draw(ctx) {
 
+        //this.drawAnim(ctx, this.animations[7]);
 
         if(this.velocity.x < 0) {//left
             this.drawAnim(ctx, this.animations[7]);

@@ -47,8 +47,8 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"), 
 	new Dimension(32, 32), new Padding(0, 0, 0, 0));
 
-let slime = new Slime(new Vec2(100,100), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-	new Dimension(180, 170), new Padding(0, 0, 0, 0));
+let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+	new Dimension(55, 37), new Padding(0, 0, 0, 0));
 
 let hotbar;
 buildWorld();
@@ -57,6 +57,8 @@ buildUI();
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(bat);
+gameEngine.addEntity(slime);
+
 
 
 
@@ -65,23 +67,23 @@ function buildWorld() {
 	new MapBuilder().build();
 
 	//Random trees near spawn
-	makeTree(new Vec2(3, 8));
-	makeTree(new Vec2(21, -3));
-	makeTree(new Vec2(20, -12));
-	makeTree(new Vec2(-13, -16));
-	makeTree(new Vec2(-19, -1));
-	makeTree(new Vec2(11, -7));
-	makeTree(new Vec2(-12, 11));
-	makeTree(new Vec2(5, -11));
-	makeTree(new Vec2(-13, -5));
-	makeTree(new Vec2(18, 3));
-	makeTree(new Vec2(13, 11));
-	makeTree(new Vec2(6, 10));
-	makeTree(new Vec2(4, 1));
-	makeTree(new Vec2(5, 15));
-	makeTree(new Vec2(10, 6));
-	makeTree(new Vec2(-1, -6));
-	makeTree(new Vec2(-10, 2));
+	// makeTree(new Vec2(3, 8));
+	// makeTree(new Vec2(21, -3));
+	// makeTree(new Vec2(20, -12));
+	// makeTree(new Vec2(-13, -16));
+	// makeTree(new Vec2(-19, -1));
+	// makeTree(new Vec2(11, -7));
+	// makeTree(new Vec2(-12, 11));
+	// makeTree(new Vec2(5, -11));
+	// makeTree(new Vec2(-13, -5));
+	// makeTree(new Vec2(18, 3));
+	// makeTree(new Vec2(13, 11));
+	// makeTree(new Vec2(6, 10));
+	// makeTree(new Vec2(4, 1));
+	// makeTree(new Vec2(5, 15));
+	// makeTree(new Vec2(10, 6));
+	// makeTree(new Vec2(-1, -6));
+	// makeTree(new Vec2(-10, 2));
 
 	//Torch line along path
 	placeTorches();

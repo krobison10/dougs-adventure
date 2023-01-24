@@ -6,7 +6,7 @@
  * @author Cameron Lempitsky
  *
  */
-class slime extends Enemy {
+class Slime extends Enemy {
     /**
      * @param {Vec2} pos initial position of the bat.
      * @param {HTMLImageElement} spritesheet spritesheet of the bat.
@@ -27,16 +27,17 @@ class slime extends Enemy {
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
+        // for(let i = 0; i < 4; i++) {
+        //     this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
+        //         this.size.w, this.size.h,
+        //         1, 1, 0, false, true);
+        // }
         for(let i = 0; i < 4; i++) {
-            this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
+            this.animations[i] = new Animator(this.spritesheet, 13, i * this.size.h + 8,
                 this.size.w, this.size.h,
-                1, 1, 0, false, true);
+                3, .5, 0, false, true);
         }
-        for(let i = 0; i < 4; i++) {
-            this.animations[i + 4] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
-                this.size.w, this.size.h,
-                2, .1, 0, false, true);
-        }
+        
     }
 
     /**
@@ -46,7 +47,7 @@ class slime extends Enemy {
 
         //this.velocity.x = this.velocity.y = 0;
         
-        //this.route();
+        this.route();
 
         this.pos.x += this.velocity.x * gameEngine.clockTick;
         this.pos.y += this.velocity.y * gameEngine.clockTick;
@@ -86,26 +87,26 @@ class slime extends Enemy {
     }
     draw(ctx) {
 
-            this.drawAnim(ctx,this.animations[1]);
-        // if(this.velocity.x < 0) {//left
-        //     this.drawAnim(ctx, this.animations[7]);
-        //     this.directionMem = 1;
-        // }
-        // if(this.velocity.x > 0) {//right
-        //     this.drawAnim(ctx, this.animations[5]);
-        //     this.directionMem = 2;
-        // }
-        // if(this.velocity.y > 0 && this.velocity.x === 0) {//down
-        //     this.drawAnim(ctx, this.animations[4]);
-        //     this.directionMem = 0;
-        // }
-        // if(this.velocity.y < 0 && this.velocity.x === 0) {//up
-        //     this.drawAnim(ctx, this.animations[6]);
-        //     this.directionMem = 3;
-        // }
-        // if(this.velocity.y === 0 && this.velocity.x === 0) {
-        //     this.drawAnim(ctx, this.animations[5]);
-        // }
+            //this.drawAnim(ctx, this.animations[2]);
+        if(this.velocity.x < 0) {//left
+            this.drawAnim(ctx, this.animations[0]);
+            this.directionMem = 1;
+        }
+        if(this.velocity.x > 0) {//right
+            this.drawAnim(ctx, this.animations[3]);
+            this.directionMem = 2;
+        }
+        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+            this.drawAnim(ctx, this.animations[1]);
+            this.directionMem = 0;
+        }
+        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+            this.drawAnim(ctx, this.animations[2]);
+            this.directionMem = 3;
+        }
+        if(this.velocity.y === 0 && this.velocity.x === 0) {
+            this.drawAnim(ctx, this.animations[1]);
+        }
 
         //this.boundingBox.draw(ctx);
     }
