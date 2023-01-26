@@ -1,3 +1,9 @@
+/**
+ * Represents the bear enemy.
+ *
+ * @author Alay Kidane
+ *
+ */
 class BearBoss extends Enemy {
     /**
      * Creates a new bear boss that represents a stationary, potentially collidable object in came
@@ -10,20 +16,13 @@ class BearBoss extends Enemy {
      * @param {Dimension} sheetSize the size of the sprite in the spritesheet.
      */
     
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints, canvasWidth, canvasHeight) {
+    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
 
-    
-        this.canvasWidth = canvasWidth;
-    this.canvasHeight = canvasHeight;
-
         this.animations = [];
-
-        this.maxHitPoints = 100;
-
-        this.hitPoints = 100;
-        this.damage = 50;
-
+        this.maxHitPoints = hitPoints;
+        this.hitPoints = hitPoints;
+        this.damage = damage;
         this.speed = 75;
         this.velocity = new Vec2(0, -this.speed);
         this.direction = "up";
@@ -43,6 +42,8 @@ class BearBoss extends Enemy {
         this.animations["left"] = new Animator(this.spritesheet, 0, this.size.h * 2, this.size.w, this.size.h, 3, 0.1, 0, false, true);
         this.animations["right"] = new Animator(this.spritesheet, 0, this.size.h * 3, this.size.w, this.size.h, 3, 0.1, 0, false, true);
     }
+
+    
 
     update() {
         // Move the boss in the direction it is facing
