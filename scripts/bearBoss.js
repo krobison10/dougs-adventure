@@ -82,12 +82,6 @@ class BearBoss extends Enemy {
             this.direction = "left";
         }
 
-        //new
-
-
-
-        //
-
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
