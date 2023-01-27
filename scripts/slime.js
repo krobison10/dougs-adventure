@@ -12,8 +12,12 @@ class Slime extends Enemy {
     /**
      * @param {Vec2} pos initial position of the slime.
      * @param {HTMLImageElement} spritesheet spritesheet of the slime.
-     * @param {Dimension} size size of the slime.
+     * @param {Dimension} size size of the slime in the spritesheet.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
+     * @param {damage} damage represents the damage of the slime
+     * @param {hitPoints} hitPoints represenets the heath of the slime
+     * @param {parent} parent is boolean true if this is the parent slime that spawn 2 little slimes. little slimes are false
+     * @param {scale} scale of the slime in the game small slimes are .5 of the big slime
      */
     constructor(pos, spritesheet, size, spritePadding, damage, hitPoints, parent, scale) {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
@@ -51,12 +55,7 @@ class Slime extends Enemy {
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-        // const entities = gameEngine.entities[Layers.FOREGROUND];
-        // for(const entity of entities) {
-        //      if (entity instanceof Doug && this.boundingBox.collide(entity.boundingBox)) {
-        //          this.hitPoints -= 3;
-        //     }
-        // }
+       
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
@@ -93,17 +92,14 @@ class Slime extends Enemy {
     die() {
         if (this.hitPoints <= 0) {
             if (this.parent) {
-<<<<<<< HEAD
+                //this.pos.x+1,this.pos.y
+                //(-3,-3)
                 let slime = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
                     new Dimension(55, 37), new Padding(0, 15, 10, 5), 10, 100, false, .75)
-                let slime2 = new Slime(new Vec2(-7,-20), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+                let slime2 = new Slime(new Vec2(-9,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
                     new Dimension(55, 37), new Padding(0, 15, 10, 5), 10, 100, false, .75)
-=======
-                let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-                    new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false, .75)
-                let slime2 = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-                    new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false, .75)
->>>>>>> main
+                    
+                slime
                 
                 let slime1Bar = new HealthBar(slime);
                 let slime2Bar = new HealthBar(slime2);
@@ -112,6 +108,7 @@ class Slime extends Enemy {
                 gameEngine.addEntity(slime2);
                 gameEngine.addEntity(slime1Bar);
                 gameEngine.addEntity(slime2Bar);
+                
             }
             
             this.removeFromWorld = true;
