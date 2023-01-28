@@ -58,7 +58,7 @@ let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01
 	new Dimension(55, 37), new Padding(0, -20, -20, 5));
 
 let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
-	new Dimension(32, 64), new Padding(10, -15, 0, 5));
+	new Dimension(32, 64), new Padding(10, -15, 0, 5), 40, 150);
 
 let hotbar;
 buildWorld();
