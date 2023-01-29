@@ -207,6 +207,7 @@ class GameEngine {
         this.update();
         this.draw();
         this.countFPS();
+        this.click = null;
     }
 
     countFPS() {

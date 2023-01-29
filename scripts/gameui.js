@@ -375,4 +375,11 @@ class UIText extends Entity{
     update() {
         this.updateFn();
     }
+
+    static drawText(ctx, pos, content, size = 20, color = new RGBColor(255, 255, 255)) {
+        ctx.font = `${size}px ${UIText.font}`;
+        ctx.fillStyle = rgba(color.r, color.g, color.b, 1);
+        ctx.textBaseline = 'top';
+        ctx.fillText(content, pos.x, pos.y);
+    }
 }
