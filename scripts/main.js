@@ -20,7 +20,6 @@ const lightMap = new LightMap();
 declareAssets([
 	"sprites/blondie_spritesheet.png",
 	"sprites/bat_spritesheet.png",
-	"sprites/wolf_spritesheet.png",
 	"sprites/slime01.png",
 	"sprites/tree_00.png",
 	"sprites/grass_1.png",
@@ -29,10 +28,10 @@ declareAssets([
 	"sprites/heart.png",
 	"sprites/star.png",
 	"sprites/items.png",
+	"sprites/bear.png",
 	"sprites/fires/torch_stem.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
-	"sprites/fires/orange/loops/burning_loop_3.png",
-	"sprites/sword.png"
+	"sprites/fires/orange/loops/burning_loop_3.png"
 ]);
 
 ASSET_MANAGER.downloadAll(() => {
@@ -46,8 +45,8 @@ ASSET_MANAGER.downloadAll(() => {
 
 //------ Build Game ------//
 
-const spawnPoint = new Vec2(-140, 0);
-let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
+
+let doug = new Doug(new Vec2(-140, 0), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72), new Padding(36, 12, 8, 12));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
@@ -56,10 +55,10 @@ let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_sprite
 	new Dimension(32, 32), new Padding(10, -15, 0, 5));
 
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-	new Dimension(55, 37), new Padding(0, -20, -20, 5));
+	new Dimension(32, 37), new Padding(0, -20, -20, 5));
 
-let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
-	new Dimension(32, 64), new Padding(10, -15, 0, 5), 40, 150);
+let	bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"), 
+new Dimension(56, 56), new Padding(0, -15, 0, 3));
 
 let hotbar;
 buildWorld();
@@ -69,7 +68,19 @@ gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(bat);
 gameEngine.addEntity(slime);
-gameEngine.addEntity(wolf);
+gameEngine.addEntity(bearBoss);
+
+gameEngine.start();
+gameEngine.draw = function (ctx) {
+	bearBoss.draw(ctx);
+};
+// gameEngine.update = function () {
+// 	bearBoss.update();
+// 	bearBoss.checkCollision(player);
+// };
+// 	bearBoss.moveRandomly();
+
+
 
 
 
