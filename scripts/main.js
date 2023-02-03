@@ -22,6 +22,7 @@ declareAssets([
 	"sprites/bat_spritesheet.png",
 	"sprites/wolf_spritesheet.png",
 	"sprites/slime01.png",
+	"sprites/dragon2.png",
 	"sprites/tree_00.png",
 	"sprites/grass_1.png",
 	"sprites/firepit.png",
@@ -68,6 +69,9 @@ let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spr
 let	bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"), 
 new Dimension(56, 56), new Padding(0, -15, 0, 3));
 
+let dragon = new Dragon(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+	new Dimension(100, 100), new Padding(0,0,0,0));
+
 let hotbar;
 buildWorld();
 buildUI();
@@ -82,6 +86,8 @@ gameEngine.addEntity(slimeHealthBar,4);
 
 gameEngine.addEntity(wolf);
 gameEngine.addEntity(bearBoss);
+gameEngine.addEntity(dragon);
+
 
 
 //------ Functions ------//
