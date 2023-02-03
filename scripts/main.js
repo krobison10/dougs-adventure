@@ -57,6 +57,9 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
 	new Dimension(32, 32), new Padding(10, -15, 0, 5));
 
+let dragon = new Dragon(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+	new Dimension(97, 91), new Padding(0,0,0,0));	
+
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
 	new Dimension(55, 37), new Padding(0, -20, -20, 5), 15, 150, true, 1.5);
 
@@ -67,10 +70,9 @@ let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spr
 	new Dimension(32, 64), new Padding(10, -15, 0, 5), 40, 150);
 
 let	bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"), 
-new Dimension(56, 56), new Padding(0, -15, 0, 3));
+	new Dimension(56, 56), new Padding(0, -15, 0, 3));
 
-let dragon = new Dragon(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
-	new Dimension(100, 100), new Padding(0,0,0,0));
+
 
 let hotbar;
 buildWorld();
