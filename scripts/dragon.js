@@ -19,38 +19,44 @@ class Dragon extends Enemy {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
         this.animations = [];
 
-        this.maxHitPoints = 100;
+        this.maxHitPoints = 1000;
 
-        this.hitPoints = 100;
+        this.hitPoints = 1000;
         this.damage = 10;
 
         this.speed = 200;
         this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-        this.animations[0] = new Animator(this.spritesheet, 1, 1,
-            100, 100,
-            3, .5, 0, false, true);
+        // this.animations[0] = new Animator(this.spritesheet, 1, 1,
+        //     100, 100,
+        //     3, .5, 0, false, true);
         // for(let i = 0; i < 4; i++) {
-        //     this.animations[i] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
+        //     this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
         //         this.size.w, this.size.h,
-        //         3, .1, 0, false, true);
+        //         4, .18, 0, false, true);
         // }
+
+        for(let i = 0; i < 4; i++) {
+            this.animations[i] = new Animator(this.spritesheet, 0, i * this.size.h,
+                this.size.w, this.size.h,
+                4, .2, 0, false, true);
+        }
     }
 
     /**
      * Updates the dragon for the frame.
      */
     update() {
-        //this.route();
-        // const collisionLat = this.checkCollide("lateral");
-        // const collisionVert = this.checkCollide("vertical")
-        // if(!collisionLat) {
-        //     this.pos.x += this.velocity.x * gameEngine.clockTick;
-        // }
-        // if(!collisionVert) {
-        //     this.pos.y += this.velocity.y * gameEngine.clockTick;
-        // }
+        this.route();
+        const collisionLat = this.checkCollide("lateral");
+        const collisionVert = this.checkCollide("vertical")
+        if(!collisionLat) {
+            this.pos.x += this.velocity.x * gameEngine.clockTick;
+        }
+        if(!collisionVert) {
+            this.pos.y += this.velocity.y * gameEngine.clockTick;
+        }
 
         //const entities = gameEngine.entities[Layers.FOREGROUND];
         // for(const entity of entities) {
@@ -94,32 +100,32 @@ class Dragon extends Enemy {
 
     draw(ctx) {
 
-        this.drawAnim(ctx, this.animations[0]);
+        //this.drawAnim(ctx, this.animations[1]);
 
-        // if(this.velocity.x < 0) {//left
-        //     this.drawAnim(ctx, this.animations[3]);
-        //     this.directionMem = 1;
-        // }
-        // if(this.velocity.x > 0) {//right
-        //     this.drawAnim(ctx, this.animations[1]);
-        //     this.directionMem = 2;
-        // }
-        // if(this.velocity.y > 0 && this.velocity.x === 0) {//down
-        //     this.drawAnim(ctx, this.animations[0]);
-        //     this.directionMem = 0;
-        // }
-        // if(this.velocity.y < 0 && this.velocity.x === 0) {//up
-        //     this.drawAnim(ctx, this.animations[2]);
-        //     this.directionMem = 3;
-        // }
-        // if(this.velocity.y === 0 && this.velocity.x === 0) {
-        //     this.drawAnim(ctx, this.animations[3]);
-        // }
+        if(this.velocity.x < 0) {//left
+            this.drawAnim(ctx, this.animations[1]);
+            this.directionMem = 1;
+        }
+        if(this.velocity.x > 0) {//right
+            this.drawAnim(ctx, this.animations[2]);
+            this.directionMem = 2;
+        }
+        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+            this.drawAnim(ctx, this.animations[0]);
+            this.directionMem = 0;
+        }
+        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+            this.drawAnim(ctx, this.animations[3]);
+            this.directionMem = 3;
+        }
+        if(this.velocity.y === 0 && this.velocity.x === 0) {
+            this.drawAnim(ctx, this.animations[0]);
+        }
 
         this.boundingBox.draw(ctx);
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 3);
      }
 }

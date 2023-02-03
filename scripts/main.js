@@ -19,10 +19,10 @@ const lightMap = new LightMap();
 //Add paths of assets to be downloaded here
 declareAssets([
 	"sprites/blondie_spritesheet.png",
+	"sprites/dragon2.png",
 	"sprites/bat_spritesheet.png",
 	"sprites/wolf_spritesheet.png",
 	"sprites/slime01.png",
-	"sprites/dragon2.png",
 	"sprites/tree_00.png",
 	"sprites/grass_1.png",
 	"sprites/firepit.png",
@@ -57,8 +57,8 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
 	new Dimension(32, 32), new Padding(10, -15, 0, 5));
 
-let dragon = new Dragon(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
-	new Dimension(97, 91), new Padding(0,0,0,0));	
+let dragon = new Dragon(new Vec2(0, -200), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+	new Dimension(96, 96), new Padding(20,-200,-150,0));	
 
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
 	new Dimension(55, 37), new Padding(0, -20, -20, 5), 15, 150, true, 1.5);
@@ -80,6 +80,7 @@ buildUI();
 
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
+gameEngine.addEntity(dragon);
 gameEngine.addEntity(bat);
 gameEngine.addEntity(batHealthBar);
 gameEngine.addEntity(slime);
@@ -88,7 +89,7 @@ gameEngine.addEntity(slimeHealthBar,4);
 
 gameEngine.addEntity(wolf);
 gameEngine.addEntity(bearBoss);
-gameEngine.addEntity(dragon);
+
 
 
 
