@@ -31,7 +31,8 @@ declareAssets([
 	"sprites/items.png",
 	"sprites/fires/torch_stem.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
-	"sprites/fires/orange/loops/burning_loop_3.png"
+	"sprites/fires/orange/loops/burning_loop_3.png",
+	"sprites/sword.png"
 ]);
 
 ASSET_MANAGER.downloadAll(() => {

@@ -117,6 +117,8 @@ class Doug extends Character {
          * @type {BoundingBox}
          */
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        this.attacking = false;
+        this.attackDir = undefined;
 
         //Create still animations
         for(let i = 0; i < 4; i++) {
@@ -144,6 +146,16 @@ class Doug extends Character {
             else {
                 return;
             }
+        }
+
+        if(hotbar.slots[hotbar.selectedIndex].itemID === 336 && gameEngine.click && !this.attacking) {
+            if(gameEngine.click.x <= WIDTH / 2) {
+                gameEngine.addEntity(new Sword(SwingDirections.LEFT));
+            }
+            else {
+                gameEngine.addEntity(new Sword(SwingDirections.RIGHT));
+            }
+
         }
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
@@ -289,24 +301,41 @@ class Doug extends Character {
     draw(ctx) {
         if(this.dead) return;
 
-        if(this.velocity.x < 0) {
-            this.drawAnim(ctx, this.animations[5]);
-            this.directionMem = 1;
+        if(!this.attacking) {
+            if(this.velocity.x < 0) {
+                this.drawAnim(ctx, this.animations[5]);
+                this.directionMem = 1;
+            }
+            if(this.velocity.x > 0) {
+                this.drawAnim(ctx, this.animations[6]);
+                this.directionMem = 2;
+            }
+            if(this.velocity.y === this.speed) {
+                this.drawAnim(ctx, this.animations[4]);
+                this.directionMem = 0;
+            }
+            if(this.velocity.y === -this.speed) {
+                this.drawAnim(ctx, this.animations[7]);
+                this.directionMem = 3;
+            }
+            if(this.velocity.y === 0 && this.velocity.x === 0) {
+                this.drawAnim(ctx, this.animations[this.directionMem]);
+            }
         }
-        if(this.velocity.x > 0) {
-            this.drawAnim(ctx, this.animations[6]);
-            this.directionMem = 2;
-        }
-        if(this.velocity.y === this.speed) {
-            this.drawAnim(ctx, this.animations[4]);
-            this.directionMem = 0;
-        }
-        if(this.velocity.y === -this.speed) {
-            this.drawAnim(ctx, this.animations[7]);
-            this.directionMem = 3;
-        }
-        if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[this.directionMem]);
+        else {
+            if(this.attackDir === SwingDirections.LEFT) {
+                this.directionMem = 1;
+            }
+            if(this.attackDir === SwingDirections.RIGHT) {
+                this.directionMem = 2;
+            }
+
+            if(Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2)) > 0) {
+                this.drawAnim(ctx, this.animations[this.directionMem + 4]);
+            }
+            else {
+                this.drawAnim(ctx, this.animations[this.directionMem]);
+            }
         }
 
         this.boundingBox.draw(ctx);
