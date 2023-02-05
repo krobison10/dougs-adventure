@@ -31,6 +31,7 @@ declareAssets([
 	"sprites/bear.png",
 	"sprites/fires/torch_stem.png",
 	"sprites/sword.png",
+	"sprites/bow.png",
 	"sprites/arrow.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
 	"sprites/fires/orange/loops/burning_loop_3.png",
@@ -47,6 +48,7 @@ declareAssets([
 	"sounds/slime_kill.wav",
 	"sounds/MaxMana.wav",
 	"sounds/arrow_impact.wav",
+	"sounds/drink.wav",
 
 
 
