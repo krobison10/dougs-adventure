@@ -12,6 +12,16 @@ class Doug extends Character {
      */
     static regenDelay = 10;
     /**
+     * Time in seconds for how long doug must wait to drink another health potion.
+     * @type {number}
+     */
+    static healthPotionCooldown = 20;
+    /**
+     * Amount of HP that the health potion regenerates.
+     * @type {number}
+     */
+    static healthPotionAmount = 50;
+    /**
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
      */
@@ -64,6 +74,11 @@ class Doug extends Character {
          * @type {number}
          */
         this.lastHealthRegen = Date.now();
+        /**
+         * Time that doug last drank a health potion.
+         * @type {number}
+         */
+        this.lastHealthPotion = 0;
         /**
          * Time that the last damage frame occurred.
          * @type {number}
@@ -147,15 +162,8 @@ class Doug extends Character {
             else return;
         }
 
-        if(hotbar.slots[hotbar.selectedIndex].itemID === 336 && gameEngine.click && !this.attacking) {
-            if(gameEngine.click.x <= WIDTH / 2) {
-                gameEngine.addEntity(new Sword(SwingDirections.LEFT));
-            }
-            else {
-                gameEngine.addEntity(new Sword(SwingDirections.RIGHT));
-            }
-        } else if (hotbar.slots[hotbar.selectedIndex].itemID === 76 && gameEngine.click && !this.attacking) {
-            gameEngine.addEntity(new Arrow(gameEngine.click))
+        if(gameEngine.click) {
+            this.handleClick();
         }
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
@@ -196,6 +204,35 @@ class Doug extends Character {
 
         this.regen();
         this.updateDebug();
+    }
+
+    handleClick() {
+        if(!this.attacking) {
+            if(hotbar.slots[hotbar.selectedIndex].itemID === 336) {
+                if(gameEngine.click.x <= WIDTH / 2) {
+                    gameEngine.addEntity(new Sword(Directions.LEFT));
+                }
+                else {
+                    gameEngine.addEntity(new Sword(Directions.RIGHT));
+                }
+            }
+            else if (hotbar.slots[hotbar.selectedIndex].itemID === 76) {
+                if(gameEngine.click.x <= WIDTH / 2) {
+                    gameEngine.addEntity(new Bow(Directions.LEFT));
+                }
+                else {
+                    gameEngine.addEntity(new Bow(Directions.RIGHT));
+                }
+                gameEngine.addEntity(new Arrow(gameEngine.click));
+            }
+        }
+        if (hotbar.slots[hotbar.selectedIndex].itemID === 246
+            && timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+            this.lastHealthPotion = Date.now();
+            this.hitPoints += Doug.healthPotionAmount;
+            if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            ASSET_MANAGER.playAsset("sounds/drink.wav");
+        }
     }
 
     checkCollide(dir) {
@@ -317,7 +354,9 @@ class Doug extends Character {
 
     }
 
+    drinkHealthPotion() {
 
+    }
 
     /**
      * Updates the position label below the canvas
@@ -352,10 +391,10 @@ class Doug extends Character {
             }
         }
         else {
-            if(this.attackDir === SwingDirections.LEFT) {
+            if(this.attackDir === Directions.LEFT) {
                 this.directionMem = 1;
             }
-            if(this.attackDir === SwingDirections.RIGHT) {
+            if(this.attackDir === Directions.RIGHT) {
                 this.directionMem = 2;
             }
 

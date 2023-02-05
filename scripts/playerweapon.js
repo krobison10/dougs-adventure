@@ -12,7 +12,7 @@ class Sword extends Entity {
 
         this.speed = 12;
         this.dir = swingDir;
-        if(swingDir === SwingDirections.RIGHT) {
+        if(swingDir === Directions.RIGHT) {
             this.angle = 0;
             this.change = this.speed;
         }
@@ -35,16 +35,16 @@ class Sword extends Entity {
         this.updateBB();
         this.checkDamage();
 
-        if(this.dir === SwingDirections.RIGHT && this.angle >= Math.PI) {
+        if(this.dir === Directions.RIGHT && this.angle >= Math.PI) {
             this.resetDoug();
         }
-        if(this.dir === SwingDirections.LEFT && (this.angle <= -Math.PI / 2 )) {
+        if(this.dir === Directions.LEFT && (this.angle <= -Math.PI / 2 )) {
             this.resetDoug();
         }
     }
 
     updateBB() {
-        if(this.dir === SwingDirections.RIGHT) {
+        if(this.dir === Directions.RIGHT) {
             this.attackBox = new BoundingBox(new Vec2(doug.pos.x + 10, doug.pos.y - 12), this.bbSize);
         } else {
             this.attackBox = new BoundingBox(new Vec2(doug.pos.x - 30, doug.pos.y - 12), this.bbSize);
@@ -88,9 +88,59 @@ class Sword extends Entity {
 
 }
 
-const SwingDirections = {
+const Directions = {
     LEFT: 0,
     RIGHT: 1
+}
+
+class Bow extends Entity {
+    static useTime = 0.4;
+
+    constructor(dir) {
+        super(new Vec2(doug.pos.x, doug.pos.y), new Dimension(44, 44));
+
+        doug.attacking = true;
+        doug.attackDir = dir;
+
+        this.dir = dir;
+        this.startTime = Date.now();
+        this.image = this.getImage();
+    }
+
+    update() {
+        if(timeInSecondsBetween(Date.now(), this.startTime) > Bow.useTime) {
+            doug.attacking = false;
+            doug.attackDir = undefined;
+            this.removeFromWorld = true;
+        }
+
+        this.pos.y = doug.pos.y - 50;
+    }
+
+    getImage() {
+        let offScreenCanvas = document.createElement('canvas');
+        let w = this.size.w ;
+        let h = this.size.h;
+        offScreenCanvas.width = w;
+        offScreenCanvas.height = h;
+        let offCtx = offScreenCanvas.getContext('2d');
+        offCtx.save();
+        offCtx.translate(w/2, h/2);
+        let angle = 5 * Math.PI / 4;
+        if(this.dir === Directions.LEFT) angle -= Math.PI;
+        offCtx.rotate(angle);
+        offCtx.translate(-w/2, -h/2);
+        offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/bow.png"), 6, 6, 32, 32);
+        offCtx.restore();
+
+        return offScreenCanvas;
+    }
+
+
+    draw(ctx) {
+        let xPos = this.dir === Directions.LEFT ? doug.getScreenPos().x - 10 : doug.getScreenPos().x + 18;
+        ctx.drawImage(this.image, xPos, doug.getScreenPos().y + 14);
+    }
 }
 
 class Arrow extends Entity {
@@ -109,18 +159,25 @@ class Arrow extends Entity {
         this.speed = 600;
 
         ASSET_MANAGER.playAsset("sounds/bow.wav");
-        //this.angle = 7 * Math.PI / 4;
         this.angle = Arrow.calcAngleFromOrigin(this.velocity);
 
 
         this.image = this.getImage();
 
         this.padding = new Padding(15, 15, 15, 15);
+        //this.padding = new Padding();
+        this.moveToStartingPoint();
         this.setBox();
     }
 
     setBox() {
         this.attackBox = Character.createBB(this.pos, this.size, this.padding);
+    }
+
+    // gives the arrow a jump in its direction, so it doesn't start inside the player
+    moveToStartingPoint() {
+        this.pos.x += this.velocity.x * 20;
+        this.pos.y += this.velocity.y * 20;
     }
 
     update() {
@@ -161,7 +218,7 @@ class Arrow extends Entity {
         offCtx.translate(w/2, h/2);
         offCtx.rotate(-this.angle);
         offCtx.translate(-w/2, -h/2);
-        offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/arrow.png"), 5, 5, 14, 32);
+        offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/arrow.png"), 14, 5, 14, 32);
         offCtx.restore();
 
         return offScreenCanvas;
