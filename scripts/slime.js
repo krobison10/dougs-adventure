@@ -79,13 +79,6 @@ class Slime extends Enemy {
             this.velocity.y = 0;
         }
     }
-    takeDamage(amount) {
-            this.hitPoints -= amount;
-            if(this.hitPoints <= 0) {
-                this.hitPoints = 0;
-                this.die();
-            }
-    }
     
     // die() {
     //     if (this.hitPoints <= 0) {
