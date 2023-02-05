@@ -33,7 +33,20 @@ declareAssets([
 	"sprites/fires/torch_stem.png",
 	"sprites/sword.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
-	"sprites/fires/orange/loops/burning_loop_3.png"
+	"sprites/fires/orange/loops/burning_loop_3.png",
+
+	"sounds/swing_2.wav",
+	"sounds/Player_Hit_0.wav",
+	"sounds/Player_Hit_1.wav",
+	"sounds/Player_Hit_2.wav",
+	"sounds/Player_Killed.wav",
+	"sounds/Hit_1.wav",
+	"sounds/std_kill.wav",
+	"sounds/bat_kill.wav",
+	"sounds/slime_kill.wav",
+
+	"sounds/Menu_Tick.wav"
+
 ]);
 
 ASSET_MANAGER.downloadAll(() => {

@@ -188,8 +188,6 @@ class Doug extends Character {
         for(const entity of entities) {
             if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
                  this.takeDamage(entity.damage);
-                 entity.takeDamage(3);
-
             }
         }
 
@@ -218,9 +216,17 @@ class Doug extends Character {
             this.hitPoints -= amount;
             if(this.hitPoints <= 0) {
                 this.hitPoints = 0;
+                ASSET_MANAGER.playAsset("sounds/Player_Killed.wav");
                 this.die();
+            } else {
+                this.hitNoise()
             }
         }
+    }
+
+    hitNoise() {
+        let variant = randomInt(3)
+        ASSET_MANAGER.playAsset(`sounds/Player_Hit_${variant}.wav`)
     }
 
     /**

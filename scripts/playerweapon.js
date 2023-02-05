@@ -24,6 +24,7 @@ class Sword extends Entity {
         this.sprite = ASSET_MANAGER.getAsset("sprites/sword.png");
         this.bbSize = new Dimension(72, 76);
         this.updateBB();
+        ASSET_MANAGER.playAsset("sounds/swing_2.wav")
     }
 
     update() {
