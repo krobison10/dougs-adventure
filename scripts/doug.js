@@ -185,9 +185,11 @@ class Doug extends Character {
 
 
         const entities = gameEngine.entities[Layers.FOREGROUND];
-            for(const entity of entities) {
-                 if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
-                     this.takeDamage(entity.damage);
+        for(const entity of entities) {
+            if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
+                 this.takeDamage(entity.damage);
+                 entity.takeDamage(3);
+
             }
         }
 

@@ -40,6 +40,22 @@ class Enemy extends Character {
     update() {
 
     }
+    update() {
+        
+    }
+    takeDamage(amount) {
+        this.hitPoints -= amount;
+        if(this.hitPoints <= 0) {
+            this.hitPoints = 0;
+            this.die();
+        }
+    }   
+
+    die() {
+        if (this.hitPoints <= 0) {
+            this.removeFromWorld = true;
+        }
+    }
 
     /**
      * Draws the current frame of the animation at the current position of the Enemy.

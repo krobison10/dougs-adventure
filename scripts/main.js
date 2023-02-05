@@ -56,7 +56,7 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
 	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50);
 
-let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
+let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"),
 	new Dimension(55, 37), new Padding(0, 0, 0, 0), 20, 100);
 
 let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
@@ -73,6 +73,8 @@ gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(bat);
 gameEngine.addEntity(slime);
+
+
 gameEngine.addEntity(wolf);
 //gameEngine.addEntity(bearBoss);
 
