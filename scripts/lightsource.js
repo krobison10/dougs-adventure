@@ -26,7 +26,7 @@ class LightSource extends Entity {
 
     update() {
         if(this.attachTo) {
-            if(this.attachTo.removeFromWorld) return lightMap.removeLightSource(this);
+            if(this.attachTo.removeFromWorld) return this.removeFromWorld = true;
             this.pos.x = this.attachTo.getCenter().x;
             this.pos.y = this.attachTo.getCenter().y;
         }

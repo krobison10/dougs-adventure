@@ -35,7 +35,7 @@ class Doug extends Character {
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
      */
-    static baseManaRegen = 5;
+    static baseManaRegen = 7;
     /**
      * Multiplier for the exponential growth of mana regeneration.
      * @type {number}
@@ -224,6 +224,15 @@ class Doug extends Character {
                     gameEngine.addEntity(new Bow(Directions.RIGHT));
                 }
                 gameEngine.addEntity(new Arrow(gameEngine.click));
+            }
+            else if (hotbar.slots[hotbar.selectedIndex].itemID === 351 && this.useMana(ManaBolt.ManaCost)) {
+                if(gameEngine.click.x <= WIDTH / 2) {
+                    gameEngine.addEntity(new ManaBolt(Directions.LEFT));
+                }
+                else {
+                    gameEngine.addEntity(new ManaBolt(Directions.RIGHT));
+                }
+                gameEngine.addEntity(new WaterSphere(gameEngine.click));
             }
         }
         if (hotbar.slots[hotbar.selectedIndex].itemID === 246
