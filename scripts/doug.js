@@ -154,7 +154,8 @@ class Doug extends Character {
             else {
                 gameEngine.addEntity(new Sword(SwingDirections.RIGHT));
             }
-
+        } else if (hotbar.slots[hotbar.selectedIndex].itemID === 76 && gameEngine.click && !this.attacking) {
+            gameEngine.addEntity(new Arrow(gameEngine.click))
         }
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
