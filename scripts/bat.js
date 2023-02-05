@@ -44,21 +44,15 @@ class Bat extends Enemy {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
 
-        const entities = gameEngine.entities[Layers.FOREGROUND];
-        // for(const entity of entities) {
-        //      if (entity instanceof Doug && this.boundingBox.collide(entity.boundingBox)) {
-        //          this.hitPoints = 0;
-        //     }
-        // }
         if (this.hitPoints <= 0) {
-            
-            console.log("1");
-
             this.removeFromWorld = true;
         }
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+    }
 
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/bat_kill.wav")
     }
 
     route() {

@@ -79,6 +79,10 @@ class Slime extends Enemy {
             this.velocity.y = 0;
         }
     }
+
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/slime_kill.wav")
+    }
     
     // die() {
     //     if (this.hitPoints <= 0) {

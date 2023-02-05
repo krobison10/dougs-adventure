@@ -29,12 +29,24 @@ class Enemy extends Character {
             if(this.hitPoints <= 0) {
                 this.hitPoints = 0;
                 this.die();
+            } else {
+                this.hitSound();
             }
         }
     }
 
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/std_kill.wav");
+    }
+
+    hitSound() {
+        ASSET_MANAGER.playAsset("sounds/Hit_1.wav")
+
+    }
+
     die() {
         this.removeFromWorld = true;
+        this.deathSound();
     }
 
     update() {

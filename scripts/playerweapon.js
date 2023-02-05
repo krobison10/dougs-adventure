@@ -24,6 +24,7 @@ class Sword extends Entity {
         this.sprite = ASSET_MANAGER.getAsset("sprites/sword.png");
         this.bbSize = new Dimension(72, 76);
         this.updateBB();
+        ASSET_MANAGER.playAsset("sounds/swing_2.wav")
     }
 
     update() {
@@ -90,4 +91,84 @@ class Sword extends Entity {
 const SwingDirections = {
     LEFT: 0,
     RIGHT: 1
+}
+
+class Arrow extends Entity {
+    static damage = 14;
+    constructor(clickPos) {
+        const width = 42;
+        const height = 42;
+        super(new Vec2(doug.getCenter().x - width/2, doug.getCenter().y - height/2), new Dimension(width, height));
+        this.velocity = new Vec2(clickPos.x - WIDTH / 2, clickPos.y - HEIGHT / 2);
+
+        // normalize
+        const magnitude = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        this.velocity.x /= magnitude;
+        this.velocity.y /= magnitude;
+
+        this.speed = 600;
+
+        ASSET_MANAGER.playAsset("sounds/bow.wav");
+        //this.angle = 7 * Math.PI / 4;
+        this.angle = Arrow.calcAngleFromOrigin(this.velocity);
+
+
+        this.image = this.getImage();
+
+        this.padding = new Padding(15, 15, 15, 15);
+        this.setBox();
+    }
+
+    setBox() {
+        this.attackBox = Character.createBB(this.pos, this.size, this.padding);
+    }
+
+    update() {
+        this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;
+        this.pos.y += this.velocity.y * this.speed * gameEngine.clockTick;
+        this.setBox();
+        this.checkCollide();
+    }
+
+    checkCollide() {
+        for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
+            if(entity.boundingBox && this.attackBox.collide(entity.boundingBox) && entity !== doug) {
+                if(entity instanceof Obstacle) {
+                    ASSET_MANAGER.playAsset("sounds/arrow_impact.wav");
+                    return this.removeFromWorld = true;
+                }
+                if(entity instanceof Enemy) {
+                    entity.takeDamage(Arrow.damage);
+                    return this.removeFromWorld = true;
+                }
+            }
+        }
+    }
+
+    static calcAngleFromOrigin(vector) {
+        const angle = Math.atan2(vector.x, vector.y);
+        return angle >= 0 ? angle : angle + 2 * Math.PI;
+    }
+
+    getImage() {
+        let offScreenCanvas = document.createElement('canvas');
+        let w = this.size.w;
+        let h = this.size.h;
+        offScreenCanvas.width = w;
+        offScreenCanvas.height = h;
+        let offCtx = offScreenCanvas.getContext('2d');
+        offCtx.save();
+        offCtx.translate(w/2, h/2);
+        offCtx.rotate(-this.angle);
+        offCtx.translate(-w/2, -h/2);
+        offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/arrow.png"), 5, 5, 14, 32);
+        offCtx.restore();
+
+        return offScreenCanvas;
+    }
+
+    draw(ctx) {
+        ctx.drawImage(this.image, this.getScreenPos().x, this.getScreenPos().y);
+        this.attackBox.draw(ctx);
+    }
 }

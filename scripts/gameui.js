@@ -40,6 +40,8 @@ class Hotbar extends Entity {
         this.slots[2].itemID = 246;
         this.slots[3].itemID = 85;
 
+        this.lastSwitch = Date.now();
+
     }
                 
     update() {
@@ -49,6 +51,10 @@ class Hotbar extends Entity {
     checkSlotSelect() {
         for(let i = 1; i <= this.slots.length; i++) {
             if(gameEngine.keys[i]) {
+                if(i - 1 !== this.selectedIndex) {
+                    ASSET_MANAGER.playAsset("sounds/Menu_Tick.wav")
+
+                }
                 this.slots[this.selectedIndex].selected = false;
                 this.slots[i - 1].selected = true;
                 this.selectedIndex = i - 1;
