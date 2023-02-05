@@ -7,23 +7,22 @@
  *
  */
 class Slime extends Enemy {
+    //static parent = TRUE;
+
     /**
-     * @param {Vec2} pos initial position of the bat.
-     * @param {HTMLImageElement} spritesheet spritesheet of the bat.
-     * @param {Dimension} size size of the bat.
+     * @param {Vec2} pos initial position of the slime.
+     * @param {HTMLImageElement} spritesheet spritesheet of the slime.
+     * @param {Dimension} size size of the slime.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
+     * @param {number} damage how much damage the entity deals to the player
+     * @param {number} maxHitPoints maximum health of the enemy.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
+        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
 
-        this.maxHitPoints = 100;
+        this.speed = 150;
 
-        this.hitPoints = 100;
-        this.damage = 10;
-
-        this.speed = 250;
-        this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
@@ -42,13 +41,20 @@ class Slime extends Enemy {
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
+       // var that = this;
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-
+        // const entities = gameEngine.entities[Layers.FOREGROUND];
+        // for(const entity of entities) {
+        //      if (entity instanceof Doug && this.boundingBox.collide(entity.boundingBox)) {
+        //          this.hitPoints -= 3;
+        //     }
+        // }
+        
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
     route() {
@@ -73,6 +79,27 @@ class Slime extends Enemy {
             this.velocity.y = 0;
         }
     }
+    
+    // die() {
+    //     if (this.hitPoints <= 0) {
+    //         if (this.parent) {
+    //             let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
+    //                 new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false)
+    //             let slime2 = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"),
+    //                 new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false)
+    //
+    //             let slime1Bar = new HealthBar(slime);
+    //             let slime2Bar = new HealthBar(slime2);
+    //
+    //             gameEngine.addEntity(slime);
+    //             gameEngine.addEntity(slime2);
+    //             gameEngine.addEntity(slime1Bar);
+    //             gameEngine.addEntity(slime2Bar);
+    //         }
+    //
+    //         this.removeFromWorld = true;
+    //     }
+    // }
     draw(ctx) {
 
             //this.drawAnim(ctx, this.animations[2]);
@@ -100,6 +127,6 @@ class Slime extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
      }
 }
