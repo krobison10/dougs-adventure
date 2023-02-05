@@ -12,18 +12,14 @@ class Slime extends Enemy {
      * @param {HTMLImageElement} spritesheet spritesheet of the bat.
      * @param {Dimension} size size of the bat.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
+     * @param {number} damage how much damage the entity deals to the player
+     * @param {number} maxHitPoints maximum health of the enemy.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
+        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
 
-        this.maxHitPoints = 100;
-
-        this.hitPoints = 100;
-        this.damage = 10;
-
-        this.speed = 250;
-        this.velocity = new Vec2(0,0);
+        this.speed = 150;
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
@@ -100,6 +96,6 @@ class Slime extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
      }
 }

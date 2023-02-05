@@ -11,6 +11,7 @@ class HealthBar extends Entity {
     constructor(agent) {
         super(agent.pos, new Dimension(50, 10));
         this.agent = agent;
+        this.bottomGap = 5;
         this.offset = this.agent.size.w - this.size.w;
         this.innerPadding = 1;
     }
@@ -29,21 +30,27 @@ class HealthBar extends Entity {
 
         ctx.fillRect(
             screenPos.x + this.offset / 2 + this.innerPadding,
-            screenPos.y + this.agent.size.h + this.innerPadding,
+            screenPos.y + this.agent.size.h + this.innerPadding + this.bottomGap,
             this.size.w - 2 * this.innerPadding, this.size.h - 2 * this.innerPadding);
 
 
         ctx.fillStyle = rgba(c.r, c.g, c.b, 1);
 
-        ctx.fillRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h,
+        ctx.fillRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h + this.bottomGap,
             this.size.w * healthLevel, this.size.h);
 
 
         ctx.strokeStyle = rgba(40, 40, 40, 1);
         ctx.lineWidth = '2.5';
 
-        ctx.strokeRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h,
+        ctx.strokeRect(screenPos.x + this.offset / 2, screenPos.y + this.agent.size.h + this.bottomGap,
             this.size.w * healthLevel, this.size.h);
+    }
+
+    update() {
+        if(this.agent.removeFromWorld) {
+            this.removeFromWorld = true;
+        }
     }
 }
 

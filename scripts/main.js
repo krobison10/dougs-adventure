@@ -9,7 +9,7 @@ const dontDrawDistance = 1000;
 const dontUpdateDistance = 2000;
 const dontCheckCollideDistance = 800;
 
-let gameTime = 4.5 * 60; //5:30 am
+let gameTime = 11 * 60; //12:00 pm
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
@@ -53,13 +53,13 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
-	new Dimension(32, 32), new Padding(10, -15, 0, 5));
+	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50);
 
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-	new Dimension(55, 37), new Padding(0, -20, -20, 5));
+	new Dimension(55, 37), new Padding(0, 0, 0, 0), 20, 100);
 
 let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
-	new Dimension(32, 64), new Padding(10, -15, 0, 5), 40, 150);
+	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150);
 
 let hotbar;
 buildWorld();

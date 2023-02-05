@@ -15,7 +15,7 @@ class Doug extends Character {
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
      */
-    static immunityDuration = 0.2;
+    static immunityDuration = 0.4;
     /**
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
@@ -51,12 +51,12 @@ class Doug extends Character {
          * The maximum hit points of doug
          * @type {number}
          */
-        this.maxHitPoints = 100;
+        this.maxHitPoints = 200;
         /**
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
-        this.hitPoints = 100;
+        this.hitPoints = this.maxHitPoints;
         /**
          * The time of the last health regeneration frame.
          * @type {number}
@@ -81,12 +81,12 @@ class Doug extends Character {
          * The maximum mana level of doug.
          * @type {number}
          */
-        this.maxMana = 20;
+        this.maxMana = 100;
         /**
          * The current mana level of doug.
          * @type {number}
          */
-        this.manaLevel = 20;
+        this.manaLevel = this.maxMana;
         /**
          * The time of the last mana regeneration frame.
          * @type {number}

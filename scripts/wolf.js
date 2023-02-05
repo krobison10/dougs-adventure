@@ -6,19 +6,14 @@
  */
 
 class Wolf extends Enemy {
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
+        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
 
         this.xStart = pos.x;
         this.yStart = pos.y;
-        this.maxHitPoints = hitPoints;
-
-        this.hitPoints = this.maxHitPoints;
-        this.damage = damage;
 
         this.setSpeed();
-        this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
@@ -96,7 +91,7 @@ class Wolf extends Enemy {
     }
 
     drawAnim(ctx, animator) {
-        animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+        animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 
     /**

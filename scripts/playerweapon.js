@@ -2,6 +2,8 @@
 
 
 class Sword extends Entity {
+    static damage = 10;
+
     constructor(swingDir) {
         super(new Vec2(doug.pos.x, doug.pos.y), new Dimension(32, 32));
 
@@ -20,6 +22,8 @@ class Sword extends Entity {
         }
 
         this.sprite = ASSET_MANAGER.getAsset("sprites/sword.png");
+        this.bbSize = new Dimension(72, 76);
+        this.updateBB();
     }
 
     update() {
@@ -27,6 +31,8 @@ class Sword extends Entity {
 
         this.pos.y = doug.pos.y - 100;
         this.pos.x = doug.pos.x;
+        this.updateBB();
+        this.checkDamage();
 
         if(this.dir === SwingDirections.RIGHT && this.angle >= Math.PI) {
             this.resetDoug();
@@ -36,10 +42,26 @@ class Sword extends Entity {
         }
     }
 
+    updateBB() {
+        if(this.dir === SwingDirections.RIGHT) {
+            this.attackBox = new BoundingBox(new Vec2(doug.pos.x + 10, doug.pos.y - 12), this.bbSize);
+        } else {
+            this.attackBox = new BoundingBox(new Vec2(doug.pos.x - 30, doug.pos.y - 12), this.bbSize);
+        }
+    }
+
+    checkDamage() {
+        for(let ent of gameEngine.entities[Layers.FOREGROUND]) {
+            if(ent instanceof Enemy && this.attackBox.collide(ent.boundingBox)) {
+                ent.takeDamage(Sword.damage);
+            }
+        }
+    }
+
     resetDoug() {
-        this.removeFromWorld = true;
         doug.attacking = false;
         doug.attackDir = undefined;
+        this.removeFromWorld = true;
     }
 
     draw(ctx) {
@@ -60,6 +82,7 @@ class Sword extends Entity {
         let xOffset = (doug.size.w - square) / 2;
         let yOffset = (doug.size.h - square) / 2;
         ctx.drawImage(offScreenCanvas, doug.getScreenPos().x + xOffset, doug.getScreenPos().y + yOffset);
+        this.attackBox.draw(ctx)
     }
 
 }
