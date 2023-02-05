@@ -37,8 +37,9 @@ class Hotbar extends Entity {
 
         this.slots[0].itemID = 336;
         this.slots[1].itemID = 76;
-        this.slots[2].itemID = 246;
-        this.slots[3].itemID = 85;
+        this.slots[2].itemID = 351;
+        this.slots[3].itemID = 246;
+        this.slots[4].itemID = 85;
 
         this.lastSwitch = Date.now();
 

@@ -2,7 +2,7 @@
 
 
 class Sword extends Entity {
-    static damage = 10;
+    static damage = 29;
 
     constructor(swingDir) {
         super(new Vec2(doug.pos.x, doug.pos.y), new Dimension(32, 32));
@@ -168,6 +168,8 @@ class Arrow extends Entity {
         //this.padding = new Padding();
         this.moveToStartingPoint();
         this.setBox();
+        lightMap.addLightSource(
+            new LightSource(.4, new Vec2(0, 0), this, new RGBColor(255, 146, 73), 50));
     }
 
     setBox() {
@@ -191,7 +193,9 @@ class Arrow extends Entity {
         for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
             if(entity.boundingBox && this.attackBox.collide(entity.boundingBox) && entity !== doug) {
                 if(entity instanceof Obstacle) {
-                    ASSET_MANAGER.playAsset("sounds/arrow_impact.wav");
+                    if(getDistance(this.pos, doug.pos) < dontUpdateDistance) {
+                        ASSET_MANAGER.playAsset("sounds/arrow_impact.wav");
+                    }
                     return this.removeFromWorld = true;
                 }
                 if(entity instanceof Enemy) {
@@ -218,7 +222,7 @@ class Arrow extends Entity {
         offCtx.translate(w/2, h/2);
         offCtx.rotate(-this.angle);
         offCtx.translate(-w/2, -h/2);
-        offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/arrow.png"), 14, 5, 14, 32);
+        offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/arrow_flaming.png"), 14, 5, 14, 32);
         offCtx.restore();
 
         return offScreenCanvas;
@@ -226,6 +230,99 @@ class Arrow extends Entity {
 
     draw(ctx) {
         ctx.drawImage(this.image, this.getScreenPos().x, this.getScreenPos().y);
+        this.attackBox.draw(ctx);
+    }
+}
+
+class ManaBolt extends Entity {
+    static useTime = 0.3;
+    static ManaCost = 15;
+
+    constructor(dir) {
+        super(new Vec2(doug.pos.x, doug.pos.y), new Dimension(0, 0));
+
+        doug.attacking = true;
+        doug.attackDir = dir;
+
+        this.dir = dir;
+        this.startTime = Date.now();
+    }
+
+    update() {
+        if(timeInSecondsBetween(Date.now(), this.startTime) > ManaBolt.useTime) {
+            doug.attacking = false;
+            doug.attackDir = undefined;
+            this.removeFromWorld = true;
+        }
+
+        this.pos.y = doug.pos.y - 50;
+    }
+
+    draw(ctx) {
+
+    }
+}
+
+class WaterSphere extends Entity {
+    static damage = 45;
+    constructor(clickPos) {
+        super(new Vec2(doug.getCenter().x - 12, doug.getCenter().y - 12), new Dimension(24, 24));
+        this.velocity = new Vec2(clickPos.x - WIDTH / 2, clickPos.y - HEIGHT / 2);
+
+        // normalize
+        const magnitude = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        this.velocity.x /= magnitude;
+        this.velocity.y /= magnitude;
+
+        this.speed = 250;
+
+        ASSET_MANAGER.playAsset("sounds/mana_bolt.wav");
+
+
+        this.moveToStartingPoint();
+        this.setBox();
+        lightMap.addLightSource(
+            new LightSource(1, new Vec2(0, 0), this, new RGBColor(123, 10, 252), 50));
+    }
+
+    setBox() {
+        this.attackBox = new BoundingBox(this.pos, this.size);
+    }
+
+    // gives a jump in its direction, so it doesn't start inside the player
+    moveToStartingPoint() {
+        this.pos.x += this.velocity.x * 20;
+        this.pos.y += this.velocity.y * 20;
+    }
+
+    update() {
+        this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;
+        this.pos.y += this.velocity.y * this.speed * gameEngine.clockTick;
+        this.setBox();
+        this.checkCollide();
+    }
+
+    checkCollide() {
+        for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
+            if(entity.boundingBox && this.attackBox.collide(entity.boundingBox) && entity !== doug) {
+                if(entity instanceof Obstacle) {
+                    if(getDistance(this.pos, doug.pos) < dontUpdateDistance) {
+                        ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+                    }
+                    return this.removeFromWorld = true;
+                }
+                if(entity instanceof Enemy) {
+                    ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+                    entity.takeDamage(WaterSphere.damage);
+                    return this.removeFromWorld = true;
+                }
+            }
+        }
+    }
+
+    draw(ctx) {
+        ctx.drawImage(ASSET_MANAGER.getAsset("sprites/Water_Sphere.png"), 0, 0, 16, 16,
+            this.getScreenPos().x, this.getScreenPos().y, this.size.w, this.size.h);
         this.attackBox.draw(ctx);
     }
 }
