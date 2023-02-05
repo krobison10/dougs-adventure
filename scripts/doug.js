@@ -143,12 +143,8 @@ class Doug extends Character {
     update() {
         this.velocity.x = this.velocity.y = 0;
         if(this.dead) {
-            if(timeInSecondsBetween(this.deathTime, Date.now()) >= Doug.respawnTime) {
-                this.respawn();
-            }
-            else {
-                return;
-            }
+            if(timeInSecondsBetween(this.deathTime, Date.now()) >= Doug.respawnTime) this.respawn();
+            else return;
         }
 
         if(hotbar.slots[hotbar.selectedIndex].itemID === 336 && gameEngine.click && !this.attacking) {
@@ -312,6 +308,7 @@ class Doug extends Character {
 
     respawn() {
         this.pos = new Vec2(spawnPoint.x, spawnPoint.y);
+        this.lastDamage = Date.now();
         this.dead = false;
         this.hitPoints = this.maxHitPoints;
         this.manaLevel = this.maxMana;

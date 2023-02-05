@@ -56,6 +56,7 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	gameEngine.init(ctx);
 	gameEngine.start();
+	ASSET_MANAGER.setVolume(0.5)
 });
 
 
