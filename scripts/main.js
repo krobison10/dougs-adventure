@@ -15,7 +15,6 @@ const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();
 
-
 //Add paths of assets to be downloaded here
 declareAssets([
 	"sprites/blondie_spritesheet.png",
@@ -44,8 +43,11 @@ declareAssets([
 	"sounds/std_kill.wav",
 	"sounds/bat_kill.wav",
 	"sounds/slime_kill.wav",
+	"sounds/MaxMana.wav",
 
-	"sounds/Menu_Tick.wav"
+
+	"sounds/Menu_Tick.wav",
+	"sounds/theme.mp3"
 
 ]);
 
@@ -62,7 +64,7 @@ ASSET_MANAGER.downloadAll(() => {
 
 const spawnPoint = new Vec2(-140, 0)
 let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
- 	new Dimension(52, 72), new Padding(36, 12, 8, 12));
+ 	new Dimension(52, 72), );
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
@@ -154,3 +156,13 @@ const toggleBoxes = () => {
 	const box = document.getElementById("toggle-boxes");
 	boundingBoxes = box.checked;
 }
+
+const toggleMute = () => {
+	const box = document.getElementById("mute")
+	if(box.checked) {
+		ASSET_MANAGER.setVolume(0)
+	} else {
+		ASSET_MANAGER.setVolume(1)
+	}
+}
+
