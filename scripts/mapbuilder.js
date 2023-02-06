@@ -10,6 +10,7 @@ class MapBuilder {
      */
     static width = 100;
     static height = 100;
+    static removeOnClear = new Set();
     constructor() {
         this.tilemap = ASSET_MANAGER.getAsset("sprites/tiles.png");
     }
@@ -21,12 +22,12 @@ class MapBuilder {
         placeRandomTrees();
         this.placePath();
         this.placeGrassTiles();
-        placeBorderWallsAndTrees();
+        placeBorderWalls();
     }
 
     placePath() {
         //Entities for the path
-        removeTreesFromArea(new BoundingBox(
+        removeNatureFromArea(new BoundingBox(
             new Vec2(-7 * TILE_SIZE, -200 * TILE_SIZE),
             new Dimension(7 * TILE_SIZE, 400 * TILE_SIZE)));
 
@@ -69,17 +70,22 @@ class GrassTile extends Entity {
 }
 
 function placeRandomTrees() {
-    const numTrees = 2500;
-    const numGrass = 1000;
-    const trees = [];
-    const grass = [];
+    const numTrees = 3000;
+    const numGrass = 8000;
+    const numFlower1 = 1500;
+    const numFlower2 = 1500;
 
-    const edgeBuffer = 20;
+    const trees = [];
+    const grasses = [];
+    const flowers1 = [];
+    const flowers2 = [];
+
+
     const grassTileSize = 4;
-    let rightBound = (MapBuilder.width * grassTileSize / 2 - edgeBuffer) * TILE_SIZE;
+    let rightBound = (MapBuilder.width * grassTileSize / 2) * TILE_SIZE;
     const leftBound = -rightBound;
     rightBound -= 50;
-    let bottomBound = (MapBuilder.height * grassTileSize / 2 - edgeBuffer) * TILE_SIZE;
+    let bottomBound = (MapBuilder.height * grassTileSize / 2) * TILE_SIZE;
     const topBound = -bottomBound;
     bottomBound -= 100;
 
@@ -108,13 +114,118 @@ function placeRandomTrees() {
 
 
     for(let i = 0; i < numGrass; i++) {
-        let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
-        let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
-        //Grass size
-        //grass.push(Character.createBB(new Vec2(x, y), new Dimension(467/5, 627/5), new Padding()));
+        let newGrass;
+        let valid = false;
+        do {
+            //Create potential grass
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newGrass = {
+                box: new BoundingBox(new Vec2(x, y), new Dimension(31, 32)),
+                remove: false
+            }
+
+            valid = true;
+            //check among trees
+            for(let tree of trees) {
+                if(newGrass.box.collide(tree.box)) {
+                    valid = false;
+                }
+            }
+
+            //check among grass
+            for(let grass of grasses) {
+                if(newGrass.box.collide(grass.box)) {
+                    valid = false;
+                }
+            }
+        } while(!valid)
+        grasses.push(newGrass);
     }
 
-    //Place grass, remove grass that overlaps with other trees or grass
+    for(let i = 0; i < numFlower1; i++) {
+        let newFlower;
+        let valid = false;
+        do {
+            //Create potential grass
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newFlower = {
+                box: new BoundingBox(new Vec2(x, y), new Dimension(12, 32)),
+                remove: false
+            }
+
+            valid = true;
+            //check among trees
+            for(let tree of trees) {
+                if(newFlower.box.collide(tree.box)) {
+                    valid = false;
+                }
+            }
+
+            //check among grass
+            for(let grass of grasses) {
+                if(newFlower.box.collide(grass.box)) {
+                    valid = false;
+                }
+            }
+
+            //check among flowers
+            for(let flower of flowers1) {
+                if(newFlower.box.collide(flower.box)) {
+                    valid = false;
+                }
+            }
+
+        } while(!valid)
+        flowers1.push(newFlower);
+    }
+
+    for(let i = 0; i < numFlower2; i++) {
+        let newFlower;
+        let valid = false;
+        do {
+            //Create potential grass
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newFlower = {
+                box: new BoundingBox(new Vec2(x, y), new Dimension(16, 30)),
+                remove: false
+            }
+
+            valid = true;
+            //check among trees
+            for(let tree of trees) {
+                if(newFlower.box.collide(tree.box)) {
+                    valid = false;
+                }
+            }
+
+            //check among grass
+            for(let grass of grasses) {
+                if(newFlower.box.collide(grass.box)) {
+                    valid = false;
+                }
+            }
+
+            //check among flowers
+            for(let flower of flowers1) {
+                if(newFlower.box.collide(flower.box)) {
+                    valid = false;
+                }
+            }
+
+            //check among flowers
+            for(let flower of flowers2) {
+                if(newFlower.box.collide(flower.box)) {
+                    valid = false;
+                }
+            }
+
+        } while(!valid)
+        flowers2.push(newFlower);
+    }
+
 
     //Add these trees to the actual engine with correct bounding boxes
     trees.forEach(tree => {
@@ -129,28 +240,87 @@ function placeRandomTrees() {
         );
         realTree.boundingBox =
             Character.createBB(realTree.pos, realTree.size, new Padding(50, 20, 0 ,20));
+        realTree.footPrint = realTree.boundingBox;
         gameEngine.addEntity(realTree);
     })
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/tree_00.png"));
 
-    //remove trees from certain areas using new function
+    grasses.forEach(grass => {
+        const realGrass = new Obstacle(
+            grass.box.pos,
+            new Dimension(31, 32),
+            ASSET_MANAGER.getAsset("sprites/tall_grass.png"),
+            false,
+            null,
+            new Vec2(0, 0),
+            new Dimension(31, 32)
+        )
+        realGrass.footPrint = new BoundingBox(realGrass.pos, realGrass.size);
+
+        gameEngine.addEntity(realGrass, Layers.BACKGROUND);
+    })
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/tall_grass.png"));
+
+    flowers1.forEach(flower => {
+        const realFlower = new Obstacle(
+            flower.box.pos,
+            new Dimension(12, 32),
+            ASSET_MANAGER.getAsset("sprites/flower_1.png"),
+            false,
+            null,
+            new Vec2(0, 0),
+            new Dimension(12, 32)
+        )
+        realFlower.footPrint = new BoundingBox(realFlower.pos, realFlower.size);
+
+        gameEngine.addEntity(realFlower, Layers.BACKGROUND);
+    })
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_1.png"));
+
+    flowers2.forEach(flower => {
+        const realFlower = new Obstacle(
+            flower.box.pos,
+            new Dimension(16, 30),
+            ASSET_MANAGER.getAsset("sprites/flower_2.png"),
+            false,
+            null,
+            new Vec2(0, 0),
+            new Dimension(16, 30)
+        )
+        realFlower.footPrint = new BoundingBox(realFlower.pos, realFlower.size);
+
+        gameEngine.addEntity(realFlower, Layers.BACKGROUND);
+    })
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_2.png"));
+
+
+    //remove nature from certain areas using new function
     let bb = new BoundingBox(
         new Vec2(-10 * TILE_SIZE, -10 * TILE_SIZE),
         new Dimension(30 * TILE_SIZE, 20 * TILE_SIZE));
-    removeTreesFromArea(bb);
+    removeNatureFromArea(bb);
 }
 
-function removeTreesFromArea(boundingBox) {
-    for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
-        if(entity.spritesheet === ASSET_MANAGER.getAsset("sprites/tree_00.png")
-            && boundingBox.collide(entity.boundingBox)) {
 
-            entity.removeFromWorld = true;
+function removeNatureFromArea(boundingBox) {
+    for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
+        if(MapBuilder.removeOnClear.has(entity.spritesheet)) {
+            if(boundingBox.collide(entity.footPrint)) {
+                entity.removeFromWorld = true;
+            }
+        }
+    }
+    for(let entity of gameEngine.entities[Layers.BACKGROUND]) {
+        if(MapBuilder.removeOnClear.has(entity.spritesheet)) {
+            if(boundingBox.collide(entity.footPrint)) {
+                entity.removeFromWorld = true;
+            }
         }
     }
 }
 
 
-function placeBorderWallsAndTrees() {
+function placeBorderWalls() {
     //Distance to place border wall from edge in terms of tiles
     const edgeBuffer = 20;
     const segmentSize = 12;
@@ -174,44 +344,5 @@ function placeBorderWallsAndTrees() {
             new Vec2(i, topEdgeCoord + edgeBuffer), new Dimension(segmentSize, 1)));
         gameEngine.addEntity(new InvisibleBorder(
             new Vec2(i, bottomEdgeCoord - edgeBuffer), new Dimension(segmentSize, 1)));
-    }
-
-    //Draw trees
-    for(let i = leftEdgeCoord; i < rightEdgeCoord; i += 10) {
-        drawTreePatch(new Vec2(i, topEdgeCoord + 10));
-        drawTreePatch(new Vec2(i, bottomEdgeCoord - 20));
-        drawTreePatch(new Vec2(i, bottomEdgeCoord - 10));
-
-    }
-    for(let i = topEdgeCoord + 20; i < bottomEdgeCoord - 20; i += 10) {
-        drawTreePatch(new Vec2(leftEdgeCoord, i));
-        drawTreePatch(new Vec2(leftEdgeCoord + 10, i));
-        drawTreePatch(new Vec2(rightEdgeCoord - 10, i));
-        drawTreePatch(new Vec2(rightEdgeCoord - 20, i));
-    }
-}
-
-function drawTreePatch(tilePos) {
-    makeTree(new Vec2(tilePos.x + 0.5, tilePos.y + 0.5));
-    makeTree(new Vec2(tilePos.x + 1, tilePos.y + 5));
-
-    makeTree(new Vec2(tilePos.x + 3.5, tilePos.y -1));
-    makeTree(new Vec2(tilePos.x + 4, tilePos.y + 4));
-
-    makeTree(new Vec2(tilePos.x + 7, tilePos.y));
-    makeTree(new Vec2(tilePos.x + 7, tilePos.y + 5));
-
-    function makeTree(tilePos) {
-        let tree1 = new Obstacle(
-            new Vec2(tilePos.x * TILE_SIZE, tilePos.y * TILE_SIZE),
-            new Dimension(467/5, 627/5),
-            ASSET_MANAGER.getAsset("sprites/tree_00.png"),
-            false,
-            null,
-            new Vec2(0, 0),
-            new Dimension(467, 627)
-        );
-        tree1.boundingBox = undefined;
-        gameEngine.addEntity(tree1);
     }
 }
