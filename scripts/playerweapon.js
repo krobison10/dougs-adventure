@@ -24,7 +24,8 @@ class Sword extends Entity {
         this.sprite = ASSET_MANAGER.getAsset("sprites/sword.png");
         this.bbSize = new Dimension(72, 76);
         this.updateBB();
-        ASSET_MANAGER.playAsset("sounds/swing_2.wav")
+        ASSET_MANAGER.playAsset("sounds/swing_2.wav");
+        this.enemiesHit = new Set()
     }
 
     update() {
@@ -53,8 +54,9 @@ class Sword extends Entity {
 
     checkDamage() {
         for(let ent of gameEngine.entities[Layers.FOREGROUND]) {
-            if(ent instanceof Enemy && this.attackBox.collide(ent.boundingBox)) {
+            if(ent instanceof Enemy && this.attackBox.collide(ent.boundingBox) && !this.enemiesHit.has(ent)) {
                 ent.takeDamage(Sword.damage);
+                this.enemiesHit.add(ent);
             }
         }
     }
@@ -234,18 +236,41 @@ class Arrow extends Entity {
     }
 }
 
+
+
 class ManaBolt extends Entity {
     static useTime = 0.3;
     static ManaCost = 15;
 
     constructor(dir) {
-        super(new Vec2(doug.pos.x, doug.pos.y), new Dimension(0, 0));
+        super(new Vec2(doug.pos.x, doug.pos.y), new Dimension(32, 32));
 
         doug.attacking = true;
         doug.attackDir = dir;
-
         this.dir = dir;
         this.startTime = Date.now();
+        this.image = this.getImage();
+    }
+
+    getImage() {
+        let offScreenCanvas = document.createElement('canvas');
+        let w = this.size.w;
+        let h = this.size.h;
+        offScreenCanvas.width = w;
+        offScreenCanvas.height = h;
+
+        let offCtx = offScreenCanvas.getContext('2d');
+        offCtx.save();
+        if(this.dir === Directions.LEFT) {
+            offCtx.scale(-1, 1);
+            offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/tome_1.png"), -24, 0, 24, 24);
+
+        } else {
+            offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/tome_1.png"), 0, 0, 24, 24);
+
+        }
+        offCtx.restore();
+        return offScreenCanvas;
     }
 
     update() {
@@ -255,13 +280,16 @@ class ManaBolt extends Entity {
             this.removeFromWorld = true;
         }
 
-        this.pos.y = doug.pos.y - 50;
+        this.pos.y = doug.pos.y + 50;
     }
 
     draw(ctx) {
-
+        const xLoc = this.dir === Directions.LEFT ? doug.getScreenPos().x - 2 : doug.getScreenPos().x + 30;
+        ctx.drawImage(this.image, xLoc, doug.getScreenPos().y + 32);
     }
 }
+
+
 
 class WaterSphere extends Entity {
     static damage = 45;

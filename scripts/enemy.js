@@ -1,5 +1,4 @@
 class Enemy extends Character {
-    static immunityDuration = 0.3;
     /**
      * @param {Vec2} pos initial position.
      * @param {Dimension} size size of the sprite.
@@ -17,14 +16,11 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        this.lastDamage = Date.now();
         gameEngine.addEntity(new HealthBar(this))
 
     }
 
     takeDamage(amount) {
-        if(timeInSecondsBetween(this.lastDamage, Date.now()) > Enemy.immunityDuration) {
-            this.lastDamage = Date.now();
             this.hitPoints -= amount;
             if(this.hitPoints <= 0) {
                 this.hitPoints = 0;
@@ -32,7 +28,6 @@ class Enemy extends Character {
             } else {
                 this.hitSound();
             }
-        }
     }
 
     deathSound() {

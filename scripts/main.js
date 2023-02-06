@@ -34,6 +34,7 @@ declareAssets([
 	"sprites/bow.png",
 	"sprites/arrow.png",
 	"sprites/Water_Sphere.png",
+	"sprites/tome_1.png",
 	"sprites/arrow_flaming.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
 	"sprites/fires/orange/loops/burning_loop_3.png",
