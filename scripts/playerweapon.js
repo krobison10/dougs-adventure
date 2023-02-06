@@ -261,12 +261,13 @@ class ManaBolt extends Entity {
 
         let offCtx = offScreenCanvas.getContext('2d');
         offCtx.save();
+        offCtx.imageSmoothingEnabled = false;
         if(this.dir === Directions.LEFT) {
             offCtx.scale(-1, 1);
-            offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/tome_1.png"), -24, 0, 24, 24);
+            offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/tome_1.png"), -32, 0, 32, 32);
 
         } else {
-            offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/tome_1.png"), 0, 0, 24, 24);
+            offCtx.drawImage(ASSET_MANAGER.getAsset("sprites/tome_1.png"), 0, 0, 32, 32);
 
         }
         offCtx.restore();
@@ -284,8 +285,8 @@ class ManaBolt extends Entity {
     }
 
     draw(ctx) {
-        const xLoc = this.dir === Directions.LEFT ? doug.getScreenPos().x - 2 : doug.getScreenPos().x + 30;
-        ctx.drawImage(this.image, xLoc, doug.getScreenPos().y + 32);
+        const xLoc = this.dir === Directions.LEFT ? doug.getScreenPos().x - 10 : doug.getScreenPos().x + 30;
+        ctx.drawImage(this.image, xLoc, doug.getScreenPos().y + 28);
     }
 }
 
