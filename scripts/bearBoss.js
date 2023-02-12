@@ -84,7 +84,7 @@ set the animator based on that angle
 move() {
     // Change direction and velocity randomly
     console.log('he')
-    if(Math.random() < 0.5) {
+    if(Math.random() < 0.25) {
       const randomDirection = Math.floor(Math.random() * 4);
       switch (randomDirection) {
         case 0:
