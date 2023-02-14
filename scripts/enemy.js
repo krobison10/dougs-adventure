@@ -9,6 +9,7 @@ class Enemy extends Character {
      */
     constructor(pos, spritesheet, size, spritePadding = new Padding(), damage, maxHitPoints) {
         super(pos, spritesheet, size, spritePadding);
+
         if(this.constructor === Enemy) {
             throw new Error("Enemy is an abstract class, cannot be instantiated");
         }
@@ -16,7 +17,8 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        gameEngine.addEntity(new HealthBar(this))
+        gameEngine.addEntity(new HealthBar(this), 4)
+        
 
     }
 
