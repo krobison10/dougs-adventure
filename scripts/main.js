@@ -38,6 +38,7 @@ declareAssets([
 	"sprites/bow.png",
 	"sprites/arrow.png",
 	"sprites/Water_Sphere.png",
+	"sprites/FireSphere.png",
 	"sprites/tome_1.png",
 	"sprites/arrow_flaming.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
@@ -106,7 +107,7 @@ buildUI();
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(dragon);
-// gameEngine.addEntity(bat);
+gameEngine.addEntity(bat);
 // gameEngine.addEntity(wolf);
 // gameEngine.addEntity(bearBoss);
 gameEngine.addEntity(slime);

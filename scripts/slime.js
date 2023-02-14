@@ -17,10 +17,11 @@ class Slime extends Enemy {
      * @param {number} maxHitPoints maximum health of the enemy.
      */
     constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints, parent, scale) {
-        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints, scale);
+        let scale1 = scale;
+        super(pos, spritesheet, new Dimension(size.w*scale1, size.h*scale1), spritePadding, damage, maxHitPoints, scale);
 
         this.parent = parent;
-        this.scale = scale;
+        this.scale = scale1;
 
         this.animations = [];
 
@@ -29,16 +30,12 @@ class Slime extends Enemy {
         this.directionMem = 0;
 
         for(let i = 0; i < 4; i++) {
-            this.animations[i] = new Animator(this.spritesheet, 13, i * this.size.h + 8,
-                this.size.w, this.size.h,
+            this.animations[i] = new Animator(this.spritesheet, 13, (i * this.size.h + 8)/this.scale,
+                this.size.w/this.scale, this.size.h/this.scale,
                 3, .5, 0, false, true);
         }
 
-        this.size.w *= scale;
-        this.size.h *= scale;
-
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-        gameEngine.addEntity(new HealthBar(this), 4)
 
     }
 

@@ -18,23 +18,41 @@ class Bat extends Enemy {
     constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
         super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
-
+        this.scale = 1;
         this.speed = 200;
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-
+        this.time = 0;
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
                 3, .1, 0, false, true);
         }
+
+        this.targetID = 0;
+        this.path = [{x: 0, y: 0}, {x: 200, y: 0}, {x: 200, y: 200}, {x: 0, y: 200}];
+        this.target = this.path[this.targetID % 4];
+
+        let dist = getDistance(this.pos, this.target)
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
     }
 
     /**
      * Updates the bat for the frame.
      */
     update() {
-        this.route();
+        let dist = getDistance(this.pos, this.target);
+        if (dist < 5) {
+            this.targetID++;
+        }
+        this.target = this.path[this.targetID % 4];
+        dist = getDistance(this.pos, this.target)
+        console.log(this.pos)
+
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
+        //this.route();
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -57,25 +75,24 @@ class Bat extends Enemy {
 
     route() {
         let x = 200;
-        if (this.pos.x >= x && this.pos.y >= x) {
+
+        if (timeInSecondsBetween(Date.now(), this.time) < 1) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
         }
-
-        if (this.pos.x >= x && this.pos.y <=0) {
+        if (timeInSecondsBetween(Date.now(), this.time) >= 1) {
             this.velocity.y = 0;
             this.velocity.x = -this.speed;
         }
-
-        if (this.pos.x <= 0 && this.pos.y <= 0) {
+        if (timeInSecondsBetween(Date.now(), this.time) < 2) {
             this.velocity.x = 0;
             this.velocity.y = this.speed;
         }
-
-        if(this.pos.x <= 0 && this.pos.y >= x) {
+        if (timeInSecondsBetween(Date.now(), this.time) < 2) {
             this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
+
     }
 
     draw(ctx) {

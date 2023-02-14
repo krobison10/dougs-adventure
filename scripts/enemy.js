@@ -1,5 +1,4 @@
 class Enemy extends Character {
-    //static scale = 1;
     /**
      * @param {Vec2} pos initial position.
      * @param {Dimension} size size of the sprite.
@@ -18,7 +17,8 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        //gameEngine.addEntity(new HealthBar(this), 4)
+        gameEngine.addEntity(new HealthBar(this), 4)
+        
 
     }
 
