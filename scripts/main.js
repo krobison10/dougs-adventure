@@ -89,7 +89,7 @@ let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_sprite
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"),
 	new Dimension(55, 37), new Padding(0, 0, 0, 0), 20, 100);
 
-let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
+let wolf = new Wolf(new Vec2(-140, 0), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
 	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150);
 
 // let	bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),

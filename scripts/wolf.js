@@ -10,8 +10,8 @@ class Wolf extends Enemy {
         super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
 
-        this.xStart = pos.x;
-        this.yStart = pos.y;
+        this.startX = doug.getCenter().x;
+        this.startY = doug.getCenter().y;
 
         this.setSpeed();
         this.directionMem = 0;
@@ -60,31 +60,34 @@ class Wolf extends Enemy {
     }
 
     route() {
-        let xMax = 200;
-        let xMin = 100;
-        let yMax = 200;
-        let yMin = -100;
-        
-        //Bottom right
-        if (this.pos.x >= xMax && this.pos.y >= yMax) {
+        // const xMax = startX + 10;
+        // const xMin = startX - 10;
+        // const yMax = startY + 10;
+        // const yMin = startY - 10;
+
+        const xDif = this.pos.x -doug.getCenter().x;
+        const yDif = this.pos.y -doug.getCenter().y;
+
+        //Bottom Right
+        if (xDif < 0 && yDif > 0) {
             this.velocity.x = 0;
             this.velocity.y = -this.speed;
         }
         
         //Top Right
-        if (this.pos.x >= xMax && this.pos.y <= yMin) {
+        if (xDif < 0 && yDif < 0) {
             this.velocity.y = 0;
             this.velocity.x = -this.speed;
         }
 
         //Top Left
-        if (this.pos.x <= xMin && this.pos.y <= yMin) {
+        if (xDif > 0 && yDif < 0) {
             this.velocity.x = 0;
             this.velocity.y = this.speed;
         }
 
         //Bottom Left
-        if(this.pos.x <= xMin && this.pos.y >= yMax) {
+        if(xDif > 0 && yDif > 0) {
             this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
@@ -130,4 +133,5 @@ class Wolf extends Enemy {
             this.speed = 250;
         }
     }
+    
 }
