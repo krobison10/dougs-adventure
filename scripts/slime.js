@@ -37,13 +37,28 @@ class Slime extends Enemy {
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
+        this.targetID = randomInt(3);
+        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ 200, y: this.pos.y}, {x: this.pos.x+200, y: this.pos.y+200}, {x: this.pos.x, y: this.pos.y+200}];
+        this.target = this.path[this.targetID % 4];
+
+        let dist = getDistance(this.pos, this.target)
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
     }
 
     /**
      * Updates the slime for the frame.
      */
     update() {
-        this.route();
+        let dist = getDistance(this.pos, this.target);
+        if (dist < 5) {
+            this.targetID++;
+        }
+        this.target = this.path[this.targetID % 4];
+        dist = getDistance(this.pos, this.target)
+        //console.log(this.pos)
+
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
@@ -58,28 +73,6 @@ class Slime extends Enemy {
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
-    route() {
-        let x = 120;
-        if (this.pos.x >= x && this.pos.y >= x) {
-            this.velocity.x = 0;
-            this.velocity.y = -this.speed;
-        }
-
-        if (this.pos.x >= x && this.pos.y <=0) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        }
-
-        if (this.pos.x <= 0 && this.pos.y <= 0) {
-            this.velocity.x = 0;
-            this.velocity.y = this.speed;
-        }
-
-        if(this.pos.x <= 0 && this.pos.y >= x) {
-            this.velocity.x = this.speed;
-            this.velocity.y = 0;
-        }
-    }
 
     deathSound() {
         ASSET_MANAGER.playAsset("sounds/slime_kill.wav")
@@ -92,7 +85,7 @@ class Slime extends Enemy {
                     new Dimension(55, 37), new Padding(0,0,0,0), 10, 100, false, .7);
                 let slime2 = new Slime(new Vec2(this.pos.x + 55, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
                     new Dimension(55, 37), new Padding(0,0,0,0), 10, 100, false, .7);
-    
+                slime.targetID += 1;
                 gameEngine.addEntity(slime);
                 gameEngine.addEntity(slime2);
             }
@@ -102,20 +95,21 @@ class Slime extends Enemy {
     }
     draw(ctx) {
 
-            //this.drawAnim(ctx, this.animations[2]);
-        if(this.velocity.x < 0) {//left
+        //this.drawAnim(ctx, this.animations[1]); 0 3 1 2 1
+
+        if(this.velocity.x < 0 && Math.abs(this.velocity.x) >= Math.abs(this.velocity.y)) {//left
             this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0) {//right
+        if(this.velocity.x > 0 && this.velocity.x >= this.velocity.y) {//right
             this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 2;
         }
-        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+        if(this.velocity.y > 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//down
             this.drawAnim(ctx, this.animations[1]);
             this.directionMem = 0;
         }
-        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+        if(this.velocity.y < 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//up
             this.drawAnim(ctx, this.animations[2]);
             this.directionMem = 3;
         }

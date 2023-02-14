@@ -29,9 +29,9 @@ class Bat extends Enemy {
                 3, .1, 0, false, true);
         }
 
-        this.targetID = 0;
-        this.path = [{x: 0, y: 0}, {x: 200, y: 0}, {x: 200, y: 200}, {x: 0, y: 200}];
-        this.target = this.path[this.targetID % 4];
+        this.targetID = randomInt(3);
+        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ 200, y: this.pos.y}, {x: this.pos.x+200, y: this.pos.y+200}, {x: this.pos.x, y: this.pos.y+200}];
+        this.target = this.path[this.targetID % this.path.length];
 
         let dist = getDistance(this.pos, this.target)
         this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
@@ -46,7 +46,7 @@ class Bat extends Enemy {
         if (dist < 5) {
             this.targetID++;
         }
-        this.target = this.path[this.targetID % 4];
+        this.target = this.path[this.targetID % this.path.length];
         dist = getDistance(this.pos, this.target)
         console.log(this.pos)
 
@@ -73,45 +73,23 @@ class Bat extends Enemy {
         ASSET_MANAGER.playAsset("sounds/bat_kill.wav")
     }
 
-    route() {
-        let x = 200;
-
-        if (timeInSecondsBetween(Date.now(), this.time) < 1) {
-            this.velocity.x = 0;
-            this.velocity.y = -this.speed;
-        }
-        if (timeInSecondsBetween(Date.now(), this.time) >= 1) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        }
-        if (timeInSecondsBetween(Date.now(), this.time) < 2) {
-            this.velocity.x = 0;
-            this.velocity.y = this.speed;
-        }
-        if (timeInSecondsBetween(Date.now(), this.time) < 2) {
-            this.velocity.x = this.speed;
-            this.velocity.y = 0;
-        }
-
-    }
-
     draw(ctx) {
 
         //this.drawAnim(ctx, this.animations[7]);
 
-        if(this.velocity.x < 0) {//left
+        if(this.velocity.x < 0 && Math.abs(this.velocity.x) >= Math.abs(this.velocity.y)) {//left
             this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0) {//right
+        if(this.velocity.x > 0 && this.velocity.x >= this.velocity.y) {//right
             this.drawAnim(ctx, this.animations[1]);
             this.directionMem = 2;
         }
-        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+        if(this.velocity.y > 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//down
             this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 0;
         }
-        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+        if(this.velocity.y < 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//up
             this.drawAnim(ctx, this.animations[2]);
             this.directionMem = 3;
         }

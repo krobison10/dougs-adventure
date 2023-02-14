@@ -22,7 +22,7 @@ class Dragon extends Enemy {
         this.animations = [];
         this.scale = scale1
         this.maxHitPoints = 1000;
-
+        this.dragonRange = 400
         this.hitPoints = 1000;
         this.damage = 10;
 
@@ -39,13 +39,30 @@ class Dragon extends Enemy {
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
+
+        this.targetID = 0;
+        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ 200, y: this.pos.y}, {x: this.pos.x+200, y: this.pos.y+200}, {x: this.pos.x, y: this.pos.y+200}];
+        this.target = this.path[this.targetID % 4];
+
+        let dist = getDistance(this.pos, this.target)
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
     }
 
-    /**d
+    /**
      * Updates the dragon for the frame.
      */
     update() {
-        this.route();
+        let dist = getDistance(this.pos, this.target);
+        if (dist < 5) {
+            this.targetID++;
+        }
+        this.target = this.path[this.targetID % 4];
+        dist = getDistance(this.pos, this.target)
+        //console.log(this.pos)
+
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
         this.fireballAttack();
         
         this.pos.x += this.velocity.x * gameEngine.clockTick;
@@ -56,7 +73,7 @@ class Dragon extends Enemy {
     }
 
     fireballAttack() {
-        if (getDistance(doug.getCenter(), dragon.getCenter()) < 500 && !doug.dead) {
+        if (getDistance(doug.getCenter(), dragon.getCenter()) < this.dragonRange && !doug.dead) {
             if (timeInSecondsBetween(Date.now(), this.time) >= 0.75) {
                 this.time = Date.now();
                 gameEngine.addEntity(new FireSphere(new Vec2(doug.getCenter().x, doug.getCenter().y)))
@@ -65,46 +82,23 @@ class Dragon extends Enemy {
         }
     }
 
-    route() {
-        let x = 200;
-        if (this.pos.x >= x && this.pos.y >= x) {
-            this.velocity.x = 0;
-            this.velocity.y = -this.speed;
-        }
-
-        if (this.pos.x >= x && this.pos.y <=0) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        }
-
-        if (this.pos.x <= 0 && this.pos.y <= 0) {
-            this.velocity.x = 0;
-            this.velocity.y = this.speed;
-        }
-
-        if(this.pos.x <= 0 && this.pos.y >= x) {
-            this.velocity.x = this.speed;
-            this.velocity.y = 0;
-        }
-    }
-
     draw(ctx) {
 
-        //this.drawAnim(ctx, this.animations[1]);
+        //this.drawAnim(ctx, this.animations[1]); 0 3 1 2 1
 
-        if(this.velocity.x < 0) {//left
+        if(this.velocity.x < 0 && Math.abs(this.velocity.x) >= Math.abs(this.velocity.y)) {//left
             this.drawAnim(ctx, this.animations[1]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0) {//right
+        if(this.velocity.x > 0 && this.velocity.x >= this.velocity.y) {//right
             this.drawAnim(ctx, this.animations[2]);
             this.directionMem = 2;
         }
-        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+        if(this.velocity.y > 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//down
             this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 0;
         }
-        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+        if(this.velocity.y < 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//up
             this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 3;
         }
@@ -119,8 +113,6 @@ class Dragon extends Enemy {
          animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, this.scale);
      }
 }
-
-
 
 class FireSphere extends Entity {
     static damage = 45;
