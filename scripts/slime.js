@@ -79,6 +79,7 @@ class Slime extends Enemy {
     }
     
     die() {
+        super.die();
         if (this.hitPoints <= 0) {
             if (this.parent) {
                 let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
