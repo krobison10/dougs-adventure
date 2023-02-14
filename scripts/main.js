@@ -91,7 +91,7 @@ let dragon = new Dragon(new Vec2(0, -200), ASSET_MANAGER.getAsset("sprites/drago
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);	
 
 let slime = new Slime(new Vec2(200,200), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-	new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true);
+	new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1);
 
 let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
 	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150);

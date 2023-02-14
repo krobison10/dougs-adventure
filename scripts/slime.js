@@ -7,7 +7,6 @@
  *
  */
 class Slime extends Enemy {
-    //static parent = TRUE;
 
     /**
      * @param {Vec2} pos initial position of the slime.
