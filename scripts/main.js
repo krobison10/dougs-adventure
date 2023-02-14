@@ -114,7 +114,7 @@ buildUI();
 
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
-
+gameEngine.addEntity(dragon);
 gameEngine.addEntity(wolf);
 gameEngine.addEntity(bearBoss);
 gameEngine.addEntity(bat);
@@ -123,7 +123,7 @@ gameEngine.addEntity(bat3);
 gameEngine.addEntity(slime);
 gameEngine.addEntity(slime2);
 gameEngine.addEntity(slime3);
-gameEngine.addEntity(dragon);
+
 
 //------ Functions ------//
 
