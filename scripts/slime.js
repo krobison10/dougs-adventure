@@ -17,20 +17,30 @@ class Slime extends Enemy {
      * @param {number} damage how much damage the entity deals to the player
      * @param {number} maxHitPoints maximum health of the enemy.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
+    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints, parent, scale) {
+        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints, scale);
+
+        this.parent = parent;
+        this.scale = scale;
+
         this.animations = [];
 
         this.speed = 150;
 
         this.directionMem = 0;
-        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, 13, i * this.size.h + 8,
                 this.size.w, this.size.h,
                 3, .5, 0, false, true);
         }
+
+        this.size.w *= scale;
+        this.size.h *= scale;
+
+        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        gameEngine.addEntity(new HealthBar(this), 4)
+
     }
 
     /**
@@ -79,26 +89,21 @@ class Slime extends Enemy {
         ASSET_MANAGER.playAsset("sounds/slime_kill.wav")
     }
     
-    // die() {
-    //     if (this.hitPoints <= 0) {
-    //         if (this.parent) {
-    //             let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-    //                 new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false)
-    //             let slime2 = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-    //                 new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false)
-    //
-    //             let slime1Bar = new HealthBar(slime);
-    //             let slime2Bar = new HealthBar(slime2);
-    //
-    //             gameEngine.addEntity(slime);
-    //             gameEngine.addEntity(slime2);
-    //             gameEngine.addEntity(slime1Bar);
-    //             gameEngine.addEntity(slime2Bar);
-    //         }
-    //
-    //         this.removeFromWorld = true;
-    //     }
-    // }
+    die() {
+        if (this.hitPoints <= 0) {
+            if (this.parent) {
+                let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
+                    new Dimension(55, 37), new Padding(0,0,0,0), 10, 100, false, .7);
+                let slime2 = new Slime(new Vec2(this.pos.x + 55, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
+                    new Dimension(55, 37), new Padding(0,0,0,0), 10, 100, false, .7);
+    
+                gameEngine.addEntity(slime);
+                gameEngine.addEntity(slime2);
+            }
+    
+            this.removeFromWorld = true;
+        }
+    }
     draw(ctx) {
 
             //this.drawAnim(ctx, this.animations[2]);
@@ -126,6 +131,6 @@ class Slime extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, this.scale);
      }
 }

@@ -7,6 +7,8 @@
  *
  */
 class Dragon extends Enemy {
+
+    //static scale = 3;
     /**
      * @param {Vec2} pos initial position of the dragon.
      * @param {HTMLImageElement} spritesheet spritesheet of the dragon.
@@ -18,7 +20,7 @@ class Dragon extends Enemy {
     constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
         super(pos, spritesheet, size, spritePadding, damage, hitPoints);
         this.animations = [];
-
+        this.scale = 3;
         this.maxHitPoints = 1000;
 
         this.hitPoints = 1000;
@@ -27,7 +29,7 @@ class Dragon extends Enemy {
         this.speed = 200;
         this.velocity = new Vec2(0,0);
         this.directionMem = 0;
-        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        
         // this.animations[0] = new Animator(this.spritesheet, 1, 1,
         //     100, 100,
         //     3, .5, 0, false, true);
@@ -42,9 +44,18 @@ class Dragon extends Enemy {
                 this.size.w, this.size.h,
                 4, .2, 0, false, true);
         }
+
+        this.size.w *= this.scale;
+        this.size.h *= this.scale;
+        
+        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+
+        
+        gameEngine.addEntity(new HealthBar(this), 4)
+
     }
 
-    /**
+    /**d
      * Updates the dragon for the frame.
      */
     update() {
@@ -126,6 +137,6 @@ class Dragon extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 3);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, this.scale);
      }
 }
