@@ -12,10 +12,20 @@ class Doug extends Character {
      */
     static regenDelay = 10;
     /**
+     * Time in seconds for how long doug must wait to drink another health potion.
+     * @type {number}
+     */
+    static healthPotionCooldown = 20;
+    /**
+     * Amount of HP that the health potion regenerates.
+     * @type {number}
+     */
+    static healthPotionAmount = 50;
+    /**
      * Amount of time in seconds before doug can take damage again.
      * @type {number}
      */
-    static immunityDuration = 0.2;
+    static immunityDuration = 0.4;
     /**
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
@@ -25,7 +35,7 @@ class Doug extends Character {
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
      */
-    static baseManaRegen = 5;
+    static baseManaRegen = 7;
     /**
      * Multiplier for the exponential growth of mana regeneration.
      * @type {number}
@@ -43,25 +53,32 @@ class Doug extends Character {
      * @param {Dimension} size size of the sprite.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      */
-    constructor(pos, spritesheet, size, spritePadding) {
-        super(pos, spritesheet, size, spritePadding);
+    constructor(pos, spritesheet, size) {
+        super(pos, spritesheet, size, null);
+        this.walkingPadding = new Padding(36, 12, 8, 12);
+        this.spritePadding = new Padding(8, 12, 8, 12);
         this.animations = [];
 
         /**
          * The maximum hit points of doug
          * @type {number}
          */
-        this.maxHitPoints = 100;
+        this.maxHitPoints = 200;
         /**
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
-        this.hitPoints = 100;
+        this.hitPoints = this.maxHitPoints;
         /**
          * The time of the last health regeneration frame.
          * @type {number}
          */
         this.lastHealthRegen = Date.now();
+        /**
+         * Time that doug last drank a health potion.
+         * @type {number}
+         */
+        this.lastHealthPotion = 0;
         /**
          * Time that the last damage frame occurred.
          * @type {number}
@@ -81,12 +98,12 @@ class Doug extends Character {
          * The maximum mana level of doug.
          * @type {number}
          */
-        this.maxMana = 20;
+        this.maxMana = 100;
         /**
          * The current mana level of doug.
          * @type {number}
          */
-        this.manaLevel = 20;
+        this.manaLevel = this.maxMana;
         /**
          * The time of the last mana regeneration frame.
          * @type {number}
@@ -116,6 +133,7 @@ class Doug extends Character {
          * Current bounding box of the player.
          * @type {BoundingBox}
          */
+        this.walkingBox = Character.createBB(this.pos, this.size, this.walkingPadding);
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         this.attacking = false;
         this.attackDir = undefined;
@@ -140,22 +158,12 @@ class Doug extends Character {
     update() {
         this.velocity.x = this.velocity.y = 0;
         if(this.dead) {
-            if(timeInSecondsBetween(this.deathTime, Date.now()) >= Doug.respawnTime) {
-                this.respawn();
-            }
-            else {
-                return;
-            }
+            if(timeInSecondsBetween(this.deathTime, Date.now()) >= Doug.respawnTime) this.respawn();
+            else return;
         }
 
-        if(hotbar.slots[hotbar.selectedIndex].itemID === 336 && gameEngine.click && !this.attacking) {
-            if(gameEngine.click.x <= WIDTH / 2) {
-                gameEngine.addEntity(new Sword(SwingDirections.LEFT));
-            }
-            else {
-                gameEngine.addEntity(new Sword(SwingDirections.RIGHT));
-            }
-
+        if(gameEngine.click) {
+            this.handleClick();
         }
 
         if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
@@ -188,15 +196,99 @@ class Doug extends Character {
         for(const entity of entities) {
             if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
                  this.takeDamage(entity.damage);
-                 entity.takeDamage(3);
-
             }
         }
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        this.walkingBox = Character.createBB(this.pos, this.size, this.walkingPadding);
 
         this.regen();
         this.updateDebug();
+    }
+
+    handleClick() {
+        if(!this.attacking) {
+            if(hotbar.slots[hotbar.selectedIndex].itemID === 336) {
+                if(gameEngine.click.x <= WIDTH / 2) {
+                    gameEngine.addEntity(new Sword(Directions.LEFT));
+                }
+                else {
+                    gameEngine.addEntity(new Sword(Directions.RIGHT));
+                }
+            }
+            else if (hotbar.slots[hotbar.selectedIndex].itemID === 76) {
+                if(gameEngine.click.x <= WIDTH / 2) {
+                    gameEngine.addEntity(new Bow(Directions.LEFT));
+                }
+                else {
+                    gameEngine.addEntity(new Bow(Directions.RIGHT));
+                }
+                gameEngine.addEntity(new Arrow(gameEngine.click));
+            }
+            else if (hotbar.slots[hotbar.selectedIndex].itemID === 351 && this.useMana(ManaBolt.ManaCost)) {
+                if(gameEngine.click.x <= WIDTH / 2) {
+                    gameEngine.addEntity(new ManaBolt(Directions.LEFT));
+                }
+                else {
+                    gameEngine.addEntity(new ManaBolt(Directions.RIGHT));
+                }
+                gameEngine.addEntity(new WaterSphere(gameEngine.click));
+            }
+        }
+        if (hotbar.slots[hotbar.selectedIndex].itemID === 246
+            && timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+            this.lastHealthPotion = Date.now();
+            this.hitPoints += Doug.healthPotionAmount;
+            if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            ASSET_MANAGER.playAsset("sounds/drink.wav");
+        }
+    }
+
+    checkCollide(dir) {
+        let futurePos = {};
+        futurePos.x = this.pos.x + (dir === 'lateral' ? this.velocity.x * gameEngine.clockTick : 0);
+        futurePos.y = this.pos.y + (dir === 'vertical' ? this.velocity.y * gameEngine.clockTick : 0);
+        let box = Character.createBB(new Vec2(futurePos.x, futurePos.y), this.size, this.walkingPadding);
+
+        const entities = gameEngine.entities[Layers.FOREGROUND];
+        for(const entity of entities) {
+            if(entity.boundingBox && entity instanceof Obstacle) {
+                if(entity !== this && box.collide(entity.boundingBox)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Attempts to regenerate the player's health and mana
+     */
+    regen() {
+        if(this.hitPoints < this.maxHitPoints && timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.regenDelay) {
+            if(timeInSecondsBetween(this.lastHealthRegen, Date.now()) >= 1 / Doug.healthRegen) {
+                if(this.velocity.netVelocity() !== 0) {
+                    this.hitPoints += 1;
+                }
+                else {
+                    this.hitPoints += 2;
+                }
+
+                if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+
+                this.lastHealthRegen = Date.now();
+            }
+        }
+        if(this.manaLevel < this.maxMana) {
+            if(timeInSecondsBetween(this.lastManaRegen, Date.now()) >= 1 / this.curManaRegen) {
+                this.manaLevel += 1;
+                this.lastManaRegen = Date.now();
+                this.curManaRegen *= Doug.manaRegenMultiplier;
+                if(this.manaLevel >= this.maxMana) {
+                    ASSET_MANAGER.playAsset("sounds/MaxMana.wav");
+                }
+            }
+        }
     }
 
     /**
@@ -216,8 +308,13 @@ class Doug extends Character {
         if(timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.immunityDuration) {
             this.lastDamage = Date.now();
             this.hitPoints -= amount;
-            if(this.hitPoints <= 0) {
+            if(this.hitPoints > 0) {
+                let variant = randomInt(3);
+                ASSET_MANAGER.playAsset(`sounds/Player_Hit_${variant}.wav`);
+
+            } else {
                 this.hitPoints = 0;
+                ASSET_MANAGER.playAsset("sounds/Player_Killed.wav");
                 this.die();
             }
         }
@@ -258,6 +355,7 @@ class Doug extends Character {
 
     respawn() {
         this.pos = new Vec2(spawnPoint.x, spawnPoint.y);
+        this.lastDamage = Date.now();
         this.dead = false;
         this.hitPoints = this.maxHitPoints;
         this.manaLevel = this.maxMana;
@@ -265,31 +363,8 @@ class Doug extends Character {
 
     }
 
-    /**
-     * Attempts to regenerate the player's health and mana
-     */
-    regen() {
-        if(this.hitPoints < this.maxHitPoints && timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.regenDelay) {
-            if(timeInSecondsBetween(this.lastHealthRegen, Date.now()) >= 1 / Doug.healthRegen) {
-                if(this.velocity.netVelocity() !== 0) {
-                    this.hitPoints += 1;
-                }
-                else {
-                    this.hitPoints += 2;
-                }
+    drinkHealthPotion() {
 
-                if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-
-                this.lastHealthRegen = Date.now();
-            }
-        }
-        if(this.manaLevel < this.maxMana) {
-            if(timeInSecondsBetween(this.lastManaRegen, Date.now()) >= 1 / this.curManaRegen) {
-                this.manaLevel += 1;
-                this.lastManaRegen = Date.now();
-                this.curManaRegen *= Doug.manaRegenMultiplier;
-            }
-        }
     }
 
     /**
@@ -325,10 +400,10 @@ class Doug extends Character {
             }
         }
         else {
-            if(this.attackDir === SwingDirections.LEFT) {
+            if(this.attackDir === Directions.LEFT) {
                 this.directionMem = 1;
             }
-            if(this.attackDir === SwingDirections.RIGHT) {
+            if(this.attackDir === Directions.RIGHT) {
                 this.directionMem = 2;
             }
 
@@ -341,6 +416,7 @@ class Doug extends Character {
         }
 
         this.boundingBox.draw(ctx);
+        this.walkingBox.draw(ctx);
     }
 
     drawAnim(ctx, animator) {

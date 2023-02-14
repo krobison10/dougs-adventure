@@ -14,22 +14,15 @@ class Slime extends Enemy {
      * @param {HTMLImageElement} spritesheet spritesheet of the slime.
      * @param {Dimension} size size of the slime in the spritesheet.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
-     * @param {damage} damage represents the damage of the slime
-     * @param {hitPoints} hitPoints represenets the heath of the slime
-     * @param {parent} parent is boolean true if this is the parent slime that spawn 2 little slimes. little slimes are false
-     * @param {scale} scale of the slime in the game small slimes are .5 of the big slime
+     * @param {number} damage how much damage the entity deals to the player
+     * @param {number} maxHitPoints maximum health of the enemy.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints, parent, scale) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
-        Object.assign(this, {parent, scale});
+    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
+        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
-        this.maxHitPoints = 100;
 
-        //this.hitPoints = 100;
-        //this.damage = 10;
+        this.speed = 150;
 
-        this.speed = 250;
-        this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
 
@@ -81,39 +74,31 @@ class Slime extends Enemy {
             this.velocity.y = 0;
         }
     }
-    takeDamage(amount) {
-            this.hitPoints -= amount;
-            if(this.hitPoints <= 0) {
-                this.hitPoints = 0;
-                this.die();
-            }
+
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/slime_kill.wav")
     }
     
-    die() {
-        if (this.hitPoints <= 0) {
-            if (this.parent) {
-                //this.pos.x+1,this.pos.y
-                //(-3,-3)
-                let slime = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-                    new Dimension(55, 37), new Padding(0, 15, 10, 5), 10, 100, false, .75)
-                let slime2 = new Slime(new Vec2(-9,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
-                    new Dimension(55, 37), new Padding(0, 15, 10, 5), 10, 100, false, .75)
-                    
-                slime
-                
-                let slime1Bar = new HealthBar(slime);
-                let slime2Bar = new HealthBar(slime2);
-                
-                gameEngine.addEntity(slime);
-                gameEngine.addEntity(slime2);
-                gameEngine.addEntity(slime1Bar);
-                gameEngine.addEntity(slime2Bar);
-                
-            }
-            
-            this.removeFromWorld = true;
-        }
-    }
+    // die() {
+    //     if (this.hitPoints <= 0) {
+    //         if (this.parent) {
+    //             let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
+    //                 new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false)
+    //             let slime2 = new Slime(new Vec2(-3,-3), ASSET_MANAGER.getAsset("sprites/slime01.png"),
+    //                 new Dimension(55, 37), new Padding(0, -20, -20, 5), 10, 100, false)
+    //
+    //             let slime1Bar = new HealthBar(slime);
+    //             let slime2Bar = new HealthBar(slime2);
+    //
+    //             gameEngine.addEntity(slime);
+    //             gameEngine.addEntity(slime2);
+    //             gameEngine.addEntity(slime1Bar);
+    //             gameEngine.addEntity(slime2Bar);
+    //         }
+    //
+    //         this.removeFromWorld = true;
+    //     }
+    // }
     draw(ctx) {
 
             //this.drawAnim(ctx, this.animations[2]);
@@ -141,6 +126,6 @@ class Slime extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, this.scale);
+         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
      }
 }

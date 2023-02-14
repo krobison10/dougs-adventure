@@ -55,14 +55,6 @@ class LightMap {
         this.lightSources.push(source);
     }
 
-    /**
-     * Removes a light source from the map, will be removed from the next and all future draws.
-     * @param {LightSource} lightSource the lightsource to remove.
-     */
-    removeLightSource(lightSource) {
-        this.lightSources.splice(this.lightSources.indexOf(lightSource), 1);
-    }
-
 
     /**
      * Updates the mask to be ready for the next draw, if a light source is marked for
@@ -81,10 +73,10 @@ class LightMap {
         this.renderingCtx.fillRect(0 ,0, WIDTH, HEIGHT);
 
         for (let i = this.lightSources.length - 1; i >= 0; --i) {
+            this.lightSources[i].update();
             if (this.lightSources[i].removeFromWorld) {
                 this.lightSources.splice(i, 1); // Delete element at i
             } else {
-                this.lightSources[i].update();
                 this.lightSources[i].drawLight(this.renderingCtx);
             }
         }

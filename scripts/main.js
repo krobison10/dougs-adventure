@@ -9,12 +9,11 @@ const dontDrawDistance = 1000;
 const dontUpdateDistance = 2000;
 const dontCheckCollideDistance = 800;
 
-let gameTime = 4.5 * 60; //5:30 am
+let gameTime = 11 * 60; //12:00 pm
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();
-
 
 //Add paths of assets to be downloaded here
 declareAssets([
@@ -25,6 +24,9 @@ declareAssets([
 	"sprites/slime01.png",
 	"sprites/tree_00.png",
 	"sprites/grass_1.png",
+	"sprites/tall_grass.png",
+	"sprites/flower_1.png",
+	"sprites/flower_2.png",
 	"sprites/firepit.png",
 	"sprites/tiles.png",
 	"sprites/heart.png",
@@ -33,8 +35,35 @@ declareAssets([
 	"sprites/bear.png",
 	"sprites/fires/torch_stem.png",
 	"sprites/sword.png",
+	"sprites/bow.png",
+	"sprites/arrow.png",
+	"sprites/Water_Sphere.png",
+	"sprites/tome_1.png",
+	"sprites/arrow_flaming.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
-	"sprites/fires/orange/loops/burning_loop_3.png"
+	"sprites/fires/orange/loops/burning_loop_3.png",
+
+	"sounds/swing_2.wav",
+	"sounds/bow.wav",
+	"sounds/Player_Hit_0.wav",
+	"sounds/Player_Hit_1.wav",
+	"sounds/Player_Hit_2.wav",
+	"sounds/Player_Killed.wav",
+	"sounds/Hit_1.wav",
+	"sounds/std_kill.wav",
+	"sounds/bat_kill.wav",
+	"sounds/slime_kill.wav",
+	"sounds/MaxMana.wav",
+	"sounds/mana_bolt.wav",
+	"sounds/projectile_impact.wav",
+	"sounds/arrow_impact.wav",
+	"sounds/drink.wav",
+
+
+
+	"sounds/Menu_Tick.wav",
+	"sounds/theme.mp3"
+
 ]);
 
 ASSET_MANAGER.downloadAll(() => {
@@ -42,6 +71,7 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	gameEngine.init(ctx);
 	gameEngine.start();
+	ASSET_MANAGER.setVolume(0.5)
 });
 
 
@@ -50,12 +80,12 @@ ASSET_MANAGER.downloadAll(() => {
 
 const spawnPoint = new Vec2(-140, 0)
 let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
- 	new Dimension(52, 72), new Padding(36, 12, 8, 12));
+ 	new Dimension(52, 72), );
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
 let bat = new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
-	new Dimension(32, 32), new Padding(10, -15, 0, 5));
+	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50);
 
 let dragon = new Dragon(new Vec2(0, -200), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,-200,-150,0));	
@@ -67,12 +97,10 @@ let slimeHealthBar = new HealthBar(slime);
 let batHealthBar = new HealthBar(bat);
 
 let wolf = new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
-	new Dimension(32, 64), new Padding(10, -15, 0, 5), 40, 150);
+	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150);
 
-let	bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"), 
-	new Dimension(56, 56), new Padding(0, -15, 0, 3));
-
-
+ let	bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
+ new Dimension(56, 56), new Padding(0, -15, 0, 3));
 
 let hotbar;
 buildWorld();
@@ -82,14 +110,11 @@ gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(dragon);
 gameEngine.addEntity(bat);
-gameEngine.addEntity(batHealthBar);
 gameEngine.addEntity(slime);
-gameEngine.addEntity(slimeHealthBar,4);
 
 
 gameEngine.addEntity(wolf);
 gameEngine.addEntity(bearBoss);
-
 
 
 
@@ -154,3 +179,13 @@ const toggleBoxes = () => {
 	const box = document.getElementById("toggle-boxes");
 	boundingBoxes = box.checked;
 }
+
+const toggleMute = () => {
+	const box = document.getElementById("mute")
+	if(box.checked) {
+		ASSET_MANAGER.setVolume(0)
+	} else {
+		ASSET_MANAGER.setVolume(1)
+	}
+}
+
