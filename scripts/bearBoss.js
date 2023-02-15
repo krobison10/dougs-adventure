@@ -132,7 +132,7 @@ draw(ctx){
       } else {
         // this.drawAnim = this.animations[0];
       }
-      // this.boundingBox.draw(ctx);
+      this.boundingBox.draw(ctx);
 
 }
 
