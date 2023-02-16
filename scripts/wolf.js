@@ -12,6 +12,7 @@ class Wolf extends Enemy {
 
         this.startX = doug.getCenter().x;
         this.startY = doug.getCenter().y;
+        this.aggroRange = 10;
 
         this.setSpeed();
         this.directionMem = 0;
@@ -31,7 +32,7 @@ class Wolf extends Enemy {
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-
+        
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
@@ -65,32 +66,41 @@ class Wolf extends Enemy {
         // const yMax = startY + 10;
         // const yMin = startY - 10;
 
-        const xDif = this.pos.x -doug.getCenter().x;
-        const yDif = this.pos.y -doug.getCenter().y;
+        const deltaX = this.pos.x - doug.getCenter().x;
+        const deltaY = this.pos.y - doug.getCenter().y;
 
-        //Bottom Right
-        if (xDif < 0 && yDif > 0) {
-            this.velocity.x = 0;
-            this.velocity.y = -this.speed;
+        if((Math.abs(deltaX) || Math.abs(deltaY)) <= this.aggroRange) {
+            this.velocity.x = x2 - x1;
+            this.velocity.y = y2 - y1;
+
+            const magnitude = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+            this.velocity.x /= magnitude;
+            this.velocity.y /= magnitude;
         }
+
+        // //Bottom Right
+        // if (xDif < 0 && yDif > 0) {
+        //     this.velocity.x = 0;
+        //     this.velocity.y = -this.speed;
+        // }
         
-        //Top Right
-        if (xDif < 0 && yDif < 0) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        }
+        // //Top Right
+        // if (xDif < 0 && yDif < 0) {
+        //     this.velocity.y = 0;
+        //     this.velocity.x = -this.speed;
+        // }
 
-        //Top Left
-        if (xDif > 0 && yDif < 0) {
-            this.velocity.x = 0;
-            this.velocity.y = this.speed;
-        }
+        // //Top Left
+        // if (xDif > 0 && yDif < 0) {
+        //     this.velocity.x = 0;
+        //     this.velocity.y = this.speed;
+        // }
 
-        //Bottom Left
-        if(xDif > 0 && yDif > 0) {
-            this.velocity.x = this.speed;
-            this.velocity.y = 0;
-        }
+        // //Bottom Left
+        // if(xDif > 0 && yDif > 0) {
+        //     this.velocity.x = this.speed;
+        //     this.velocity.y = 0;
+        // }
     }
 
     drawAnim(ctx, animator) {

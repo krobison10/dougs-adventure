@@ -102,7 +102,7 @@ let slime2 = new Slime(new Vec2(200,500), ASSET_MANAGER.getAsset("sprites/slime0
 let slime3 = new Slime(new Vec2(-500,100), ASSET_MANAGER.getAsset("sprites/slime01.png"), 
 	new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1);
 
-let wolf = new Wolf(new Vec2(-140, 0), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
+let wolf = new Wolf(new Vec2(-190, 100), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
 	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150);
 
 let bearBoss = new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
