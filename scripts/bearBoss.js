@@ -83,8 +83,7 @@ set the animator based on that angle
 */
 move() {
     // Change direction and velocity randomly
-    //console.log('he')
-    if(Math.random() < 0.11) {
+    if(Math.random() < 0.25) {
       const randomDirection = Math.floor(Math.random() * 4);
       switch (randomDirection) {
         case 0:
@@ -133,7 +132,7 @@ draw(ctx){
       } else {
         // this.drawAnim = this.animations[0];
       }
-       this.boundingBox.draw(ctx);
+      this.boundingBox.draw(ctx);
 
 }
 
