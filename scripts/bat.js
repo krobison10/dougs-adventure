@@ -13,34 +13,44 @@ class Bat extends Enemy {
      * @param {Dimension} size size of the bat.
      * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      * @param {number} damage how much damage the entity deals to the player
-     * @param {number} hitPoints maximum health of the enemy.
+     * @param {number} maxHitPoints maximum health of the enemy.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
+        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
-
-        this.maxHitPoints = 100;
-
-        this.hitPoints = 100;
-        this.damage = 10;
-
+        this.scale = 1;
         this.speed = 200;
-        this.velocity = new Vec2(0,0);
         this.directionMem = 0;
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-
+        this.time = 0;
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
                 3, .1, 0, false, true);
         }
+
+        this.targetID = randomInt(3);
+        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ 200, y: this.pos.y}, {x: this.pos.x+200, y: this.pos.y+200}, {x: this.pos.x, y: this.pos.y+200}];
+        this.target = this.path[this.targetID % this.path.length];
+
+        let dist = getDistance(this.pos, this.target)
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
     }
 
     /**
      * Updates the bat for the frame.
      */
     update() {
-        this.route();
+        let dist = getDistance(this.pos, this.target);
+        if (dist < 5) {
+            this.targetID++;
+        }
+        this.target = this.path[this.targetID % this.path.length];
+        dist = getDistance(this.pos, this.target)
+
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -50,50 +60,34 @@ class Bat extends Enemy {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
 
-        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        if (this.hitPoints <= 0) {
+            this.removeFromWorld = true;
+        }
 
+        this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
-    route() {
-        let x = 200;
-        if (this.pos.x >= x && this.pos.y >= x) {
-            this.velocity.x = 0;
-            this.velocity.y = -this.speed;
-        }
-
-        if (this.pos.x >= x && this.pos.y <=0) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        }
-
-        if (this.pos.x <= 0 && this.pos.y <= 0) {
-            this.velocity.x = 0;
-            this.velocity.y = this.speed;
-        }
-
-        if(this.pos.x <= 0 && this.pos.y >= x) {
-            this.velocity.x = this.speed;
-            this.velocity.y = 0;
-        }
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/bat_kill.wav")
     }
 
     draw(ctx) {
 
         //this.drawAnim(ctx, this.animations[7]);
 
-        if(this.velocity.x < 0) {//left
+        if(this.velocity.x < 0 && Math.abs(this.velocity.x) >= Math.abs(this.velocity.y)) {//left
             this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0) {//right
+        if(this.velocity.x > 0 && this.velocity.x >= this.velocity.y) {//right
             this.drawAnim(ctx, this.animations[1]);
             this.directionMem = 2;
         }
-        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
+        if(this.velocity.y > 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//down
             this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 0;
         }
-        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
+        if(this.velocity.y < 0 && Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {//up
             this.drawAnim(ctx, this.animations[2]);
             this.directionMem = 3;
         }
@@ -105,6 +99,6 @@ class Bat extends Enemy {
     }
 
      drawAnim(ctx, animator) {
-         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+        animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
      }
 }

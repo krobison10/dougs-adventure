@@ -139,5 +139,5 @@ draw(ctx){
 drawAnim(ctx,animation) {
     animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
   }
-      
+
 } 

@@ -14,7 +14,8 @@ class Item {
         76: 'Diamond Bow',
         85: 'Candle',
         246: 'Healing Potion',
-        336: 'Iron Sword'
+        336: 'Iron Sword',
+        351: 'Mana Bolt'
     }
 
     /**
@@ -23,7 +24,7 @@ class Item {
      * @returns {{size: number, x: number, y: number}}
      */
     static getItemSpriteLocById(id) {
-        if(id < 1 || id > 350) {
+        if(id < 1 || id > 351) {
             throw new Error("Invalid item ID requested");
         }
         id -= 1;

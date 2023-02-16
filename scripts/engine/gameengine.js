@@ -35,6 +35,7 @@ class GameEngine {
 
     init(ctx) {
         this.ctx = ctx;
+        //this.ctx.imageSmoothingEnabled = false;
         this.startInput();
         this.timer = new Timer();
     }
@@ -118,7 +119,14 @@ class GameEngine {
         }
         i = Layers.FOREGROUND;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
-            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
+            if(shouldDraw(this.entities[i][j]) && !(this.entities[i][j] instanceof Dragon)) {
+                this.entities[i][j].draw(this.ctx);
+            }
+        }
+        for(let ent of this.entities[i]) {
+            if(ent instanceof Dragon) {
+                if(shouldDraw(ent)) ent.draw(this.ctx);
+            }
         }
         i = Layers.LIGHTMAP;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
@@ -207,6 +215,7 @@ class GameEngine {
         this.update();
         this.draw();
         this.countFPS();
+        this.click = null;
     }
 
     countFPS() {

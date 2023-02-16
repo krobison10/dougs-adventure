@@ -159,6 +159,7 @@ class AssetManager {
      */
     autoRepeat(path) {
         const aud = this.cache[path];
+        aud.play();
         aud.addEventListener("ended", () => {
             aud.play();
         })

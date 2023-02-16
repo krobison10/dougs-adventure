@@ -26,8 +26,12 @@
     <script type="text/javascript" src="./scripts/character.js"></script>
     <script type="text/javascript" src="./scripts/enemy.js"></script>
     <script type="text/javascript" src="scripts/doug.js"></script>
+    <script type="text/javascript" src="scripts/playerweapon.js"></script>
     <script type="text/javascript" src="scripts/bat.js"></script>
+    <script type="text/javascript" src="scripts/dragon.js"></script>
     <script type="text/javascript" src="scripts/slime.js"></script>
+    <script type="text/javascript" src="scripts/bearBoss.js"></script>
+    <script type="text/javascript" src="scripts/wolf.js"></script>
     <script type="text/javascript" src="scripts/healthbar.js"></script>
     <script type="text/javascript" src="scripts/fires.js"></script>
     <script type="text/javascript" src="./scripts/main.js" defer></script>
@@ -44,9 +48,15 @@
             <input id="toggle-boxes" type="checkbox" onclick="toggleBoxes()"/>
         </div>
         <div>
-            <h4>Position:</h4>
+            <h4>Mute</h4>
+            <label for="mute"></label>
+            <input id="mute" type="checkbox" onclick="toggleMute()"/>
+        </div>
+        <div>
+            <h4>Position</h4>
             <h4 id="position">X: , Y: </h4>
         </div>
+
     </div>
 </body>
 </html>

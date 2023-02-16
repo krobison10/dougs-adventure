@@ -37,8 +37,11 @@ class Hotbar extends Entity {
 
         this.slots[0].itemID = 336;
         this.slots[1].itemID = 76;
-        this.slots[2].itemID = 246;
-        this.slots[3].itemID = 85;
+        this.slots[2].itemID = 351;
+        this.slots[3].itemID = 246;
+        this.slots[4].itemID = 85;
+
+        this.lastSwitch = Date.now();
 
     }
                 
@@ -49,6 +52,10 @@ class Hotbar extends Entity {
     checkSlotSelect() {
         for(let i = 1; i <= this.slots.length; i++) {
             if(gameEngine.keys[i]) {
+                if(i - 1 !== this.selectedIndex) {
+                    ASSET_MANAGER.playAsset("sounds/Menu_Tick.wav")
+
+                }
                 this.slots[this.selectedIndex].selected = false;
                 this.slots[i - 1].selected = true;
                 this.selectedIndex = i - 1;
@@ -374,5 +381,12 @@ class UIText extends Entity{
 
     update() {
         this.updateFn();
+    }
+
+    static drawText(ctx, pos, content, size = 20, color = new RGBColor(255, 255, 255)) {
+        ctx.font = `${size}px ${UIText.font}`;
+        ctx.fillStyle = rgba(color.r, color.g, color.b, 1);
+        ctx.textBaseline = 'top';
+        ctx.fillText(content, pos.x, pos.y);
     }
 }
