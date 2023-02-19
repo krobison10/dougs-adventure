@@ -60,8 +60,8 @@ class GrassTile extends Entity {
     constructor(pos, size) {
         super(pos, size);
         this.sprite = ASSET_MANAGER.getAsset("sprites/grass_1.png")
-        this.pos.x *= 128;
-        this.pos.y *= 128;
+        this.pos.x *= 127;
+        this.pos.y *= 127;
     }
 
     draw(ctx) {
