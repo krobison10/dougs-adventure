@@ -72,6 +72,12 @@ class Dragon extends Enemy {
 
     }
 
+    die() {
+        super.die();
+        log.addMessage("Dragon has been defeated", MessageLog.colors.purple);
+        doug.upgrade('dragon');
+    }
+
     fireballAttack() {
         if (getDistance(doug.getCenter(), dragon.getCenter()) < this.dragonRange && !doug.dead) {
             if (timeInSecondsBetween(Date.now(), this.time) >= 0.75) {

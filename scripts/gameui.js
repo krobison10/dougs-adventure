@@ -344,7 +344,7 @@ class ManaStar {
  *
  * @author Kyler Robison
  */
-class UIText extends Entity{
+class UIText extends Entity {
     /**
      * Default font
      * @type {string}
@@ -390,3 +390,45 @@ class UIText extends Entity{
         ctx.fillText(content, pos.x, pos.y);
     }
 }
+
+class MessageLog {
+    static colors = {
+        red: new RGBColor(255, 45, 45),
+        green: new RGBColor(29, 212, 0),
+        purple: new RGBColor(142, 15, 252),
+        yellow: new RGBColor(255, 247, 0)
+    }
+    constructor() {
+        this.messages = [];
+        this.pos = new Vec2(100, 600);
+        this.messageHeight = 25;
+    }
+
+    update() {
+        //Delete eligible messages
+        for(let i = this.messages.length - 1; i >= 0; --i) {
+            if (this.messages[i].removeFromWorld) {
+                this.messages.splice(i, 1); // Delete message at i
+            }
+        }
+
+        for(let i = 0; i < this.messages.length; i++) {
+
+            this.messages[i].pos.y = this.pos.y + i * this.messageHeight;
+        }
+
+    }
+
+    addMessage(text, color = new RGBColor(255, 255, 255)) {
+        let message = new UIText(new Vec2(this.pos.x, this.pos.y), text, 20, color);
+        message.createdTime = Date.now();
+        message.updateFn = function() {
+            if(timeInSecondsBetween(this.createdTime, Date.now()) >= 15) {
+                this.removeFromWorld = true;
+            }
+        }
+        this.messages.push(message);
+        gameEngine.addEntity(message);
+    }
+}
+

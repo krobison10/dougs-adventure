@@ -327,6 +327,8 @@ class Doug extends Character {
         this.dead = true;
         this.deathTime = Date.now();
 
+        log.addMessage("Doug was slain", MessageLog.colors.red)
+
         const bigText = new UIText(
             new Vec2(this.getScreenPos().x - 48, this.getScreenPos().y + 20),
             "Doug Ded",
@@ -363,9 +365,34 @@ class Doug extends Character {
 
     }
 
-    drinkHealthPotion() {
-
+    upgrade(who) {
+        log.addMessage("You feel stronger than ever...", MessageLog.colors.yellow);
+        if(who === 'bear') {
+            this.maxHitPoints += 100;
+            this.hitPoints += 100;
+            if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            this.maxMana += 40;
+            this.manaLevel += 40;
+            if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
+            Sword.damage *= 1.2;
+            Arrow.damage *= 1.5;
+            WaterSphere.damage *= 1.2;
+            Doug.healthPotionAmount += 30;
+        }
+        if(who === 'dragon') {
+            this.maxHitPoints += 100;
+            this.hitPoints += 100;
+            if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            this.maxMana += 60;
+            this.manaLevel += 60;
+            if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
+            Sword.damage *= 1.5;
+            Arrow.damage *= 1.3;
+            WaterSphere.damage *= 1.6;
+            Doug.healthPotionAmount += 70;
+        }
     }
+
 
     /**
      * Updates the position label below the canvas

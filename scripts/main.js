@@ -14,6 +14,7 @@ let gameTime = 11 * 60; //12:00 pm
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightMap = new LightMap();
+const log = new MessageLog();
 
 //Add paths of assets to be downloaded here
 declareAssets([

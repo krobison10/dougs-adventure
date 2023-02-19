@@ -216,6 +216,7 @@ class GameEngine {
         this.draw();
         this.countFPS();
         this.click = null;
+        log.update();
     }
 
     countFPS() {
@@ -226,4 +227,5 @@ class GameEngine {
             this.startCount = Date.now();
         }
     }
+
 }
