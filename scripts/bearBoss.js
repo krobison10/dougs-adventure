@@ -132,12 +132,12 @@ draw(ctx){
       } else {
         // this.drawAnim = this.animations[0];
       }
-      // this.boundingBox.draw(ctx);
+      this.boundingBox.draw(ctx);
 
 }
 
 drawAnim(ctx,animation) {
     animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
   }
-      
+
 } 

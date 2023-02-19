@@ -18,6 +18,7 @@ class Slime extends Enemy {
      */
     constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints, parent, scale) {
         let scale1 = scale;
+        //new Dimension(55, 37)
         super(pos, spritesheet, new Dimension(size.w*scale1, size.h*scale1), spritePadding, damage, maxHitPoints, scale);
 
         this.parent = parent;
@@ -30,8 +31,8 @@ class Slime extends Enemy {
         this.directionMem = 0;
 
         for(let i = 0; i < 4; i++) {
-            this.animations[i] = new Animator(this.spritesheet, 13, (i * this.size.h + 8)/this.scale,
-                this.size.w/this.scale, this.size.h/this.scale,
+            this.animations[i] = new Animator(this.spritesheet, 13, (i * 37) + 8,
+                55, this.size.h/this.scale,
                 3, .5, 0, false, true);
         }
 
@@ -62,7 +63,6 @@ class Slime extends Enemy {
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
-       // var that = this;
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
         }
@@ -79,7 +79,6 @@ class Slime extends Enemy {
     }
     
     die() {
-        super.die();
         if (this.hitPoints <= 0) {
             if (this.parent) {
                 let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
