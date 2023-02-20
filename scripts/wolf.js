@@ -23,7 +23,7 @@ class Wolf extends Enemy {
 
     update() {
         this.setSpeed();
-        this.route(doug.getCenter());
+        this.route(doug.pos);
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
