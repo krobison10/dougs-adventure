@@ -22,7 +22,7 @@ class Wolf extends Enemy {
     }
 
     update() {
-        this.route();
+        this.route(doug.getCenter);
         this.setSpeed();
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
@@ -60,47 +60,18 @@ class Wolf extends Enemy {
         this.boundingBox.draw(ctx);
     }
 
-    route() {
-        // const xMax = startX + 10;
-        // const xMin = startX - 10;
-        // const yMax = startY + 10;
-        // const yMin = startY - 10;
-
-        const deltaX = this.pos.x - doug.getCenter().x;
-        const deltaY = this.pos.y - doug.getCenter().y;
-
-        if((Math.abs(deltaX) || Math.abs(deltaY)) <= this.aggroRange) {
-            this.velocity.x = x2 - x1;
-            this.velocity.y = y2 - y1;
-
-            const magnitude = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
-            this.velocity.x /= magnitude;
-            this.velocity.y /= magnitude;
+    route(dest) {
+        const xDif = dest.x - this.pos.x;
+        const yDif = dest.y - this.pos.y;
+        if(xDif > 0 && yDif > 0) { //Move Up
+            
+        } else if(xDif < 0 && yDif > 0) { //Move Left
+            
+        } else if(xDif < 0 && yDif < 0) { //Move Down
+            
+        } else if(xDif > 0 && yDif < 0) { //Move Right
+            
         }
-
-        // //Bottom Right
-        // if (xDif < 0 && yDif > 0) {
-        //     this.velocity.x = 0;
-        //     this.velocity.y = -this.speed;
-        // }
-        
-        // //Top Right
-        // if (xDif < 0 && yDif < 0) {
-        //     this.velocity.y = 0;
-        //     this.velocity.x = -this.speed;
-        // }
-
-        // //Top Left
-        // if (xDif > 0 && yDif < 0) {
-        //     this.velocity.x = 0;
-        //     this.velocity.y = this.speed;
-        // }
-
-        // //Bottom Left
-        // if(xDif > 0 && yDif > 0) {
-        //     this.velocity.x = this.speed;
-        //     this.velocity.y = 0;
-        // }
     }
 
     drawAnim(ctx, animator) {
