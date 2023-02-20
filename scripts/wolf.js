@@ -39,11 +39,11 @@ class Wolf extends Enemy {
     draw(ctx) {
         if(this.velocity.x < 0) {//left
             this.drawAnim(ctx, this.animations[3]);
-            this.directionMem = 1;
+            this.directionMem = 3;
         }
         if(this.velocity.x > 0) {//right
             this.drawAnim(ctx, this.animations[1]);
-            this.directionMem = 2;
+            this.directionMem = 1;
         }
         if(this.velocity.y > 0 && this.velocity.x === 0) {//down
             this.drawAnim(ctx, this.animations[0]);
@@ -51,10 +51,10 @@ class Wolf extends Enemy {
         }
         if(this.velocity.y < 0 && this.velocity.x === 0) {//up
             this.drawAnim(ctx, this.animations[2]);
-            this.directionMem = 3;
+            this.directionMem = 2;
         }
         if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[2]);
+            this.drawAnim(ctx, this.animations[this.directionMem]);
         }
 
         this.boundingBox.draw(ctx);
@@ -63,18 +63,23 @@ class Wolf extends Enemy {
     route(dest) {
         const xDif = dest.x - this.pos.x;
         const yDif = dest.y - this.pos.y;
-        if(xDif > 0 && yDif > 0) { //Move Up
-            this.velocity.y = this.speed;
+        if(Math.sqrt(xDif * xDif + yDif * yDif) < 200) {
+            if(xDif > 0 && yDif > 0) { //Move Up
+                this.velocity.y = this.speed;
+                this.velocity.x = 0;
+            } else if(xDif < 0 && yDif > 0) { //Move Left
+                this.velocity.y = 0;
+                this.velocity.x = -this.speed;
+            } else if(xDif < 0 && yDif < 0) { //Move Down
+                this.velocity.y = -this.speed;
+                this.velocity.x = 0;
+            } else if(xDif > 0 && yDif < 0) { //Move Right
+                this.velocity.y = 0;
+                this.velocity.x = this.speed;
+            }
+        } else {
             this.velocity.x = 0;
-        } else if(xDif < 0 && yDif > 0) { //Move Left
             this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        } else if(xDif < 0 && yDif < 0) { //Move Down
-            this.velocity.y = -this.speed;
-            this.velocity.x = 0;
-        } else if(xDif > 0 && yDif < 0) { //Move Right
-            this.velocity.y = 0;
-            this.velocity.x = this.speed;
         }
     }
 
