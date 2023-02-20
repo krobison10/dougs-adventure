@@ -366,10 +366,10 @@ class Doug extends Character {
 
     }
 
-    upgrade(who) {
-        log.addMessage("You feel stronger than ever...", MessageLog.colors.yellow);
+    upgrade(boss) {
+        log.addMessage("You feel stronger than ever...", MessageLog.colors.green);
         ASSET_MANAGER.playAsset("sounds/upgrade.wav");
-        if(who === 'bear') {
+        if(boss === 'bear') {
             this.maxHitPoints += 100;
             this.hitPoints += 100;
             if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
@@ -381,7 +381,7 @@ class Doug extends Character {
             WaterSphere.damage *= 1.2;
             Doug.healthPotionAmount += 30;
         }
-        if(who === 'dragon') {
+        if(boss === 'dragon') {
             this.maxHitPoints += 100;
             this.hitPoints += 100;
             if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;

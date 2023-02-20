@@ -249,7 +249,6 @@ class Heart {
 }
 
 
-
 /**
  * Represents the player's health in the UI
  *
@@ -394,8 +393,8 @@ class UIText extends Entity {
 class MessageLog {
     static colors = {
         red: new RGBColor(255, 45, 45),
-        green: new RGBColor(29, 212, 0),
-        purple: new RGBColor(142, 15, 252),
+        green: new RGBColor(50, 255, 129),
+        purple: new RGBColor(139, 38, 255),
         yellow: new RGBColor(255, 247, 0)
     }
     constructor() {
@@ -426,7 +425,7 @@ class MessageLog {
         let message = new UIText(new Vec2(this.pos.x, this.getMessagePos(this.messages.length)), text, 20, color);
         message.createdTime = Date.now();
         message.updateFn = function() {
-            if(timeInSecondsBetween(this.createdTime, Date.now()) >= 15) {
+            if(timeInSecondsBetween(this.createdTime, Date.now()) >= 10) {
                 this.removeFromWorld = true;2
             }
         }

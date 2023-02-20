@@ -85,7 +85,6 @@ class Character extends Entity {
      * @param {CanvasRenderingContext2D} ctx the rendering context.
      */
     draw(ctx) {
-
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }

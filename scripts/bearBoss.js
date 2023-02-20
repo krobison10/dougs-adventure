@@ -8,7 +8,7 @@
 'use strict';
 class BearBoss extends Enemy {
     constructor(pos, spritesheet, size, spritePadding, damage, hitPoints,x,y,direction) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+        super(pos, spritesheet, new Dimension(size.w * 1.5, size.h * 1.5), spritePadding, damage, hitPoints);
 
 
         this.x=x;

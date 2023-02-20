@@ -12,7 +12,7 @@ class GameEngine {
         this.ctx = null;
 
         // Everything that will be updated and drawn each frame
-        this.entities = [[], [], [], [], []];
+        this.entities = [[], [], [], [], [], []];
 
         // Information on the input
         this.click = null;
@@ -150,10 +150,6 @@ class GameEngine {
 
         let layer = this.entities[Layers.BACKGROUND];
         let entitiesCount = layer.length;
-        //No updates for background tiles until necessary
-        // for (let i = 0; i < entitiesCount; i++) {
-        //     let entity = layer[i];
-        // }
 
         layer = this.entities[Layers.FOREGROUND];
         entitiesCount = layer.length;
@@ -227,5 +223,4 @@ class GameEngine {
             this.startCount = Date.now();
         }
     }
-
 }
