@@ -48,11 +48,9 @@ class Bat extends Enemy {
         }
         this.target = this.path[this.targetID % this.path.length];
         dist = getDistance(this.pos, this.target)
-        console.log(this.pos)
 
         this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
 
-        //this.route();
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {

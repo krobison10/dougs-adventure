@@ -49,7 +49,7 @@ class MapBuilder {
         for(let row = 0; row < MapBuilder.height; row++) {
             for(let col = 0; col < MapBuilder.width; col++) {
                 gameEngine.addEntity(new GrassTile({x: col-MapBuilder.height/2, y: row-MapBuilder.height/2},
-                    new Dimension(128, 128)),  Layers.BACKGROUND);
+                    new Dimension(128, 128)), Layers.BACKGROUND);
             }
         }
     }
