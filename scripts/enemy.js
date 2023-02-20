@@ -18,18 +18,17 @@ class Enemy extends Character {
         this.hitPoints = this.maxHitPoints;
 
         gameEngine.addEntity(new HealthBar(this), 4)
-        
 
     }
 
     takeDamage(amount) {
-            this.hitPoints -= amount;
-            if(this.hitPoints <= 0) {
-                this.hitPoints = 0;
-                this.die();
-            } else {
-                this.hitSound();
-            }
+        this.hitPoints -= amount;
+        if(this.hitPoints <= 0) {
+            this.hitPoints = 0;
+            this.die();
+        } else {
+            this.hitSound();
+        }
     }
 
     deathSound() {
@@ -44,10 +43,6 @@ class Enemy extends Character {
     die() {
         this.removeFromWorld = true;
         this.deathSound();
-    }
-
-    update() {
-
     }
 
     /**

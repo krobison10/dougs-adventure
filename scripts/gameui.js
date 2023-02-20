@@ -413,22 +413,25 @@ class MessageLog {
         }
 
         for(let i = 0; i < this.messages.length; i++) {
-
-            this.messages[i].pos.y = this.pos.y + i * this.messageHeight;
+            this.messages[i].pos.y = this.getMessagePos(i);
         }
 
     }
 
+    getMessagePos(i) {
+        return this.pos.y + i * this.messageHeight
+    }
+
     addMessage(text, color = new RGBColor(255, 255, 255)) {
-        let message = new UIText(new Vec2(this.pos.x, this.pos.y), text, 20, color);
+        let message = new UIText(new Vec2(this.pos.x, this.getMessagePos(this.messages.length)), text, 20, color);
         message.createdTime = Date.now();
         message.updateFn = function() {
             if(timeInSecondsBetween(this.createdTime, Date.now()) >= 15) {
-                this.removeFromWorld = true;
+                this.removeFromWorld = true;2
             }
         }
         this.messages.push(message);
-        gameEngine.addEntity(message);
+        gameEngine.addEntity(message, Layers.UI);
     }
 }
 

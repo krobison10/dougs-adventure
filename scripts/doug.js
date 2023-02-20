@@ -166,10 +166,10 @@ class Doug extends Character {
             this.handleClick();
         }
 
-        if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
-        if(gameEngine.keys["d"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"]) this.velocity.y -= this.speed;
-        if(gameEngine.keys["s"]) this.velocity.y += this.speed;
+        if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
+        if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
+        if(gameEngine.keys["w"] || gameEngine.keys["W"])  this.velocity.y -= this.speed;
+        if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
 
         //If the resulting vector's magnitude exceeds the speed
         if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {

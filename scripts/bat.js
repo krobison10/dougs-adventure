@@ -60,10 +60,6 @@ class Bat extends Enemy {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
 
-        if (this.hitPoints <= 0) {
-            this.removeFromWorld = true;
-        }
-
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
