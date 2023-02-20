@@ -23,6 +23,7 @@ class Enemy extends Character {
 
     takeDamage(amount) {
         this.hitPoints -= amount;
+        createDamageMarker(this, amount);
         if(this.hitPoints <= 0) {
             this.hitPoints = 0;
             this.die();

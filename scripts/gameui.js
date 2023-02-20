@@ -354,7 +354,7 @@ class UIText extends Entity {
     /**
      * Creates UI Text
      * @param pos {Vec2} position of the text on the screen.
-     * @param text {string} content of the text.
+     * @param text {String | Number} content of the text.
      * @param size {Number} font size of the text in pixels.
      * @param color {RGBColor} color of the text, defaults to white.
      */
@@ -433,5 +433,28 @@ class MessageLog {
         this.messages.push(message);
         gameEngine.addEntity(message, Layers.UI);
     }
+}
+
+function createDamageMarker(entity, amount) {
+    let x = entity.getCenter().x;
+    let y = entity.getCenter().y;
+    let marker = new UIText(new Vec2(x, y), Math.abs(Math.round(amount)), 25);
+    marker.color = MessageLog.colors.red;
+    if(amount < 0) {
+        marker.color = MessageLog.colors.green;
+    }
+    marker.velocity = 60;
+    marker.velDecay = 1.7;
+    marker.updateFn = function() {
+        this.pos.y -= this.velocity * gameEngine.clockTick;
+        this.velocity *= 1 - gameEngine.clockTick * this.velDecay;
+        if(this.velocity < 10) {
+            this.removeFromWorld = true;
+        }
+    }
+    marker.draw = function(ctx) {
+        UIText.drawText(ctx, this.getScreenPos(), this.content, this.size, this.color);
+    }
+    gameEngine.addEntity(marker, Layers.GLOWING_ENTITIES);
 }
 

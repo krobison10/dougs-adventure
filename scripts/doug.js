@@ -35,7 +35,7 @@ class Doug extends Character {
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
      */
-    static baseManaRegen = 7;
+    static baseManaRegen = 8;
     /**
      * Multiplier for the exponential growth of mana regeneration.
      * @type {number}
@@ -241,6 +241,7 @@ class Doug extends Character {
             this.hitPoints += Doug.healthPotionAmount;
             if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
             ASSET_MANAGER.playAsset("sounds/drink.wav");
+            createDamageMarker(this, -Doug.healthPotionAmount);
         }
     }
 
@@ -367,6 +368,7 @@ class Doug extends Character {
 
     upgrade(who) {
         log.addMessage("You feel stronger than ever...", MessageLog.colors.yellow);
+        ASSET_MANAGER.playAsset("sounds/upgrade.wav");
         if(who === 'bear') {
             this.maxHitPoints += 100;
             this.hitPoints += 100;
