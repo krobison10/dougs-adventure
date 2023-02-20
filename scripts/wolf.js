@@ -22,8 +22,8 @@ class Wolf extends Enemy {
     }
 
     update() {
-        this.route(doug.getCenter);
         this.setSpeed();
+        this.route(doug.getCenter());
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -64,13 +64,17 @@ class Wolf extends Enemy {
         const xDif = dest.x - this.pos.x;
         const yDif = dest.y - this.pos.y;
         if(xDif > 0 && yDif > 0) { //Move Up
-            
+            this.velocity.y = this.speed;
+            this.velocity.x = 0;
         } else if(xDif < 0 && yDif > 0) { //Move Left
-            
+            this.velocity.y = 0;
+            this.velocity.x = -this.speed;
         } else if(xDif < 0 && yDif < 0) { //Move Down
-            
+            this.velocity.y = -this.speed;
+            this.velocity.x = 0;
         } else if(xDif > 0 && yDif < 0) { //Move Right
-            
+            this.velocity.y = 0;
+            this.velocity.x = this.speed;
         }
     }
 
