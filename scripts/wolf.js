@@ -59,6 +59,14 @@ class Wolf extends Enemy {
         this.boundingBox.draw(ctx);
     }
 
+    hitSound() {
+        ASSET_MANAGER.playAsset("sounds/wolf_hit.wav");
+    }
+
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/wolf_kill.wav");
+    }
+
     route() {
         let xMax = 200;
         let xMin = 100;

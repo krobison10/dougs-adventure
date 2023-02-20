@@ -78,11 +78,17 @@ class Dragon extends Enemy {
         doug.upgrade('dragon');
     }
 
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/dragon_kill.wav");
+    }
+
     fireballAttack() {
         if (getDistance(doug.getCenter(), dragon.getCenter()) < this.dragonRange && !doug.dead) {
             if (timeInSecondsBetween(Date.now(), this.time) >= 0.75) {
                 this.time = Date.now();
-                gameEngine.addEntity(new FireSphere(new Vec2(doug.getCenter().x, doug.getCenter().y)))
+                gameEngine.addEntity(new FireSphere(new Vec2(doug.getCenter().x, doug.getCenter().y)));
+                ASSET_MANAGER.playAsset("sounds/dragon_attack.wav")
+
             }
             
         }

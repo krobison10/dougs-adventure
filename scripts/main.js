@@ -60,7 +60,11 @@ declareAssets([
 	"sounds/projectile_impact.wav",
 	"sounds/arrow_impact.wav",
 	"sounds/drink.wav",
-
+	"sounds/dragon_attack.wav",
+	"sounds/dragon_kill.wav",
+	"sounds/bear_kill.wav",
+	"sounds/wolf_hit.wav",
+	"sounds/wolf_kill.wav",
 
 
 	"sounds/Menu_Tick.wav",

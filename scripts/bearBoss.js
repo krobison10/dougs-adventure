@@ -47,7 +47,11 @@ class BearBoss extends Enemy {
         doug.upgrade("bear");
     }
 
-   
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/bear_kill.wav");
+    }
+
+
     update() {
 // call custom move function
 this.move();

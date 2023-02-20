@@ -17,7 +17,7 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        gameEngine.addEntity(new HealthBar(this), 4)
+        gameEngine.addEntity(new HealthBar(this), Layers.GLOWING_ENTITIES)
 
     }
 
@@ -37,7 +37,6 @@ class Enemy extends Character {
 
     hitSound() {
         ASSET_MANAGER.playAsset("sounds/Hit_1.wav")
-
     }
 
     die() {
