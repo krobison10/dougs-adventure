@@ -12,7 +12,7 @@ class Wolf extends Enemy {
 
         this.startX = doug.getCenter().x;
         this.startY = doug.getCenter().y;
-        this.aggroRange = 10;
+        this.aggroRange = 200;
 
         this.setSpeed();
         this.directionMem = 0;
@@ -63,7 +63,9 @@ class Wolf extends Enemy {
     route(dest) {
         const xDif = dest.x - this.pos.x;
         const yDif = dest.y - this.pos.y;
-        if(Math.sqrt(xDif * xDif + yDif * yDif) < 200) {
+        const dist = Math.sqrt(xDif * xDif + yDif * yDif);
+        
+        if(dist < this.aggroRange && dist > 1) { // Stops at one to smooth attack
             if(xDif > 0 && yDif > 0) { //Move Up
                 this.velocity.y = this.speed;
                 this.velocity.x = 0;
