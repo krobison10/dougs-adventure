@@ -98,7 +98,7 @@ gameEngine.addEntity(new Bat(new Vec2(-400, -200), ASSET_MANAGER.getAsset("sprit
 gameEngine.addEntity(new Bat(new Vec2(-400, 350), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
 	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50));
 
-let dragon = new Dragon(new Vec2(-400, -800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+let dragon = new Dragon(new Vec2(-400, -1800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
 
 gameEngine.addEntity(new Slime(new Vec2(0,0), ASSET_MANAGER.getAsset("sprites/slime01.png"),
