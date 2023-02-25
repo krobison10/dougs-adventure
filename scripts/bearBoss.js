@@ -13,7 +13,7 @@ class BearBoss extends Enemy {
 
         this.changeDirectionDelay = 8;
         this.player=player; //store the player object
-        this.pursueRange=0.001; //set the range at which the bear starts pursuing the player
+        this.pursueRange=200; //set the range at which the bear starts pursuing the player
         this.direction="right";  //default
         // max hitpoints and damage of the boss
         this.maxHitPoints = 500;
@@ -82,66 +82,62 @@ this.move();
     }
 
     move() {
-      // Decrement the direction delay by 1
-      this.changeDirectionDelay-= gameEngine.clockTick;
+      //Decrement the direction delay by 1
+       this.changeDirectionDelay-= gameEngine.clockTick;
       //console.log(this.changeDirectionDelay);
-      // Check if the direction delay has elapsed
+      //Check if the direction delay has elapsed
 
-      
-        // calculate the direction vector from bear to player
-      let bearCenter = this.pos;
-      let playerCenter = this.player.pos;
-      let direction = {
-        x : bearCenter.x  - playerCenter.x,
-        y: bearCenter.y - playerCenter.y
-      }
-      let direction_magnitude = direction.x*direction.x + direction.y * direction.y
-      
+        if(getDistance(this.pos, doug.pos) < this.pursueRange) {
+            // calculate the direction vector from bear to player
+            let bearCenter = this.pos;
+            let playerCenter = this.player.pos;
+            let direction = {
+                x : bearCenter.x  - playerCenter.x,
+                y: bearCenter.y - playerCenter.y
+            }
+            let direction_magnitude = direction.x*direction.x + direction.y * direction.y
 
-      direction_magnitude = Math.sqrt(direction_magnitude)
-      
-      direction.x/= direction_magnitude
-      direction.y/= direction_magnitude
-      console.log(direction)
-      
-        //this.direction = playerCenter.sub(bearCenter).normalize();
-      // console.log(this.direction)
-        this.velocity.x = direction.x * -this.speed;
-        this.velocity.y = direction.y * -this.speed;
+            direction_magnitude = Math.sqrt(direction_magnitude)
 
-      
-        
-      if (this.changeDirectionDelay <= 0) {
-        // Reset the direction delay to a new value
-        this.changeDirectionDelay = 8;
-    
-        // Change direction and velocity randomly with probability 
-          
-      const randomDirection = Math.floor(Math.random() * 4);
-      switch (randomDirection) {
-        case 0:
-          this.velocity.x = -this.speed;
-          this.velocity.y = 0;
-          this.directionMem = 1;
-          break;
-        case 1:
-          this.velocity.x = this.speed;
-          this.velocity.y = 0;
-          this.directionMem = 2;
-          break;
-        case 2:
-          this.velocity.x = 0;
-          this.velocity.y = -this.speed;
-          this.directionMem = 3;
-          break;
-        case 3:
-          this.velocity.x = 0;
-          this.velocity.y = this.speed;
-          this.directionMem = 4;
-          break;
-      }
+            direction.x/= direction_magnitude
+            direction.y/= direction_magnitude
+
+            this.velocity.x = direction.x * -this.speed;
+            this.velocity.y = direction.y * -this.speed;
+        }
+        else {
+            if (this.changeDirectionDelay <= 0) {
+                // Reset the direction delay to a new value
+                this.changeDirectionDelay = 8;
+
+                // Change direction and velocity randomly with probability
+
+                const randomDirection = Math.floor(Math.random() * 4);
+                switch (randomDirection) {
+                    case 0:
+                        this.velocity.x = -this.speed;
+                        this.velocity.y = 0;
+                        this.directionMem = 1;
+                        break;
+                    case 1:
+                        this.velocity.x = this.speed;
+                        this.velocity.y = 0;
+                        this.directionMem = 2;
+                        break;
+                    case 2:
+                        this.velocity.x = 0;
+                        this.velocity.y = -this.speed;
+                        this.directionMem = 3;
+                        break;
+                    case 3:
+                        this.velocity.x = 0;
+                        this.velocity.y = this.speed;
+                        this.directionMem = 4;
+                        break;
+                }
+            }
+        }
     }
-  }
     
     
     
@@ -163,12 +159,11 @@ this.move();
           }
         }
           this.boundingBox.draw(ctx);
-    
     }
     
     
     drawAnim(ctx,animation) {
         animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
-      }
-    
     }
+    
+}
