@@ -205,7 +205,7 @@ class Doug extends Character {
         this.regen();
         this.updateDebug();
     }
-
+    
     handleClick() {
         if(!this.attacking) {
             if(hotbar.slots[hotbar.selectedIndex].itemID === 336) {
