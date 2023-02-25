@@ -2,9 +2,8 @@
 <html lang="english">
 <head>
     <meta charset="utf-8">
-    <title>Adventure</title>
+    <title>Doug's Adventure</title>
     <link rel="stylesheet" href="styles.css">
-
 
     <script type="text/javascript" src="./scripts/engine/util.js"></script>
     <script type="text/javascript" src="./scripts/engine/assetmanager.js"></script>
@@ -21,7 +20,6 @@
     <script type="text/javascript" src="scripts/backgroundtile.js"></script>
     <script type="text/javascript" src="scripts/mapbuilder.js"></script>
 
-
     <script type="text/javascript" src="./scripts/item.js"></script>
     <script type="text/javascript" src="./scripts/character.js"></script>
     <script type="text/javascript" src="./scripts/enemy.js"></script>
@@ -36,23 +34,22 @@
     <script type="text/javascript" src="scripts/fires.js"></script>
     <script type="text/javascript" src="./scripts/main.js" defer></script>
 
-
 </head>
 <body>
-    <h1>Doug's Down Bad</h1>
+    <h1>Doug's Adventure</h1>
     <div id="canvas-container">
         <canvas id="gameWorld" width="1024" height="768" tabindex="0" autofocus></canvas>
-        <div>
+        <div class="debug">
             <h4>Collision boxes</h4>
             <label for="toggle-boxes"></label>
             <input id="toggle-boxes" type="checkbox" onclick="toggleBoxes()"/>
         </div>
-        <div>
+        <div class="debug">
             <h4>Mute</h4>
             <label for="mute"></label>
             <input id="mute" type="checkbox" onclick="toggleMute()"/>
         </div>
-        <div>
+        <div class="debug">
             <h4>Position</h4>
             <h4 id="position">X: , Y: </h4>
         </div>

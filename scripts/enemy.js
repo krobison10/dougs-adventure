@@ -17,19 +17,19 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        gameEngine.addEntity(new HealthBar(this), 4)
-        
+        gameEngine.addEntity(new HealthBar(this), Layers.GLOWING_ENTITIES)
 
     }
 
     takeDamage(amount) {
-            this.hitPoints -= amount;
-            if(this.hitPoints <= 0) {
-                this.hitPoints = 0;
-                this.die();
-            } else {
-                this.hitSound();
-            }
+        this.hitPoints -= amount;
+        createDamageMarker(this, amount);
+        if(this.hitPoints <= 0) {
+            this.hitPoints = 0;
+            this.die();
+        } else {
+            this.hitSound();
+        }
     }
 
     deathSound() {
@@ -38,16 +38,11 @@ class Enemy extends Character {
 
     hitSound() {
         ASSET_MANAGER.playAsset("sounds/Hit_1.wav")
-
     }
 
     die() {
         this.removeFromWorld = true;
         this.deathSound();
-    }
-
-    update() {
-
     }
 
     /**

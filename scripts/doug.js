@@ -35,7 +35,7 @@ class Doug extends Character {
      * The base regeneration rate in terms of hit points per second.
      * @type {number}
      */
-    static baseManaRegen = 7;
+    static baseManaRegen = 8;
     /**
      * Multiplier for the exponential growth of mana regeneration.
      * @type {number}
@@ -166,10 +166,10 @@ class Doug extends Character {
             this.handleClick();
         }
 
-        if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
-        if(gameEngine.keys["d"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"]) this.velocity.y -= this.speed;
-        if(gameEngine.keys["s"]) this.velocity.y += this.speed;
+        if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
+        if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
+        if(gameEngine.keys["w"] || gameEngine.keys["W"])  this.velocity.y -= this.speed;
+        if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
 
         //If the resulting vector's magnitude exceeds the speed
         if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
@@ -241,6 +241,7 @@ class Doug extends Character {
             this.hitPoints += Doug.healthPotionAmount;
             if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
             ASSET_MANAGER.playAsset("sounds/drink.wav");
+            createDamageMarker(this, -Doug.healthPotionAmount);
         }
     }
 
@@ -327,6 +328,8 @@ class Doug extends Character {
         this.dead = true;
         this.deathTime = Date.now();
 
+        log.addMessage("Doug was slain", MessageLog.colors.red)
+
         const bigText = new UIText(
             new Vec2(this.getScreenPos().x - 48, this.getScreenPos().y + 20),
             "Doug Ded",
@@ -363,9 +366,35 @@ class Doug extends Character {
 
     }
 
-    drinkHealthPotion() {
-
+    upgrade(boss) {
+        log.addMessage("You feel stronger than ever...", MessageLog.colors.green);
+        ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+        if(boss === 'bear') {
+            this.maxHitPoints += 100;
+            this.hitPoints += 100;
+            if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            this.maxMana += 40;
+            this.manaLevel += 40;
+            if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
+            Sword.damage *= 1.2;
+            Arrow.damage *= 1.5;
+            WaterSphere.damage *= 1.2;
+            Doug.healthPotionAmount += 30;
+        }
+        if(boss === 'dragon') {
+            this.maxHitPoints += 100;
+            this.hitPoints += 100;
+            if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            this.maxMana += 60;
+            this.manaLevel += 60;
+            if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
+            Sword.damage *= 1.5;
+            Arrow.damage *= 1.3;
+            WaterSphere.damage *= 1.6;
+            Doug.healthPotionAmount += 70;
+        }
     }
+
 
     /**
      * Updates the position label below the canvas
