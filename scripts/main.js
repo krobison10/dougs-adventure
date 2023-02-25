@@ -112,7 +112,7 @@ gameEngine.addEntity(new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprite
 	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150));
 
 gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
-	new Dimension(56, 56), new Padding(0, -15, 0, 3)));
+	new Dimension(56, 56), new Padding(0, -15, 0, 3),10,100,doug);
 
 let hotbar;
 buildWorld();
@@ -194,4 +194,3 @@ const toggleMute = () => {
 		ASSET_MANAGER.setVolume(1)
 	}
 }
-
