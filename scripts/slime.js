@@ -73,9 +73,13 @@ class Slime extends Enemy {
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
+        }else {
+            this.targetID = randomInt(3);
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
+        }else {
+            this.targetID = randomInt(3);
         }
        
         

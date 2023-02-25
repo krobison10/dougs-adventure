@@ -62,9 +62,13 @@ class Bat extends Enemy {
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
+        }else {
+            this.targetID = randomInt(3);
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
+        }else {
+            this.targetID = randomInt(3);
         }
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
