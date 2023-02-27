@@ -17,8 +17,8 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        gameEngine.addEntity(new HealthBar(this), Layers.GLOWING_ENTITIES)
-
+        gameEngine.addEntity(new HealthBar(this), Layers.GLOWING_ENTITIES);
+        this.type = undefined;
     }
 
     takeDamage(amount) {
@@ -43,10 +43,21 @@ class Enemy extends Character {
     die() {
         this.removeFromWorld = true;
         this.deathSound();
+        this.drops();
     }
 
     drops() {
-
+        const table = Enemy.dropTable[this.type];
+        if(table) {
+            for(let drop in table) {
+                if(Enemy.dropTypes[drop] === "item") {
+                    doug.getDrop(drop, dropQuantity(table[drop]));
+                }
+                else if(Enemy.dropTypes[drop] === "boost") {
+                    doug.getBoost(drop, dropQuantity(table[drop]));
+                }
+            }
+        }
     }
 
     /**
@@ -60,6 +71,20 @@ class Enemy extends Character {
     static dropTable = {
         slime: {
             arrow: {
+                chance: 1/4,
+                rolls: 6,
+            },
+            heart: {
+                chance: 1/20,
+                rolls: 1
+            },
+            'healing potion': {
+                chance: 1/20,
+                rolls: 1
+            }
+        },
+        bat: {
+            arrow: {
                 chance: 0.5,
                 rolls: 5
             },
@@ -67,9 +92,13 @@ class Enemy extends Character {
                 chance: 1/20,
                 rolls: 1
             },
-            healthPotion: {
-                chance: 1/20,
-                rolls: 2
+            mana: {
+                chance: 1/10,
+                rolls: 1
+            },
+            'healing potion': {
+                chance: 1/10,
+                rolls: 1
             }
         },
         wolf: {
@@ -82,33 +111,28 @@ class Enemy extends Character {
                 rolls: 1
             },
             mana: {
-                chance: 1/5,
+                chance: 1/10,
                 rolls: 1
             },
-            healthPotion: {
+            'healing potion': {
                 chance: 1/20,
                 rolls: 4
             }
-        },
-        bat: {
-            arrow: {
-                chance: 0.5,
-                rolls: 10
-            },
-            heart: {
-                chance: 1/10,
-                rolls: 1
-            },
-            mana: {
-                chance: 1/10,
-                rolls: 1
-            },
-            healthPotion: {
-                chance: 1/20,
-                rolls: 2
-            }
         }
+    }
+    static dropTypes = {
+        arrow: "item",
+        'healing potion': "item",
+        heart: "boost",
+        mana: "boost"
     }
 }
 
+function dropQuantity(drop) {
+    let count = 0;
+    for(let i = 0; i < drop.rolls; i++) {
+        if(probability(drop.chance)) count++;
+    }
+    return count;
+}
 

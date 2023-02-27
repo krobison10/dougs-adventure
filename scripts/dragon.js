@@ -75,7 +75,6 @@ class Dragon extends Enemy {
     die() {
         super.die();
         log.addMessage("Dragon has been defeated", MessageLog.colors.purple);
-        doug.upgrade('dragon');
     }
 
     deathSound() {

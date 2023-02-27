@@ -21,6 +21,7 @@ class Bat extends Enemy {
         this.scale = 1;
         this.speed = 200;
         this.directionMem = 0;
+        this.type = 'bat';
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         this.time = 0;
         for(let i = 0; i < 4; i++) {

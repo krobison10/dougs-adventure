@@ -22,6 +22,8 @@ class Slime extends Enemy {
                 damage, hitPoints, parent, scale) {
         super(pos, spritesheet, new Dimension(size.w * scale, size.h * scale), spritePadding, damage, hitPoints);
 
+        this.type = 'slime';
+
         this.parent = parent;
         this.scale = scale;
 

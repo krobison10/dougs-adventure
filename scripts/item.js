@@ -23,7 +23,7 @@ class Item {
         246: {
             name: 'Healing Potion',
             stackable: true,
-            stackName: 'healthPotion',
+            stackName: 'healing potion',
             reverse: false
         },
         336: {

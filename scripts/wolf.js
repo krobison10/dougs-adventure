@@ -10,6 +10,8 @@ class Wolf extends Enemy {
         super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
 
+        this.type = 'wolf';
+
         this.xStart = pos.x;
         this.yStart = pos.y;
 

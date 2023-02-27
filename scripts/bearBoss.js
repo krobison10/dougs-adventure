@@ -48,7 +48,6 @@ class BearBoss extends Enemy {
     die() {
         super.die();
         log.addMessage("Bear has been defeated", MessageLog.colors.purple);
-        doug.upgrade("bear");
     }
 
     deathSound() {

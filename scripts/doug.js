@@ -61,7 +61,7 @@ class Doug extends Character {
 
         this.inventory = {
             arrow: 50,
-            healthPotion: 2
+            'healing potion': 2
         }
         /**
          * The maximum hit points of doug
@@ -246,9 +246,9 @@ class Doug extends Character {
     }
 
     useHealthPotion() {
-        if(this.inventory.healthPotion >= 1 &&
+        if(this.inventory['healing potion'] >= 1 &&
             timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
-            this.inventory.healthPotion--;
+            this.inventory['healing potion']--;
             this.lastHealthPotion = Date.now();
             this.hitPoints += Doug.healthPotionAmount;
             if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
@@ -378,37 +378,41 @@ class Doug extends Character {
 
     }
 
-    upgrade(boss) {
-        log.addMessage("You feel stronger than ever...", MessageLog.colors.green);
-        ASSET_MANAGER.playAsset("sounds/upgrade.wav");
-        if(boss === 'bear') {
-            this.maxHitPoints += 100;
-            this.hitPoints += 100;
-            if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-            this.maxMana += 40;
-            this.manaLevel += 40;
+    getBoost(name, count) {
+        if(count < 1) return;
+        if(name === "mana") {
+            if(this.maxMana < 200) {
+                ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+            }
+
+            this.maxMana += count * 20;
+            this.manaLevel += count * 20;
+
+            if(this.maxMana > 200) this.maxMana = 200;
             if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
-            Sword.damage *= 1.2;
-            Arrow.damage *= 1.5;
-            WaterSphere.damage *= 1.2;
-            Doug.healthPotionAmount += 30;
         }
-        if(boss === 'dragon') {
-            this.maxHitPoints += 100;
-            this.hitPoints += 100;
+        if(name === "heart") {
+            if(this.maxHitPoints < 400) {
+                ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+            }
+
+            this.maxHitPoints += count * 20;
+            this.hitPoints += count * 20;
+
+            if(this.maxHitPoints > 400) this.maxHitPoints = 400;
             if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-            this.maxMana += 60;
-            this.manaLevel += 60;
-            if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
-            Sword.damage *= 1.5;
-            Arrow.damage *= 1.3;
-            WaterSphere.damage *= 1.6;
-            Doug.healthPotionAmount += 70;
         }
     }
 
-    getDrop(name, count, quality) {
-
+    getDrop(name, count) {
+        if(count > 0) {
+            const message = `Picked up ${count} ${name}${count > 1 ? 's' : ''}`;
+            setTimeout(() => {
+                this.inventory[name] += count;
+                log.addMessage(message, MessageLog.colors.lightGray);
+                ASSET_MANAGER.playAsset("sounds/grab.wav");
+            }, 200);
+        }
     }
 
     /**

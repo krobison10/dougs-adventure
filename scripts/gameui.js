@@ -1,6 +1,5 @@
 'use strict'
 
-
 /**
  * Represents the hotbar that contains the player's items
  *
@@ -153,17 +152,19 @@ class HotbarSlot {
             );
         } else {
             //Need to reverse
+            ctx.scale(-1, 1);
             ctx.drawImage(
                 ASSET_MANAGER.getAsset("sprites/items.png"),
                 sheetPos.x,
                 sheetPos.y,
                 sheetPos.size,
                 sheetPos.size,
-                this.pos.x + HotbarSlot.borderSize,
+                -(this.pos.x + HotbarSlot.borderSize) - 32,
                 this.pos.y + HotbarSlot.borderSize,
                 32,
                 32
             );
+            ctx.scale(-1, 1);
         }
     }
 
@@ -172,7 +173,7 @@ class HotbarSlot {
         if(item.stackable) {
             const count = doug.inventory[item.stackName];
             const pad = HotbarSlot.borderSize;
-            UIText.drawText(ctx, new Vec2(this.pos.x + pad, this.pos.y + pad), count, 12);
+            UIText.drawText(ctx, new Vec2(this.pos.x + pad, this.pos.y + pad), count, 14);
         }
     }
 }
@@ -423,7 +424,8 @@ class MessageLog {
         red: new RGBColor(255, 45, 45),
         green: new RGBColor(50, 255, 129),
         purple: new RGBColor(139, 38, 255),
-        yellow: new RGBColor(255, 247, 0)
+        yellow: new RGBColor(255, 247, 0),
+        lightGray: new RGBColor(200, 200, 200)
     }
     constructor() {
         this.messages = [];
