@@ -176,7 +176,7 @@ class GameEngine {
         //layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
         for (let i = 0; i < entitiesCount; i++) {
             let entity = layer[i];
-            if (!entity.removeFromWorld && shouldUpdate(entity)) {
+            if (shouldUpdate(entity)) {
                 entity.update();
             }
         }

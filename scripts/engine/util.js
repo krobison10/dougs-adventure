@@ -65,6 +65,9 @@ class RGBColor {
     constructor(r, g, b) {
         Object.assign(this, {r, g, b});
     }
+    toRGBstring() {
+        return rgb(this.r, this.g, this.b);
+    }
 }
 
 /**
@@ -85,7 +88,7 @@ class Vec2 {
     constructor(x, y) {
         Object.assign(this, {x, y});
     }
-    netVelocity() {
+    magnitude() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
     clone() {

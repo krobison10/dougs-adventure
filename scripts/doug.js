@@ -281,7 +281,7 @@ class Doug extends Character {
     regen() {
         if(this.hitPoints < this.maxHitPoints && timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.regenDelay) {
             if(timeInSecondsBetween(this.lastHealthRegen, Date.now()) >= 1 / Doug.healthRegen) {
-                if(this.velocity.netVelocity() !== 0) {
+                if(this.velocity.magnitude() !== 0) {
                     this.hitPoints += 1;
                 }
                 else {
