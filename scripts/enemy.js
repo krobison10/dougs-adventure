@@ -45,6 +45,10 @@ class Enemy extends Character {
         this.deathSound();
     }
 
+    drops() {
+
+    }
+
     /**
      * Draws the current frame of the animation at the current position of the Enemy.
      * @param {CanvasRenderingContext2D} ctx the rendering context.
@@ -52,4 +56,59 @@ class Enemy extends Character {
     draw(ctx) {
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
+
+    static dropTable = {
+        slime: {
+            arrow: {
+                chance: 0.5,
+                rolls: 5
+            },
+            heart: {
+                chance: 1/20,
+                rolls: 1
+            },
+            healthPotion: {
+                chance: 1/20,
+                rolls: 2
+            }
+        },
+        wolf: {
+            arrow: {
+                chance: 0.5,
+                rolls: 20
+            },
+            heart: {
+                chance: 1/10,
+                rolls: 1
+            },
+            mana: {
+                chance: 1/5,
+                rolls: 1
+            },
+            healthPotion: {
+                chance: 1/20,
+                rolls: 4
+            }
+        },
+        bat: {
+            arrow: {
+                chance: 0.5,
+                rolls: 10
+            },
+            heart: {
+                chance: 1/10,
+                rolls: 1
+            },
+            mana: {
+                chance: 1/10,
+                rolls: 1
+            },
+            healthPotion: {
+                chance: 1/20,
+                rolls: 2
+            }
+        }
+    }
 }
+
+

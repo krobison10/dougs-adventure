@@ -25,7 +25,7 @@ class Sword extends Entity {
         this.bbSize = new Dimension(72, 76);
         this.updateBB();
         ASSET_MANAGER.playAsset("sounds/swing_2.wav");
-        this.enemiesHit = new Set()
+        this.enemiesHit = new Set();
     }
 
     update() {
@@ -107,6 +107,14 @@ class Bow extends Entity {
         this.dir = dir;
         this.startTime = Date.now();
         this.image = this.getImage();
+        this.tryArrow();
+    }
+
+    tryArrow() {
+        if(doug.inventory.arrow >= 1) {
+            gameEngine.addEntity(new Arrow(gameEngine.click));
+            doug.inventory.arrow--;
+        }
     }
 
     update() {

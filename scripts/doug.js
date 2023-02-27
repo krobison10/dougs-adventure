@@ -15,7 +15,7 @@ class Doug extends Character {
      * Time in seconds for how long doug must wait to drink another health potion.
      * @type {number}
      */
-    static healthPotionCooldown = 20;
+    static healthPotionCooldown = 15;
     /**
      * Amount of HP that the health potion regenerates.
      * @type {number}
@@ -59,6 +59,10 @@ class Doug extends Character {
         this.spritePadding = new Padding(8, 12, 8, 12);
         this.animations = [];
 
+        this.inventory = {
+            arrow: 50,
+            healthPotion: 2
+        }
         /**
          * The maximum hit points of doug
          * @type {number}
@@ -166,6 +170,8 @@ class Doug extends Character {
             this.handleClick();
         }
 
+        if(gameEngine.keys["h"] || gameEngine.keys["H"]) this.useHealthPotion();
+
         if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
         if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
         if(gameEngine.keys["w"] || gameEngine.keys["W"])  this.velocity.y -= this.speed;
@@ -223,7 +229,6 @@ class Doug extends Character {
                 else {
                     gameEngine.addEntity(new Bow(Directions.RIGHT));
                 }
-                gameEngine.addEntity(new Arrow(gameEngine.click));
             }
             else if (hotbar.slots[hotbar.selectedIndex].itemID === 351 && this.useMana(ManaBolt.ManaCost)) {
                 if(gameEngine.click.x <= WIDTH / 2) {
@@ -235,8 +240,15 @@ class Doug extends Character {
                 gameEngine.addEntity(new WaterSphere(gameEngine.click));
             }
         }
-        if (hotbar.slots[hotbar.selectedIndex].itemID === 246
-            && timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+        if (hotbar.slots[hotbar.selectedIndex].itemID === 246) {
+            this.useHealthPotion();
+        }
+    }
+
+    useHealthPotion() {
+        if(this.inventory.healthPotion >= 1 &&
+            timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+            this.inventory.healthPotion--;
             this.lastHealthPotion = Date.now();
             this.hitPoints += Doug.healthPotionAmount;
             if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
@@ -395,6 +407,9 @@ class Doug extends Character {
         }
     }
 
+    getDrop(name, count, quality) {
+
+    }
 
     /**
      * Updates the position label below the canvas

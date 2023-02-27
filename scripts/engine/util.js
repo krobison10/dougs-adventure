@@ -88,6 +88,9 @@ class Vec2 {
     netVelocity() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
+    clone() {
+        return new Vec2(this.x, this.y);
+    }
 }
 
 /**
@@ -133,4 +136,16 @@ function shouldDraw(entity) {
  */
 function shouldUpdate(entity) {
     return getDistance(entity.pos, doug.pos) < dontUpdateDistance;
+}
+
+/**
+ * returns true with a probability of chance.
+ */
+function probability(chance) {
+    const size = 1000;
+    return randomInt(size) < Math.ceil(chance * size);
+}
+
+function flipImage(original, size) {
+
 }
