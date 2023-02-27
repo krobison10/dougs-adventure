@@ -179,6 +179,29 @@ class HotbarSlot {
 }
 
 
+class BuffIcon extends Entity {
+    constructor(pos, size) {
+        super(pos, size);
+        this.sprite = ASSET_MANAGER.getAsset("sprites/potion_delay.png");
+        this.secondsRemaining = Doug.healthPotionCooldown;
+    }
+
+    update() {
+        if(timeInSecondsBetween(Date.now(), doug.lastHealthPotion) > Doug.healthPotionCooldown) {
+            return this.removeFromWorld = true;
+        }
+        this.secondsRemaining = Doug.healthPotionCooldown - Math.round(timeInSecondsBetween(Date.now(), doug.lastHealthPotion));
+    }
+
+    draw(ctx) {
+        ctx.globalAlpha = 0.6;
+        ctx.drawImage(this.sprite, this.pos.x, this.pos.y);
+        UIText.drawText(ctx, new Vec2(this.pos.x + 2, this.pos.y + 36), `${this.secondsRemaining}s`, 16);
+        ctx.globalAlpha = 1;
+    }
+}
+
+
 /**
  * Represents the player's health in the UI
  *

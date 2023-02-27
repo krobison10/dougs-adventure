@@ -250,6 +250,7 @@ class Doug extends Character {
             timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
             this.inventory['healing potion']--;
             this.lastHealthPotion = Date.now();
+            gameEngine.addEntity(new BuffIcon(new Vec2(hotbar.pos.x, hotbar.pos.y + 52), null), Layers.UI);
             this.hitPoints += Doug.healthPotionAmount;
             if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
             ASSET_MANAGER.playAsset("sounds/drink.wav");
@@ -369,21 +370,27 @@ class Doug extends Character {
     }
 
     respawn() {
+        //Go through and check that all necessary fields are reset
         this.pos = new Vec2(spawnPoint.x, spawnPoint.y);
         this.lastDamage = Date.now();
         this.dead = false;
         this.hitPoints = this.maxHitPoints;
         this.manaLevel = this.maxMana;
         this.directionMem = 0;
-
+        this.lastHealthPotion = 0;
     }
 
     getBoost(name, count) {
         if(count < 1) return;
+
         if(name === "mana") {
             if(this.maxMana < 200) {
                 ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+                const usedCount = Math.min(count, (200 - this.maxMana) / 20);
+                const message = `Used ${usedCount} mana crystal${usedCount > 1 ? 's' : ''}`;
+                log.addMessage(message, MessageLog.colors.green);
             }
+            else return;
 
             this.maxMana += count * 20;
             this.manaLevel += count * 20;
@@ -394,7 +401,11 @@ class Doug extends Character {
         if(name === "heart") {
             if(this.maxHitPoints < 400) {
                 ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+                const usedCount = Math.min(count, (400 - this.maxHitPoints) / 20);
+                const message = `Used ${usedCount} life crystal${usedCount > 1 ? 's' : ''}`;
+                log.addMessage(message, MessageLog.colors.green);
             }
+            else return;
 
             this.maxHitPoints += count * 20;
             this.hitPoints += count * 20;

@@ -118,13 +118,59 @@ class Enemy extends Character {
                 chance: 1/20,
                 rolls: 4
             }
+        },
+        bear: {
+            arrow: {
+                chance: 4/5,
+                rolls: 50
+            },
+            heart: {
+                chance: 1,
+                rolls: 2
+            },
+            mana: {
+                chance: 1/2,
+                rolls: 2
+            },
+            'healing potion': {
+                chance: 1/2,
+                rolls: 4
+            },
+            bow: {
+                chance: 1,
+                rolls: 1
+            }
+        },
+        dragon: {
+            arrow: {
+                chance: 4/5,
+                rolls: 200
+            },
+            heart: {
+                chance: 1,
+                rolls: 5
+            },
+            mana: {
+                chance: 1,
+                rolls: 2
+            },
+            'healing potion': {
+                chance: 1/2,
+                rolls: 10
+            },
+            manaBolt: {
+                chance: 1,
+                rolls: 1
+            }
         }
     }
     static dropTypes = {
         arrow: "item",
         'healing potion': "item",
         heart: "boost",
-        mana: "boost"
+        mana: "boost",
+        bow: "newitem",
+        manaBolt: "newitem"
     }
 }
 

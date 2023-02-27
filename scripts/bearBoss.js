@@ -19,6 +19,7 @@ class BearBoss extends Enemy {
         this.maxHitPoints = 500;
         this.hitPoints = this.maxHitPoints;
         this.damage = 50;
+        this.type = "bear";
 
         // boss's movement speed
         this.speed = 100;

@@ -25,6 +25,7 @@ class Dragon extends Enemy {
         this.dragonRange = 400
         this.hitPoints = 1000;
         this.damage = 10;
+        this.type = "dragon";
 
         this.speed = 200;
         this.velocity = new Vec2(0,0);
