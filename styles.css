@@ -3,13 +3,16 @@
   src: url(ANDYB.TTF);
 }
 
+* {
+  font-family: Andy-Bold, serif;
+  color: white;
+}
+
 body {
   background-color:rgb(35, 39, 46);
 }
 
 h1, h4 {
-  color: white;
-  font-family: Andy-Bold, serif;
   margin: 10px;
 }
 
@@ -21,6 +24,9 @@ h1, h4, #gameWorld, #toggle-boxes, #light-slider {
 
 h1 {
   text-align: center;
+}
+
+h1 {
   font-size: 50px;
   margin-left: auto;
   margin-right: auto;
@@ -50,4 +56,9 @@ h4 {
 #canvas-container div {
   display: inline-block;
   margin-right: 50px;
+}
+
+#guide {
+  width: fit-content;
+  margin: auto;
 }
