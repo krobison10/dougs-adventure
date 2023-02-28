@@ -205,6 +205,10 @@ class Doug extends Character {
             }
         }
 
+        this.pos.x = Math.round(this.pos.x);
+        this.pos.y = Math.round(this.pos.y);
+
+
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         this.walkingBox = Character.createBB(this.pos, this.size, this.walkingPadding);
 

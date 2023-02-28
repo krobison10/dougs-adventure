@@ -35,7 +35,7 @@ class GameEngine {
 
     init(ctx) {
         this.ctx = ctx;
-        //this.ctx.imageSmoothingEnabled = false;
+        this.ctx.imageSmoothingEnabled = false;
         this.startInput();
         this.timer = new Timer();
     }

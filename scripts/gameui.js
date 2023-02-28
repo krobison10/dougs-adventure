@@ -137,7 +137,6 @@ class HotbarSlot {
 
     drawItem(ctx) {
         let sheetPos = Item.getItemSpriteLocById(this.itemID);
-        ctx.imageSmoothingEnabled = false;
         if(!Item.items[this.itemID].reverse) {
             ctx.drawImage(
                 ASSET_MANAGER.getAsset("sprites/items.png"),
