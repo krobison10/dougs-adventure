@@ -374,7 +374,7 @@ class WaterSphere extends Entity {
 
     generateParticles() {
         for(let i = 0; i < 8; i++) {
-            if(probability(5 * gameEngine.clockTick)) {
+            if(probability(10 * gameEngine.clockTick)) {
 
                 const duration = 0.5 + Math.random();
                 const speed = 10 + Math.random() * 20;
@@ -382,14 +382,14 @@ class WaterSphere extends Entity {
                 const x = this.getCenter().x - 8 + Math.random() * 16;
                 const y = this.getCenter().y - 8 + Math.random() * 16;
 
-                const magnitude = 0.075 + Math.random() / 10;
+                //const magnitude = 0.075 + Math.random() / 10;
 
                 const particle = new Particle(new Vec2(x, y), 4, new RGBColor(11, 46, 255),
                     1, speed, .8, null, duration)
                 gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
 
-                lightMap.addLightSource(
-                    new LightSource(magnitude, this.getCenter().clone(), particle, particle.color, 60));
+                //lightMap.addLightSource(
+                //    new LightSource(magnitude, this.getCenter().clone(), particle, particle.color, 60));
             }
         }
     }

@@ -62,7 +62,7 @@ class LightMap {
      */
     update() {
         this.updateTime();
-        this.updateAlpha();
+        //this.updateAlpha();
 
         this.renderingCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
