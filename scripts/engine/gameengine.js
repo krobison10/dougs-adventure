@@ -89,6 +89,12 @@ class GameEngine {
         });
 
         this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
+        this.ctx.canvas.addEventListener("keydown", event => {
+            this.keys[event.key] = true;
+            if(event.key === " ") {
+                event.preventDefault();
+            }
+        });
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
     }
 

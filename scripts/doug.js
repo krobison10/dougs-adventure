@@ -51,7 +51,6 @@ class Doug extends Character {
      * @param {Vec2} pos initial position of the player.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
      * @param {Dimension} size size of the sprite.
-     * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      */
     constructor(pos, spritesheet, size) {
         super(pos, spritesheet, size, null);
@@ -124,6 +123,31 @@ class Doug extends Character {
          */
         this.speed = 250;
         /**
+         * Speed when dashing.
+         * @type {number}
+         */
+        this.dashSpeed = 1000;
+        /**
+         * Indicates whether currently dashing.
+         * @type {boolean}
+         */
+        this.dashing = false;
+        /**
+         * How long dashes will last.
+         * @type {number}
+         */
+        this.dashDuration = 0.12;
+        /**
+         * Time that last dash occurred.
+         * @type {number}
+         */
+        this.lastDash = 0;
+        /**
+         * Minimum time in seconds between dashes.
+         * @type {number}
+         */
+        this.dashCoolDown = 6;
+        /**
          * Current velocity of the player.
          * @type {Vec2}
          */
@@ -154,6 +178,12 @@ class Doug extends Character {
                 this.size.w, this.size.h,
                 2, .1, 0, false, true);
         }
+        //Create dash animations
+        for(let i = 0; i < 4; i++) {
+            this.animations[i + 8] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
+                this.size.w, this.size.h,
+                2, .1 * this.speed / this.dashSpeed, 0, false, true);
+        }
     }
 
     /**
@@ -172,17 +202,56 @@ class Doug extends Character {
 
         if(gameEngine.keys["h"] || gameEngine.keys["H"]) this.useHealthPotion();
 
+
         if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
         if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"] || gameEngine.keys["W"])  this.velocity.y -= this.speed;
+        if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.speed;
         if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
 
-        //If the resulting vector's magnitude exceeds the speed
-        if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
-            //Modify components so that vector's magnitude (total speed) matches desired speed
-            this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant
-            this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
+        //if dashing is true but time since start is greater than duration, stop
+        if(this.dashing && timeInSecondsBetween(this.lastDash, Date.now()) > this.dashDuration) {
+            this.dashing = false;
         }
+
+        //some key is being pressed
+        if(this.velocity.magnitude() !== 0) {
+            //Not currently dashing but tab key pressed and dash cooldown over, start dashing
+            if(!this.dashing && gameEngine.keys[" "]
+                && timeInSecondsBetween(Date.now(), this.lastDash) - this.dashDuration > this.dashCoolDown) {
+                this.dashing = true;
+                this.lastDash = Date.now();
+            }
+        }
+        else {
+            //no key is being pressed
+            if(this.dashing) {
+                this.dashing = false;
+            }
+        }
+
+        if(this.dashing) {
+            this.velocity.x = this.velocity.y = 0;
+
+            if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.dashSpeed;
+            if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.dashSpeed;
+            if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.dashSpeed;
+            if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.dashSpeed;
+
+            if(this.velocity.magnitude() > this.dashSpeed) {
+                //Modify components so that vector's magnitude (total speed) matches desired speed
+                this.velocity.x = this.dashSpeed/Math.sqrt(2) * this.velocity.x/this.dashSpeed;
+                this.velocity.y = this.dashSpeed/Math.sqrt(2) * this.velocity.y/this.dashSpeed;
+            }
+        }
+        else {
+            //If the resulting vector's magnitude exceeds the speed
+            if(this.velocity.magnitude() > this.speed) {
+                //Modify components so that vector's magnitude (total speed) matches desired speed
+                this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;
+                this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
+            }
+        }
+
 
         /*
          * Check for collision with an obstacle, we do two separate checks so that if a player is colliding in one axis
@@ -443,23 +512,24 @@ class Doug extends Character {
         if(this.dead) return;
 
         if(!this.attacking) {
+            const d = this.dashing ? 4 : 0;
             if(this.velocity.x < 0) {
-                this.drawAnim(ctx, this.animations[5]);
+                this.drawAnim(ctx, this.animations[5 + d]);
                 this.directionMem = 1;
             }
-            if(this.velocity.x > 0) {
-                this.drawAnim(ctx, this.animations[6]);
+            else if(this.velocity.x > 0) {
+                this.drawAnim(ctx, this.animations[6 + d]);
                 this.directionMem = 2;
             }
-            if(this.velocity.y === this.speed) {
-                this.drawAnim(ctx, this.animations[4]);
+            else if(this.velocity.y === this.speed || this.velocity.y === this.dashSpeed) {
+                this.drawAnim(ctx, this.animations[4 + d]);
                 this.directionMem = 0;
             }
-            if(this.velocity.y === -this.speed) {
-                this.drawAnim(ctx, this.animations[7]);
+            else if(this.velocity.y === -this.speed || this.velocity.y === -this.dashSpeed) {
+                this.drawAnim(ctx, this.animations[7 + d]);
                 this.directionMem = 3;
             }
-            if(this.velocity.y === 0 && this.velocity.x === 0) {
+            else if(this.velocity.y === 0 && this.velocity.x === 0) {
                 this.drawAnim(ctx, this.animations[this.directionMem]);
             }
         }
@@ -470,9 +540,9 @@ class Doug extends Character {
             if(this.attackDir === Directions.RIGHT) {
                 this.directionMem = 2;
             }
-
-            if(Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2)) > 0) {
-                this.drawAnim(ctx, this.animations[this.directionMem + 4]);
+            if(this.velocity.magnitude() > 0) {
+                const index = this.directionMem + (this.dashing ? 8 : 4);
+                this.drawAnim(ctx, this.animations[index]);
             }
             else {
                 this.drawAnim(ctx, this.animations[this.directionMem]);
