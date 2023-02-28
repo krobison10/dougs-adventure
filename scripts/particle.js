@@ -41,13 +41,34 @@ class Particle extends Entity {
           this.direction.y /= this.direction.magnitude();
 
           this.velocity = this.direction.clone();
+          this.createdTime = Date.now();
+     }
+
+     static generateDeathParticles(centerPoint, count, radius, size, sizeVar) {
+          for(let i = 0; i < count; i++) {
+               const pos = getRandomPointWithinRadius(centerPoint, radius);
+
+               let dir = null;
+               if(probability(0.5)) {
+                    dir = new Vec2(pos.x - centerPoint.x, pos.y - centerPoint.y);
+               }
+
+               const speed = Math.random() * 150;
+               const duration = 5 + Math.random() * 4;
+
+               const particle = new Particle(pos, size, new RGBColor(255, 0, 0),
+                   sizeVar, speed, .05, dir, duration);
+
+               gameEngine.addEntity(particle, Layers.GROUND);
+          }
      }
 
      update() {
           //remove if duration is up
           if(timeInSecondsBetween(Date.now(), this.createdTime) > this.duration) return this.removeFromWorld = true;
 
-          this.speed *= 1 - (this.speedDecay * gameEngine.clockTick);
+          //this.speed *= 1 - (this.speedDecay * gameEngine.clockTick);
+          this.speed *= Math.pow(this.speedDecay, gameEngine.clockTick);
 
           this.velocity.x = this.direction.x * this.speed;
           this.velocity.y = this.direction.y * this.speed;

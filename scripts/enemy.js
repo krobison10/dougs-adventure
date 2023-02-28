@@ -41,10 +41,13 @@ class Enemy extends Character {
     }
 
     die() {
+        super.deathParticles();
         this.removeFromWorld = true;
         this.deathSound();
         this.drops();
     }
+
+
 
     drops() {
         const table = Enemy.dropTable[this.type];

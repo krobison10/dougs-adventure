@@ -179,7 +179,7 @@ class FireSphere extends Entity {
                 const magnitude = 0.01 + Math.random() * 0.1;
 
                 const particle = new Particle(new Vec2(x, y), 5, new RGBColor(255, g, 2),
-                    2, speed, .8, null, duration)
+                    2, speed, .3, null, duration)
                 gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
 
                 const source = new LightSource(magnitude, this.getCenter().clone(),

@@ -340,6 +340,7 @@ class Doug extends Character {
     die() {
         this.dead = true;
         this.deathTime = Date.now();
+        super.deathParticles();
 
         log.addMessage("Doug was slain", MessageLog.colors.red)
 

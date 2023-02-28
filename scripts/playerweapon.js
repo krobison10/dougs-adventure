@@ -211,9 +211,10 @@ class Arrow extends Entity {
 
                 const magnitude = 0.1 + Math.random() / 10;
                 const g = 60 + Math.random() * 40;
+                const decay = .3 + Math.random() / 5;
 
                 const particle = new Particle(this.getCenter().clone(), 3, new RGBColor(255, g, 2),
-                    1, speed, .9999, new Vec2(xVel, 1), duration)
+                    1, speed, decay, new Vec2(xVel, 1), duration)
                 gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
 
                 const source = new FlickeringLightSource(magnitude, this.getCenter().clone(),
@@ -385,7 +386,7 @@ class WaterSphere extends Entity {
                 //const magnitude = 0.075 + Math.random() / 10;
 
                 const particle = new Particle(new Vec2(x, y), 4, new RGBColor(11, 46, 255),
-                    1, speed, .8, null, duration)
+                    1, speed, .3, null, duration)
                 gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
 
                 //lightMap.addLightSource(

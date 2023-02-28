@@ -75,10 +75,11 @@ class RGBColor {
  */
 const Layers = {
     BACKGROUND: 0,
-    FOREGROUND: 1,
-    LIGHTMAP: 2,
-    GLOWING_ENTITIES: 3,
-    UI: 4
+    GROUND: 1,
+    FOREGROUND: 2,
+    LIGHTMAP: 3,
+    GLOWING_ENTITIES: 4,
+    UI: 5
 }
 
 /**
@@ -149,6 +150,16 @@ function probability(chance) {
     return randomInt(size) < Math.ceil(chance * size);
 }
 
-function flipImage(original, size) {
+function getRandomPointWithinRadius(pos, radius) {
+    // Generate a random angle in radians
+    const angle = Math.random() * 2 * Math.PI;
 
+    // Generate a random radius between 0 and the given radius
+    const randomRadius = Math.random() * radius;
+
+    // Convert polar coordinates to Cartesian coordinates
+    const x = pos.x + randomRadius * Math.cos(angle);
+    const y = pos.y + randomRadius * Math.sin(angle);
+
+    return new Vec2(x, y);
 }
