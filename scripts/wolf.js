@@ -70,7 +70,7 @@ class Wolf extends Enemy {
         ASSET_MANAGER.playAsset("sounds/wolf_kill.wav");
     }
 
-    route() {
+    route(dest) {
         const xDif = dest.x - this.pos.x;
         const yDif = dest.y - this.pos.y;
         const dist = Math.sqrt(xDif * xDif + yDif * yDif);
