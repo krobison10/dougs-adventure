@@ -44,20 +44,33 @@ class Bat extends Enemy {
      * Updates the bat for the frame.
      */
     update() {
-        let dist = getDistance(this.pos, this.target);
-        let dougDist = getDistance(this.pos, doug.pos);
+        super.update();
 
-        if(dougDist < this.aggroRange && !doug.dead) {
-            this.target = doug.pos;
-        } else {
-            if (dist < 5) {
-                this.targetID++;
-            }
-            this.target = this.path[this.targetID % 4];
-            dist = getDistance(this.pos, this.target)
+        if(this.knockback) {
+            this.velocity = new Vec2(this.knockbackDir.x, this.knockbackDir.y);
+
+            let scalingFactor = this.knockbackSpeed / this.knockbackDir.magnitude();
+
+            this.velocity.x *= scalingFactor;
+            this.velocity.y *= scalingFactor;
         }
+        else {
+            let dist = getDistance(this.pos, this.target);
+            let dougDist = getDistance(this.pos, doug.pos);
 
-        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+            if(dougDist < this.aggroRange && !doug.dead) {
+                this.target = doug.pos;
+            } else {
+                if (dist < 5) {
+                    this.targetID++;
+                }
+                this.target = this.path[this.targetID % 4];
+                dist = getDistance(this.pos, this.target)
+            }
+
+            this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
+        }
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
