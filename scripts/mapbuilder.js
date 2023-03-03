@@ -10,6 +10,8 @@ class MapBuilder {
     static width = 100;
     static height = 100;
     static removeOnClear = new Set();
+    static removeOnSoftClear = new Set();
+
     constructor() {
         this.tilemap = ASSET_MANAGER.getAsset("sprites/tiles.png");
     }
@@ -18,10 +20,13 @@ class MapBuilder {
      * Adds all the background tiles as entities to the background layer of the game engine.
      */
     build() {
+        
         placeRandomVegetation();
         this.placePath();
         this.placeGrassTiles();
+        placeRandomEnemies();
         placeBorderWalls();
+        
     }
 
     placePath() {
@@ -66,12 +71,93 @@ class GrassTile extends Entity {
         ctx.drawImage(this.sprite, 0, 0, 128, 128, this.getScreenPos().x, this.getScreenPos().y, 128, 128);
     }
 }
+function placeRandomEnemies() {
+    const numBats = 250;
+    const numSlimes = 200;
+    const obstacles = [];
 
+    const grassTileSize = 4;
+    let rightBound = (MapBuilder.width * grassTileSize / 2) * TILE_SIZE;
+    const leftBound = -rightBound;
+    rightBound -= 50;
+    let bottomBound = (MapBuilder.height * grassTileSize / 2) * TILE_SIZE;
+    const topBound = -bottomBound;
+    bottomBound -= 100;
+    //----------------------------------Bat spawn checker----------------------------------------
+    for(let i = 0; i < numBats; i++) {
+        let newBat;
+        let valid = false;
+        do {
+            //Create potential Bat
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+
+            newBat = {
+                type: "Bat",
+                box: new BoundingBox(new Vec2(x, y), new Dimension(50,50)),
+                remove: false
+            }
+
+            valid = true;
+            //check among others
+            for(let obstacle of obstacles) {
+                if(newBat.box.collide(obstacle.box)) {
+                    valid = false;
+                }
+            }
+        } while(!valid)
+        obstacles.push(newBat);
+    }
+    //----------------------------------Smile spawn checker----------------------------------------
+    for(let i = 0; i < numSlimes; i++) {
+        let newSlime;
+        let valid = false;
+        do {
+            //Create potential Bat
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+
+            newSlime = {
+                type: "Slime",
+                box: new BoundingBox(new Vec2(x, y), new Dimension(60,60)),
+                remove: false
+            }
+
+            valid = true;
+            //check among others
+            for(let obstacle of obstacles) {
+                if(newSlime.box.collide(obstacle.box)) {
+                    valid = false;
+                }
+            }
+        } while(!valid)
+        obstacles.push(newSlime);
+    }
+
+    //----------------------------------Bat Spawner----------------------------------------
+    for(let obstacle of obstacles) {
+        if(obstacle.type === "Bat") {
+            const realBat = new Bat(obstacle.box.pos, ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
+                                    new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50)
+            
+            realBat.footPrint = realBat.boundingBox;
+            gameEngine.addEntity(realBat);
+        }
+        else if(obstacle.type === "Slime") {
+            const realSlime = new Slime(obstacle.box.pos, ASSET_MANAGER.getAsset("sprites/slime01.png"),
+                                    new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1)
+            
+            realSlime.footPrint = realSlime.boundingBox;
+            gameEngine.addEntity(realSlime);
+        }
+    }
+}
 function placeRandomVegetation() {
     const numTrees = 2000;
     const numGrass = 8000;
     const numFlower1 = 1500;
     const numFlower2 = 1500;
+    const numSmallRock = 2000;
 
     const obstacles = [];
 
@@ -180,6 +266,30 @@ function placeRandomVegetation() {
         obstacles.push(newFlower);
     }
 
+    for(let i = 0; i < numSmallRock; i++) {
+        let newRock;
+        let valid = false;
+        do {
+            //Create potential rock
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newRock = {
+                type: "small_rock",
+                box: new BoundingBox(new Vec2(x, y), new Dimension(16, 16)),
+                remove: false
+            }
+
+            valid = true;
+            for(let obstacle of obstacles) {
+                if(newRock.box.collide(obstacle.box)) {
+                    valid = false;
+                }
+            }
+
+        } while(!valid)
+        obstacles.push(newRock);
+    }
+
     for(let obstacle of obstacles) {
         if(obstacle.type === "tree") {
             const realTree = new Obstacle(
@@ -238,12 +348,29 @@ function placeRandomVegetation() {
 
             gameEngine.addEntity(realFlower, Layers.BACKGROUND);
         }
+        else if(obstacle.type === "small_rock") {
+            const realRock = new Obstacle(
+                obstacle.box.pos,
+                new Dimension(16, 16),
+                ASSET_MANAGER.getAsset("sprites/rock_small.png"),
+                false,
+                null,
+                new Vec2(0, 0),
+                new Dimension(16, 16)
+            )
+            realRock.footPrint = new BoundingBox(realRock.pos, realRock.size);
+
+            gameEngine.addEntity(realRock, Layers.BACKGROUND);
+        }
     }
 
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/tree_00.png"));
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/tall_grass.png"));
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_1.png"));
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_2.png"));
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_2.png"));
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/rock_small.png"));
+
 
     //remove nature from certain areas using new function
     let bb = new BoundingBox(
