@@ -7,8 +7,8 @@
  */
 class MapBuilder {
 
-    static width = 100;
-    static height = 100;
+    static width = 150;
+    static height = 150;
     static removeOnClear = new Set();
     static removeOnSoftClear = new Set();
 
@@ -32,10 +32,10 @@ class MapBuilder {
     placePath() {
         //Entities for the path
         removeNatureFromArea(new BoundingBox(
-            new Vec2(-7 * TILE_SIZE, -200 * TILE_SIZE),
-            new Dimension(7 * TILE_SIZE, 400 * TILE_SIZE)));
+            new Vec2(-7 * TILE_SIZE, -300 * TILE_SIZE),
+            new Dimension(7 * TILE_SIZE, 600 * TILE_SIZE)));
 
-        for(let i = -200; i < 200; i++) {
+        for(let i = -300; i < 300; i++) {
             gameEngine.addEntity(new BackgroundTile(new Vec2(-5, i),
                 new Dimension(16, 16),
                 this.tilemap, new Vec2(0, 1)),  Layers.BACKGROUND);
@@ -153,11 +153,11 @@ function placeRandomEnemies() {
     }
 }
 function placeRandomVegetation() {
-    const numTrees = 2000;
-    const numGrass = 8000;
-    const numFlower1 = 1500;
-    const numFlower2 = 1500;
-    const numSmallRock = 2000;
+    const numTrees = 3000;
+    const numGrass = 12000;
+    const numFlower1 = 2000;
+    const numFlower2 = 2000;
+    const numSmallRock = 3000;
 
     const obstacles = [];
 
@@ -372,7 +372,7 @@ function placeRandomVegetation() {
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/rock_small.png"));
 
 
-    //remove nature from certain areas using new function
+    //remove nature from spawn area
     let bb = new BoundingBox(
         new Vec2(-10 * TILE_SIZE, -10 * TILE_SIZE),
         new Dimension(30 * TILE_SIZE, 20 * TILE_SIZE));

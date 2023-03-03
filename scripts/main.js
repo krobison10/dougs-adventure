@@ -163,7 +163,7 @@ function buildUI() {
 }
 
 function placeTorches() {
-	for(let y = 180; y >= -180; y -= 6) {
+	for(let y = 300; y >= -300; y -= 6) {
 		gameEngine.addEntity(new Torch(new Vec2(-6.5 * TILE_SIZE, y * TILE_SIZE)));
 		gameEngine.addEntity(new Torch(new Vec2(-1.5 * TILE_SIZE, (y - 3) * TILE_SIZE)));
 	}

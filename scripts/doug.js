@@ -339,7 +339,7 @@ class Doug extends Character {
 
         const entities = gameEngine.entities[Layers.FOREGROUND];
         for(const entity of entities) {
-            if(entity.boundingBox && entity instanceof Obstacle) {
+            if(entity.boundingBox && (entity instanceof Obstacle || entity instanceof InvisibleBorder)) {
                 if(entity !== this && box.collide(entity.boundingBox)) {
                     return true;
                 }
