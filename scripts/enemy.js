@@ -129,7 +129,7 @@ class Enemy extends Character {
             },
             heart: {
                 chance: 1,
-                rolls: 2
+                rolls: 1
             },
             mana: {
                 chance: 1/2,
@@ -151,7 +151,7 @@ class Enemy extends Character {
             },
             heart: {
                 chance: 1,
-                rolls: 5
+                rolls: 4
             },
             mana: {
                 chance: 1,
@@ -164,6 +164,24 @@ class Enemy extends Character {
             manaBolt: {
                 chance: 1,
                 rolls: 1
+            }
+        },
+        demon: {
+            arrow: {
+                chance: 4/5,
+                rolls: 100
+            },
+            heart: {
+                chance: 1,
+                rolls: 2
+            },
+            mana: {
+                chance: 1,
+                rolls: 2
+            },
+            'healing potion': {
+                chance: 1/2,
+                rolls: 8
             }
         }
     }

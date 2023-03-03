@@ -116,7 +116,7 @@ class Slime extends Enemy {
             this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0 && this.velocity.x >= this.velocity.y) {//right
+        if(this.velocity.x > 0 && Math.abs(this.velocity.x) >= Math.abs(this.velocity.y)) {//right
             this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 2;
         }
