@@ -12,8 +12,9 @@ class Wolf extends Enemy {
 
         this.type = 'wolf';
 
-        this.xStart = pos.x;
-        this.yStart = pos.y;
+        this.startX = doug.getCenter().x;
+        this.startY = doug.getCenter().y;
+        this.aggroRange = 200;
 
         this.setSpeed();
         this.directionMem = 0;
@@ -23,8 +24,8 @@ class Wolf extends Enemy {
     }
 
     update() {
-        this.route();
         this.setSpeed();
+        this.route(doug.pos);
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -33,18 +34,18 @@ class Wolf extends Enemy {
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-
+        
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
     draw(ctx) {
         if(this.velocity.x < 0) {//left
             this.drawAnim(ctx, this.animations[3]);
-            this.directionMem = 1;
+            this.directionMem = 3;
         }
         if(this.velocity.x > 0) {//right
             this.drawAnim(ctx, this.animations[1]);
-            this.directionMem = 2;
+            this.directionMem = 1;
         }
         if(this.velocity.y > 0 && this.velocity.x === 0) {//down
             this.drawAnim(ctx, this.animations[0]);
@@ -52,10 +53,10 @@ class Wolf extends Enemy {
         }
         if(this.velocity.y < 0 && this.velocity.x === 0) {//up
             this.drawAnim(ctx, this.animations[2]);
-            this.directionMem = 3;
+            this.directionMem = 2;
         }
         if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[2]);
+            this.drawAnim(ctx, this.animations[this.directionMem]);
         }
 
         this.boundingBox.draw(ctx);
@@ -69,33 +70,27 @@ class Wolf extends Enemy {
         ASSET_MANAGER.playAsset("sounds/wolf_kill.wav");
     }
 
-    route() {
-        let xMax = 200;
-        let xMin = 100;
-        let yMax = 200;
-        let yMin = -100;
+    route(dest) {
+        const xDif = dest.x - this.pos.x;
+        const yDif = dest.y - this.pos.y;
+        const dist = Math.sqrt(xDif * xDif + yDif * yDif);
         
-        //Bottom right
-        if (this.pos.x >= xMax && this.pos.y >= yMax) {
+        if(dist < this.aggroRange && dist > 1) { // Stops at one to smooth attack
+            if(xDif > 0 && yDif > 0) { //Move Up
+                this.velocity.y = this.speed;
+                this.velocity.x = 0;
+            } else if(xDif < 0 && yDif > 0) { //Move Left
+                this.velocity.y = 0;
+                this.velocity.x = -this.speed;
+            } else if(xDif < 0 && yDif < 0) { //Move Down
+                this.velocity.y = -this.speed;
+                this.velocity.x = 0;
+            } else if(xDif > 0 && yDif < 0) { //Move Right
+                this.velocity.y = 0;
+                this.velocity.x = this.speed;
+            }
+        } else {
             this.velocity.x = 0;
-            this.velocity.y = -this.speed;
-        }
-        
-        //Top Right
-        if (this.pos.x >= xMax && this.pos.y <= yMin) {
-            this.velocity.y = 0;
-            this.velocity.x = -this.speed;
-        }
-
-        //Top Left
-        if (this.pos.x <= xMin && this.pos.y <= yMin) {
-            this.velocity.x = 0;
-            this.velocity.y = this.speed;
-        }
-
-        //Bottom Left
-        if(this.pos.x <= xMin && this.pos.y >= yMax) {
-            this.velocity.x = this.speed;
             this.velocity.y = 0;
         }
     }
@@ -140,4 +135,5 @@ class Wolf extends Enemy {
             this.speed = 250;
         }
     }
+    
 }
