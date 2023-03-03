@@ -19,6 +19,7 @@ class BearBoss extends Enemy {
         this.maxHitPoints = 500;
         this.hitPoints = this.maxHitPoints;
         this.damage = 50;
+        this.type = "bear";
 
         // boss's movement speed
         this.speed = 100;
@@ -46,9 +47,8 @@ class BearBoss extends Enemy {
     }
 
     die() {
-        super.die();
-        log.addMessage("Bear has been defeated", MessageLog.colors.purple);
-        doug.upgrade("bear");
+         log.addMessage("Bear has been defeated", MessageLog.colors.purple);
+         super.die();
     }
 
     deathSound() {

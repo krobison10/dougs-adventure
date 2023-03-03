@@ -65,6 +65,9 @@ class RGBColor {
     constructor(r, g, b) {
         Object.assign(this, {r, g, b});
     }
+    toRGBstring() {
+        return rgb(this.r, this.g, this.b);
+    }
 }
 
 /**
@@ -72,10 +75,11 @@ class RGBColor {
  */
 const Layers = {
     BACKGROUND: 0,
-    FOREGROUND: 1,
-    LIGHTMAP: 2,
-    GLOWING_ENTITIES: 3,
-    UI: 4
+    GROUND: 1,
+    FOREGROUND: 2,
+    LIGHTMAP: 3,
+    GLOWING_ENTITIES: 4,
+    UI: 5
 }
 
 /**
@@ -85,8 +89,11 @@ class Vec2 {
     constructor(x, y) {
         Object.assign(this, {x, y});
     }
-    netVelocity() {
+    magnitude() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
+    clone() {
+        return new Vec2(this.x, this.y);
     }
 }
 
@@ -133,4 +140,26 @@ function shouldDraw(entity) {
  */
 function shouldUpdate(entity) {
     return getDistance(entity.pos, doug.pos) < dontUpdateDistance;
+}
+
+/**
+ * returns true with a probability of chance.
+ */
+function probability(chance) {
+    const size = 1000;
+    return randomInt(size) < Math.ceil(chance * size);
+}
+
+function getRandomPointWithinRadius(pos, radius) {
+    // Generate a random angle in radians
+    const angle = Math.random() * 2 * Math.PI;
+
+    // Generate a random radius between 0 and the given radius
+    const randomRadius = Math.random() * radius;
+
+    // Convert polar coordinates to Cartesian coordinates
+    const x = pos.x + randomRadius * Math.cos(angle);
+    const y = pos.y + randomRadius * Math.sin(angle);
+
+    return new Vec2(x, y);
 }

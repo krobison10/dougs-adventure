@@ -15,7 +15,7 @@ class Doug extends Character {
      * Time in seconds for how long doug must wait to drink another health potion.
      * @type {number}
      */
-    static healthPotionCooldown = 20;
+    static healthPotionCooldown = 15;
     /**
      * Amount of HP that the health potion regenerates.
      * @type {number}
@@ -51,7 +51,6 @@ class Doug extends Character {
      * @param {Vec2} pos initial position of the player.
      * @param {HTMLImageElement} spritesheet spritesheet of the player.
      * @param {Dimension} size size of the sprite.
-     * @param {Padding} spritePadding represents the padding between the actual size of the entity and its collision box.
      */
     constructor(pos, spritesheet, size) {
         super(pos, spritesheet, size, null);
@@ -59,6 +58,10 @@ class Doug extends Character {
         this.spritePadding = new Padding(8, 12, 8, 12);
         this.animations = [];
 
+        this.inventory = {
+            arrow: 50,
+            'healing potion': 2
+        }
         /**
          * The maximum hit points of doug
          * @type {number}
@@ -120,6 +123,31 @@ class Doug extends Character {
          */
         this.speed = 250;
         /**
+         * Speed when dashing.
+         * @type {number}
+         */
+        this.dashSpeed = 1000;
+        /**
+         * Indicates whether currently dashing.
+         * @type {boolean}
+         */
+        this.dashing = false;
+        /**
+         * How long dashes will last.
+         * @type {number}
+         */
+        this.dashDuration = 0.12;
+        /**
+         * Time that last dash occurred.
+         * @type {number}
+         */
+        this.lastDash = 0;
+        /**
+         * Minimum time in seconds between dashes.
+         * @type {number}
+         */
+        this.dashCoolDown = 6;
+        /**
          * Current velocity of the player.
          * @type {Vec2}
          */
@@ -150,6 +178,12 @@ class Doug extends Character {
                 this.size.w, this.size.h,
                 2, .1, 0, false, true);
         }
+        //Create dash animations
+        for(let i = 0; i < 4; i++) {
+            this.animations[i + 8] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
+                this.size.w, this.size.h,
+                2, .1 * this.speed / this.dashSpeed, 0, false, true);
+        }
     }
 
     /**
@@ -166,17 +200,58 @@ class Doug extends Character {
             this.handleClick();
         }
 
+        if(gameEngine.keys["h"] || gameEngine.keys["H"]) this.useHealthPotion();
+
+
         if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
         if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"] || gameEngine.keys["W"])  this.velocity.y -= this.speed;
+        if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.speed;
         if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
 
-        //If the resulting vector's magnitude exceeds the speed
-        if(Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) > this.speed) {
-            //Modify components so that vector's magnitude (total speed) matches desired speed
-            this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;//Might be redundant
-            this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
+        //if dashing is true but time since start is greater than duration, stop
+        if(this.dashing && timeInSecondsBetween(this.lastDash, Date.now()) > this.dashDuration) {
+            this.dashing = false;
         }
+
+        //some key is being pressed
+        if(this.velocity.magnitude() !== 0) {
+            //Not currently dashing but tab key pressed and dash cooldown over, start dashing
+            if(!this.dashing && gameEngine.keys[" "]
+                && timeInSecondsBetween(Date.now(), this.lastDash) - this.dashDuration > this.dashCoolDown) {
+                this.dashing = true;
+                this.lastDash = Date.now();
+            }
+        }
+        else {
+            //no key is being pressed
+            if(this.dashing) {
+                this.dashing = false;
+            }
+        }
+
+        if(this.dashing) {
+            this.velocity.x = this.velocity.y = 0;
+
+            if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.dashSpeed;
+            if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.dashSpeed;
+            if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.dashSpeed;
+            if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.dashSpeed;
+
+            if(this.velocity.magnitude() > this.dashSpeed) {
+                //Modify components so that vector's magnitude (total speed) matches desired speed
+                this.velocity.x = this.dashSpeed/Math.sqrt(2) * this.velocity.x/this.dashSpeed;
+                this.velocity.y = this.dashSpeed/Math.sqrt(2) * this.velocity.y/this.dashSpeed;
+            }
+        }
+        else {
+            //If the resulting vector's magnitude exceeds the speed
+            if(this.velocity.magnitude() > this.speed) {
+                //Modify components so that vector's magnitude (total speed) matches desired speed
+                this.velocity.x = this.speed/Math.sqrt(2) * this.velocity.x/this.speed;
+                this.velocity.y = this.speed/Math.sqrt(2) * this.velocity.y/this.speed;
+            }
+        }
+
 
         /*
          * Check for collision with an obstacle, we do two separate checks so that if a player is colliding in one axis
@@ -198,6 +273,10 @@ class Doug extends Character {
                  this.takeDamage(entity.damage);
             }
         }
+
+        this.pos.x = Math.round(this.pos.x);
+        this.pos.y = Math.round(this.pos.y);
+
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         this.walkingBox = Character.createBB(this.pos, this.size, this.walkingPadding);
@@ -223,7 +302,6 @@ class Doug extends Character {
                 else {
                     gameEngine.addEntity(new Bow(Directions.RIGHT));
                 }
-                gameEngine.addEntity(new Arrow(gameEngine.click));
             }
             else if (hotbar.slots[hotbar.selectedIndex].itemID === 351 && this.useMana(ManaBolt.ManaCost)) {
                 if(gameEngine.click.x <= WIDTH / 2) {
@@ -235,9 +313,17 @@ class Doug extends Character {
                 gameEngine.addEntity(new WaterSphere(gameEngine.click));
             }
         }
-        if (hotbar.slots[hotbar.selectedIndex].itemID === 246
-            && timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+        if (hotbar.slots[hotbar.selectedIndex].itemID === 246) {
+            this.useHealthPotion();
+        }
+    }
+
+    useHealthPotion() {
+        if(this.inventory['healing potion'] >= 1 &&
+            timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+            this.inventory['healing potion']--;
             this.lastHealthPotion = Date.now();
+            gameEngine.addEntity(new BuffIcon(new Vec2(hotbar.pos.x, hotbar.pos.y + 52), null), Layers.UI);
             this.hitPoints += Doug.healthPotionAmount;
             if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
             ASSET_MANAGER.playAsset("sounds/drink.wav");
@@ -268,7 +354,7 @@ class Doug extends Character {
     regen() {
         if(this.hitPoints < this.maxHitPoints && timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.regenDelay) {
             if(timeInSecondsBetween(this.lastHealthRegen, Date.now()) >= 1 / Doug.healthRegen) {
-                if(this.velocity.netVelocity() !== 0) {
+                if(this.velocity.magnitude() !== 0) {
                     this.hitPoints += 1;
                 }
                 else {
@@ -327,6 +413,7 @@ class Doug extends Character {
     die() {
         this.dead = true;
         this.deathTime = Date.now();
+        super.deathParticles();
 
         log.addMessage("Doug was slain", MessageLog.colors.red)
 
@@ -357,44 +444,61 @@ class Doug extends Character {
     }
 
     respawn() {
+        //Go through and check that all necessary fields are reset
         this.pos = new Vec2(spawnPoint.x, spawnPoint.y);
         this.lastDamage = Date.now();
         this.dead = false;
         this.hitPoints = this.maxHitPoints;
         this.manaLevel = this.maxMana;
         this.directionMem = 0;
-
+        this.lastHealthPotion = 0;
     }
 
-    upgrade(boss) {
-        log.addMessage("You feel stronger than ever...", MessageLog.colors.green);
-        ASSET_MANAGER.playAsset("sounds/upgrade.wav");
-        if(boss === 'bear') {
-            this.maxHitPoints += 100;
-            this.hitPoints += 100;
-            if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-            this.maxMana += 40;
-            this.manaLevel += 40;
+    getBoost(name, count) {
+        if(count < 1) return;
+
+        if(name === "mana") {
+            if(this.maxMana < 200) {
+                ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+                const usedCount = Math.min(count, (200 - this.maxMana) / 20);
+                const message = `Used ${usedCount} mana crystal${usedCount > 1 ? 's' : ''}`;
+                log.addMessage(message, MessageLog.colors.green);
+            }
+            else return;
+
+            this.maxMana += count * 20;
+            this.manaLevel += count * 20;
+
+            if(this.maxMana > 200) this.maxMana = 200;
             if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
-            Sword.damage *= 1.2;
-            Arrow.damage *= 1.5;
-            WaterSphere.damage *= 1.2;
-            Doug.healthPotionAmount += 30;
         }
-        if(boss === 'dragon') {
-            this.maxHitPoints += 100;
-            this.hitPoints += 100;
+        if(name === "heart") {
+            if(this.maxHitPoints < 400) {
+                ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+                const usedCount = Math.min(count, (400 - this.maxHitPoints) / 20);
+                const message = `Used ${usedCount} life crystal${usedCount > 1 ? 's' : ''}`;
+                log.addMessage(message, MessageLog.colors.green);
+            }
+            else return;
+
+            this.maxHitPoints += count * 20;
+            this.hitPoints += count * 20;
+
+            if(this.maxHitPoints > 400) this.maxHitPoints = 400;
             if(this.hitPoints > this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-            this.maxMana += 60;
-            this.manaLevel += 60;
-            if(this.manaLevel > this.maxMana) this.manaLevel = this.maxMana;
-            Sword.damage *= 1.5;
-            Arrow.damage *= 1.3;
-            WaterSphere.damage *= 1.6;
-            Doug.healthPotionAmount += 70;
         }
     }
 
+    getDrop(name, count) {
+        if(count > 0) {
+            const message = `Picked up ${count} ${name}${count > 1 ? 's' : ''}`;
+            setTimeout(() => {
+                this.inventory[name] += count;
+                log.addMessage(message, MessageLog.colors.lightGray);
+                ASSET_MANAGER.playAsset("sounds/grab.wav");
+            }, 200);
+        }
+    }
 
     /**
      * Updates the position label below the canvas
@@ -408,23 +512,24 @@ class Doug extends Character {
         if(this.dead) return;
 
         if(!this.attacking) {
+            const d = this.dashing ? 4 : 0;
             if(this.velocity.x < 0) {
-                this.drawAnim(ctx, this.animations[5]);
+                this.drawAnim(ctx, this.animations[5 + d]);
                 this.directionMem = 1;
             }
-            if(this.velocity.x > 0) {
-                this.drawAnim(ctx, this.animations[6]);
+            else if(this.velocity.x > 0) {
+                this.drawAnim(ctx, this.animations[6 + d]);
                 this.directionMem = 2;
             }
-            if(this.velocity.y === this.speed) {
-                this.drawAnim(ctx, this.animations[4]);
+            else if(this.velocity.y === this.speed || this.velocity.y === this.dashSpeed) {
+                this.drawAnim(ctx, this.animations[4 + d]);
                 this.directionMem = 0;
             }
-            if(this.velocity.y === -this.speed) {
-                this.drawAnim(ctx, this.animations[7]);
+            else if(this.velocity.y === -this.speed || this.velocity.y === -this.dashSpeed) {
+                this.drawAnim(ctx, this.animations[7 + d]);
                 this.directionMem = 3;
             }
-            if(this.velocity.y === 0 && this.velocity.x === 0) {
+            else if(this.velocity.y === 0 && this.velocity.x === 0) {
                 this.drawAnim(ctx, this.animations[this.directionMem]);
             }
         }
@@ -435,9 +540,9 @@ class Doug extends Character {
             if(this.attackDir === Directions.RIGHT) {
                 this.directionMem = 2;
             }
-
-            if(Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2)) > 0) {
-                this.drawAnim(ctx, this.animations[this.directionMem + 4]);
+            if(this.velocity.magnitude() > 0) {
+                const index = this.directionMem + (this.dashing ? 8 : 4);
+                this.drawAnim(ctx, this.animations[index]);
             }
             else {
                 this.drawAnim(ctx, this.animations[this.directionMem]);

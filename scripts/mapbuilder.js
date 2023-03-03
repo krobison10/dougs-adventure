@@ -151,7 +151,7 @@ function placeRandomEnemies() {
     }
 }
 function placeRandomVegetation() {
-    const numTrees = 3000;
+    const numTrees = 2000;
     const numGrass = 8000;
     const numFlower1 = 1500;
     const numFlower2 = 1500;

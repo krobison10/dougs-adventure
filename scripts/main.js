@@ -44,7 +44,9 @@ declareAssets([
 	"sprites/arrow_flaming.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
 	"sprites/fires/orange/loops/burning_loop_3.png",
+	"sprites/potion_delay.png",
 
+	"sounds/grab.wav",
 	"sounds/swing_2.wav",
 	"sounds/bow.wav",
 	"sounds/Player_Hit_0.wav",
@@ -181,3 +183,6 @@ const toggleMute = () => {
 	}
 }
 
+window.onbeforeunload = function() {
+	return "Data will be lost if you leave the page, are you sure?";
+};
