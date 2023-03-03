@@ -15,7 +15,7 @@ class Demon extends Enemy {
         this.scale = scale1
         this.maxHitPoints = 1000;
         this.hitPoints = 1000;
-        this.damage = 1;
+        this.damage = 20;
         this.aggroRange = 200;
         this.dead = false;
         this.type = "demon";
@@ -28,7 +28,7 @@ class Demon extends Enemy {
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, 0, (i * 70),
                 100, 70,
-                3, .2, 0, false, true);
+                3, .4, 0, false, true);
         }
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);

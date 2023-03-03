@@ -136,7 +136,7 @@ class GameEngine {
             }
         }
         for(let ent of this.entities[i]) {
-            if(ent instanceof Dragon) {
+            if(ent instanceof Dragon || ent instanceof Demon) {
                 if(shouldDraw(ent)) ent.draw(this.ctx);
             }
         }
