@@ -19,6 +19,12 @@ class Enemy extends Character {
 
         gameEngine.addEntity(new HealthBar(this), Layers.GLOWING_ENTITIES);
         this.type = undefined;
+
+        this.knockback = false;
+        this.knockbackDir = undefined;
+        this.knockbackDuration = .35;
+        this.knockbackSpeed = 250;
+        this.lastKnockBack = 0;
     }
 
     takeDamage(amount) {
@@ -29,6 +35,24 @@ class Enemy extends Character {
             this.die();
         } else {
             this.hitSound();
+        }
+    }
+
+    update() {
+        if(timeInSecondsBetween(Date.now(), this.lastKnockBack) > this.knockbackDuration) {
+            this.knockback = false;
+        }
+    }
+
+    applyKnockback(player, amount, duration) {
+        if(this instanceof Bat || this instanceof Slime) {
+            this.knockback = true;
+            this.knockbackSpeed = amount;
+            this.knockbackDuration = duration;
+            this.lastKnockBack = Date.now();
+            let doug = player.getCenter();
+            let enemy = this.getCenter();
+            this.knockbackDir = new Vec2(enemy.x - doug.x, enemy.y - doug.y);
         }
     }
 

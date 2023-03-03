@@ -54,8 +54,13 @@ class Sword extends Entity {
 
     checkDamage() {
         for(let ent of gameEngine.entities[Layers.FOREGROUND]) {
-            if(ent instanceof Enemy && this.attackBox.collide(ent.boundingBox) && !this.enemiesHit.has(ent)) {
+            if(
+                ent instanceof Enemy
+                && this.attackBox.collide(ent.boundingBox)
+                && !this.enemiesHit.has(ent)
+                && this.enemiesHit.size < 4) {
                 ent.takeDamage(Sword.damage);
+                ent.applyKnockback(doug, 250, .35);
                 this.enemiesHit.add(ent);
             }
         }
@@ -243,6 +248,7 @@ class Arrow extends Entity {
                 }
                 if(entity instanceof Enemy) {
                     entity.takeDamage(Arrow.damage);
+                    entity.applyKnockback(doug, 100, .2);
                     return this.removeFromWorld = true;
                 }
             }
@@ -407,6 +413,7 @@ class WaterSphere extends Entity {
                 if(entity instanceof Enemy) {
                     ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
                     entity.takeDamage(WaterSphere.damage);
+                    entity.applyKnockback(doug, 150, .3);
                     return this.removeFromWorld = true;
                 }
             }
