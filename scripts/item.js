@@ -7,15 +7,35 @@ class Item {
     static spriteSheetRows = 22;
     //Size of the sprites in the sheet
     static spriteSize = 16;
-    /**
-     * Stores the names of items by id
-     */
-    static itemNames = {
-        76: 'Diamond Bow',
-        85: 'Candle',
-        246: 'Healing Potion',
-        336: 'Iron Sword',
-        351: 'Mana Bolt'
+
+    static items = {
+        76: {
+            name: 'Diamond Bow',
+            stackable: true,
+            stackName: 'arrow',
+            reverse: true
+        },
+        85: {
+            name: 'Candle',
+            stackable: false,
+            reverse: false
+        },
+        246: {
+            name: 'Healing Potion',
+            stackable: true,
+            stackName: 'healing potion',
+            reverse: false
+        },
+        336: {
+            name: 'Iron Sword',
+            stackable: false,
+            reverse: true
+        },
+        351: {
+            name: 'Mana Bolt',
+            stackable: false,
+            reverse: false
+        }
     }
 
     /**
@@ -32,5 +52,4 @@ class Item {
         let row = Math.floor(id / this.spriteSheetCols);
         return {x: col * Item.spriteSize, y: row * Item.spriteSize, size: Item.spriteSize};
     }
-
 }

@@ -22,9 +22,12 @@ class Dragon extends Enemy {
         this.animations = [];
         this.scale = scale1
         this.maxHitPoints = 1000;
-        this.dragonRange = 400
+        this.dragonRange = 400;
         this.hitPoints = 1000;
         this.damage = 10;
+        this.aggroRange = 200;
+        this.dead = false;
+        this.type = "dragon";
 
         this.speed = 200;
         this.velocity = new Vec2(0,0);
@@ -54,12 +57,17 @@ class Dragon extends Enemy {
      */
     update() {
         let dist = getDistance(this.pos, this.target);
-        if (dist < 5) {
-            this.targetID++;
+        let dougDist = getDistance(this.pos, doug.pos);
+
+        if(dougDist < this.aggroRange && !doug.dead) {
+            this.target = doug.pos;
+        } else {
+            if (dist < 5) {
+                this.targetID++;
+            }
+            this.target = this.path[this.targetID % 4];
+            dist = getDistance(this.pos, this.target)
         }
-        this.target = this.path[this.targetID % 4];
-        dist = getDistance(this.pos, this.target)
-        //console.log(this.pos)
 
         this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
 
@@ -72,11 +80,22 @@ class Dragon extends Enemy {
 
     }
 
+    die() {
+        log.addMessage("Dragon has been defeated", MessageLog.colors.purple);
+        super.die();
+    }
+
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/dragon_kill.wav");
+    }
+
     fireballAttack() {
         if (getDistance(doug.getCenter(), dragon.getCenter()) < this.dragonRange && !doug.dead) {
             if (timeInSecondsBetween(Date.now(), this.time) >= 0.75) {
                 this.time = Date.now();
-                gameEngine.addEntity(new FireSphere(new Vec2(doug.getCenter().x, doug.getCenter().y)))
+                gameEngine.addEntity(new FireSphere(new Vec2(doug.getCenter().x, doug.getCenter().y)));
+                ASSET_MANAGER.playAsset("sounds/dragon_attack.wav")
+
             }
             
         }
@@ -130,8 +149,10 @@ class FireSphere extends Entity {
 
         this.moveToStartingPoint();
         this.setBox();
-        lightMap.addLightSource(
-            new LightSource(1, new Vec2(0, 0), this, new RGBColor(255, 128, 0), 50));
+
+        const source = new FlickeringLightSource(0.85, new Vec2(0, 0), this, new RGBColor(255, 100, 0), 50);
+        FireSphere.setFlicker(source);
+        lightMap.addLightSource(source);
     }
 
     setBox() {
@@ -147,8 +168,39 @@ class FireSphere extends Entity {
     update() {
         this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;
         this.pos.y += this.velocity.y * this.speed * gameEngine.clockTick;
+        this.generateParticles();
         this.setBox();
         this.checkCollide();
+    }
+
+    generateParticles() {
+        for(let i = 0; i < 6; i++) {
+            if(probability(5 * gameEngine.clockTick)) {
+                const duration = 0.5 + Math.random();
+                const speed = 20 + Math.random() * 40;
+
+                const x = this.getCenter().x - 20 + Math.random() * 32;
+                const y = this.getCenter().y - 20 + Math.random() * 32;
+
+                const g = 60 + Math.random() * 40;
+                const magnitude = 0.01 + Math.random() * 0.1;
+
+                const particle = new Particle(new Vec2(x, y), 5, new RGBColor(255, g, 2),
+                    2, speed, .3, null, duration)
+                gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
+
+                const source = new LightSource(magnitude, this.getCenter().clone(),
+                    particle, new RGBColor(255, 100, 0), 60);
+                lightMap.addLightSource(source);
+            }
+        }
+    }
+
+    static setFlicker(source) {
+        source.growSpeed = 0.5;
+        source.shrinkSpeed = .2;
+        source.maxMagnitude = source.magnitude * 1.1;
+        source.minMagnitude = source.magnitude * 0.86;
     }
 
     checkCollide() {

@@ -10,6 +10,8 @@ class Wolf extends Enemy {
         super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
         this.animations = [];
 
+        this.type = 'wolf';
+
         this.startX = doug.getCenter().x;
         this.startY = doug.getCenter().y;
         this.aggroRange = 200;
@@ -60,7 +62,15 @@ class Wolf extends Enemy {
         this.boundingBox.draw(ctx);
     }
 
-    route(dest) {
+    hitSound() {
+        ASSET_MANAGER.playAsset("sounds/wolf_hit.wav");
+    }
+
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/wolf_kill.wav");
+    }
+
+    route() {
         const xDif = dest.x - this.pos.x;
         const yDif = dest.y - this.pos.y;
         const dist = Math.sqrt(xDif * xDif + yDif * yDif);

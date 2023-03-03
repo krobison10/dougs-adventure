@@ -72,6 +72,10 @@ class Character extends Entity {
         );
     }
 
+    deathParticles() {
+        let count = this.size.h * this.size.w / 50;
+        Particle.generateDeathParticles(this.getCenter().clone(), count, this.size.w / 2, 4, 2);
+    }
     /**
      * Executes updates that should occur each frame.
      * @abstract
@@ -85,7 +89,6 @@ class Character extends Entity {
      * @param {CanvasRenderingContext2D} ctx the rendering context.
      */
     draw(ctx) {
-
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }

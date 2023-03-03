@@ -1,6 +1,5 @@
 'use strict'
 
-
 /**
  * Represents the hotbar that contains the player's items
  *
@@ -15,7 +14,7 @@ class Hotbar extends Entity {
          */
         this.slots = [];
 
-        for(let i = 0; i < 5; i++) {
+        for(let i = 0; i < 8; i++) {
             this.slots.push(new HotbarSlot(this, i));
         }
 
@@ -30,19 +29,21 @@ class Hotbar extends Entity {
             22, /*new RGBColor(129, 53, 184)*/);
         this.label.updateFn = () => {
             let id = this.slots[this.selectedIndex].itemID;
-            let text = Item.itemNames[id];
+            if(!id) return this.label.content = "";
+            let text = Item.items[id].name;
             this.label.content = id ? `${text}: ${id}` : "";
         }
         gameEngine.addEntity(this.label, Layers.UI);
 
-        this.slots[0].itemID = 336;
-        this.slots[1].itemID = 76;
-        this.slots[2].itemID = 351;
-        this.slots[3].itemID = 246;
-        this.slots[4].itemID = 85;
+        this.addItem(0, 336);
+        this.addItem(1, 76);
+        this.addItem(2, 351);
+        this.addItem(6, 246);
+        this.addItem(7, 85);
+    }
 
-        this.lastSwitch = Date.now();
-
+    addItem(slot, id) {
+        this.slots[slot].itemID = id;
     }
                 
     update() {
@@ -127,25 +128,75 @@ class HotbarSlot {
             ctx.strokeRect(this.pos.x, this.pos.y, this.size.w, this.size.h);
         }
 
-        if(this.itemID) this.drawItem(ctx);
+        if(this.itemID) {
+            this.drawItem(ctx);
+            this.drawCount(ctx);
+        }
     }
 
 
     drawItem(ctx) {
         let sheetPos = Item.getItemSpriteLocById(this.itemID);
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(
-            ASSET_MANAGER.getAsset("sprites/items.png"),
-            sheetPos.x,
-            sheetPos.y,
-            sheetPos.size,
-            sheetPos.size,
-            this.pos.x + HotbarSlot.borderSize,
-            this.pos.y + HotbarSlot.borderSize,
-            32,
-            32
+        if(!Item.items[this.itemID].reverse) {
+            ctx.drawImage(
+                ASSET_MANAGER.getAsset("sprites/items.png"),
+                sheetPos.x,
+                sheetPos.y,
+                sheetPos.size,
+                sheetPos.size,
+                this.pos.x + HotbarSlot.borderSize,
+                this.pos.y + HotbarSlot.borderSize,
+                32,
+                32
             );
-        ctx.imageSmoothingEnabled = true;
+        } else {
+            //Need to reverse
+            ctx.scale(-1, 1);
+            ctx.drawImage(
+                ASSET_MANAGER.getAsset("sprites/items.png"),
+                sheetPos.x,
+                sheetPos.y,
+                sheetPos.size,
+                sheetPos.size,
+                -(this.pos.x + HotbarSlot.borderSize) - 32,
+                this.pos.y + HotbarSlot.borderSize,
+                32,
+                32
+            );
+            ctx.scale(-1, 1);
+        }
+    }
+
+    drawCount(ctx) {
+        const item = Item.items[this.itemID];
+        if(item.stackable) {
+            const count = doug.inventory[item.stackName];
+            const pad = HotbarSlot.borderSize;
+            UIText.drawText(ctx, new Vec2(this.pos.x + pad, this.pos.y + pad), count, 14);
+        }
+    }
+}
+
+
+class BuffIcon extends Entity {
+    constructor(pos, size) {
+        super(pos, size);
+        this.sprite = ASSET_MANAGER.getAsset("sprites/potion_delay.png");
+        this.secondsRemaining = Doug.healthPotionCooldown;
+    }
+
+    update() {
+        if(timeInSecondsBetween(Date.now(), doug.lastHealthPotion) > Doug.healthPotionCooldown) {
+            return this.removeFromWorld = true;
+        }
+        this.secondsRemaining = Doug.healthPotionCooldown - Math.round(timeInSecondsBetween(Date.now(), doug.lastHealthPotion));
+    }
+
+    draw(ctx) {
+        ctx.globalAlpha = 0.6;
+        ctx.drawImage(this.sprite, this.pos.x, this.pos.y);
+        UIText.drawText(ctx, new Vec2(this.pos.x + 2, this.pos.y + 36), `${this.secondsRemaining}s`, 16);
+        ctx.globalAlpha = 1;
     }
 }
 
@@ -249,7 +300,6 @@ class Heart {
 }
 
 
-
 /**
  * Represents the player's health in the UI
  *
@@ -344,7 +394,7 @@ class ManaStar {
  *
  * @author Kyler Robison
  */
-class UIText extends Entity{
+class UIText extends Entity {
     /**
      * Default font
      * @type {string}
@@ -354,7 +404,7 @@ class UIText extends Entity{
     /**
      * Creates UI Text
      * @param pos {Vec2} position of the text on the screen.
-     * @param text {string} content of the text.
+     * @param text {String | Number} content of the text.
      * @param size {Number} font size of the text in pixels.
      * @param color {RGBColor} color of the text, defaults to white.
      */
@@ -390,3 +440,72 @@ class UIText extends Entity{
         ctx.fillText(content, pos.x, pos.y);
     }
 }
+
+class MessageLog {
+    static colors = {
+        red: new RGBColor(255, 45, 45),
+        green: new RGBColor(50, 255, 129),
+        purple: new RGBColor(139, 38, 255),
+        yellow: new RGBColor(255, 247, 0),
+        lightGray: new RGBColor(200, 200, 200)
+    }
+    constructor() {
+        this.messages = [];
+        this.pos = new Vec2(100, 600);
+        this.messageHeight = 25;
+    }
+
+    update() {
+        //Delete eligible messages
+        for(let i = this.messages.length - 1; i >= 0; --i) {
+            if (this.messages[i].removeFromWorld) {
+                this.messages.splice(i, 1); // Delete message at i
+            }
+        }
+
+        for(let i = 0; i < this.messages.length; i++) {
+            this.messages[i].pos.y = this.getMessagePos(i);
+        }
+
+    }
+
+    getMessagePos(i) {
+        return this.pos.y + i * this.messageHeight
+    }
+
+    addMessage(text, color = new RGBColor(255, 255, 255)) {
+        let message = new UIText(new Vec2(this.pos.x, this.getMessagePos(this.messages.length)), text, 20, color);
+        message.createdTime = Date.now();
+        message.updateFn = function() {
+            if(timeInSecondsBetween(this.createdTime, Date.now()) >= 10) {
+                this.removeFromWorld = true;2
+            }
+        }
+        this.messages.push(message);
+        gameEngine.addEntity(message, Layers.UI);
+    }
+}
+
+function createDamageMarker(entity, amount) {
+    let x = entity.getCenter().x;
+    let y = entity.getCenter().y;
+    let marker = new UIText(new Vec2(x, y), Math.abs(Math.round(amount)), 25);
+    marker.color = MessageLog.colors.red;
+    if(amount < 0) {
+        marker.color = MessageLog.colors.green;
+    }
+    marker.velocity = 60;
+    marker.velDecay = 1.7;
+    marker.updateFn = function() {
+        this.pos.y -= this.velocity * gameEngine.clockTick;
+        this.velocity *= 1 - gameEngine.clockTick * this.velDecay;
+        if(this.velocity < 10) {
+            this.removeFromWorld = true;
+        }
+    }
+    marker.draw = function(ctx) {
+        UIText.drawText(ctx, this.getScreenPos(), this.content, this.size, this.color);
+    }
+    gameEngine.addEntity(marker, Layers.GLOWING_ENTITIES);
+}
+

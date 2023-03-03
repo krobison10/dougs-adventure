@@ -7,21 +7,25 @@
 
 'use strict';
 class BearBoss extends Enemy {
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints,x,y,direction) {
-        super(pos, spritesheet, size, spritePadding, damage, hitPoints);
+    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints, player, direction) {
+        super(pos, spritesheet, new Dimension(size.w * 1.5, size.h * 1.5), spritePadding, damage, hitPoints);
 
 
-        this.x=x;
-        this.y=y;
-        this.direction=direction;
+        this.changeDirectionDelay = 8;
+        this.player=player; //store the player object
+        this.pursueRange=200; //set the range at which the bear starts pursuing the player
+        this.direction="right";  //default
         // max hitpoints and damage of the boss
         this.maxHitPoints = 500;
         this.hitPoints = this.maxHitPoints;
         this.damage = 50;
+        this.type = "bear";
 
         // boss's movement speed
         this.speed = 100;
-        this.velocity = new Vec2(0, 0);
+        this.velocity = new Vec2(1, 0);
+        this.velocity.x = this.speed
+        this.velocity.y = 0
 
         // boss's collision bounding box
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
@@ -38,23 +42,23 @@ class BearBoss extends Enemy {
             //, new Animator(this.spritesheet, 0, this.size.h * 5, this.size.w, this.size.h, 3, 0.2, 0, false, true),
       ];  
         this.currentAnim = this.animations[0];
+      
  
     }
 
-   
+    die() {
+         log.addMessage("Bear has been defeated", MessageLog.colors.purple);
+         super.die();
+    }
+
+    deathSound() {
+        ASSET_MANAGER.playAsset("sounds/bear_kill.wav");
+    }
+
+
     update() {
 // call custom move function
 this.move();
-
-        // change direction and velocity randomly
-        if (Math.random() < 0.05) {
-            this.velocity.x = (Math.random() - 0.5) * 5;
-            this.velocity.y = (Math.random() - 0.5) * 5;
-        }
-    
-// update the current animation based on the direction of the bear boss
-
-    
 
         // // check if the bear boss is dead
         if (this.hitPoints <= 0) {
@@ -77,67 +81,89 @@ this.move();
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
-/*
-calculate the angle of the velocity vector and 
-set the animator based on that angle
-*/
-move() {
-    // Change direction and velocity randomly
-    if(Math.random() < 0.25) {
-      const randomDirection = Math.floor(Math.random() * 4);
-      switch (randomDirection) {
-        case 0:
-          this.velocity.x = -this.speed;
-          this.velocity.y = 0;
-          this.directionMem = 1;
-          break;
-        case 1:
-          this.velocity.x = this.speed;
-          this.velocity.y = 0;
-          this.directionMem = 2;
-          break;
-        case 2:
-          this.velocity.x = 0;
-          this.velocity.y = -this.speed;
-          this.directionMem = 3;
-          break;
-        case 3:
-          this.velocity.x = 0;
-          this.velocity.y = this.speed;
-          this.directionMem = 4;
-          break;
-      }
+    move() {
+      //Decrement the direction delay by 1
+       this.changeDirectionDelay-= gameEngine.clockTick;
+      //console.log(this.changeDirectionDelay);
+      //Check if the direction delay has elapsed
+
+        if(getDistance(this.pos, doug.pos) < this.pursueRange) {
+            // calculate the direction vector from bear to player
+            let bearCenter = this.pos;
+            let playerCenter = this.player.pos;
+            let direction = {
+                x : bearCenter.x  - playerCenter.x,
+                y: bearCenter.y - playerCenter.y
+            }
+            let direction_magnitude = direction.x*direction.x + direction.y * direction.y
+
+            direction_magnitude = Math.sqrt(direction_magnitude)
+
+            direction.x/= direction_magnitude
+            direction.y/= direction_magnitude
+
+            this.velocity.x = direction.x * -this.speed;
+            this.velocity.y = direction.y * -this.speed;
+        }
+        else {
+            if (this.changeDirectionDelay <= 0) {
+                // Reset the direction delay to a new value
+                this.changeDirectionDelay = 8;
+
+                // Change direction and velocity randomly with probability
+
+                const randomDirection = Math.floor(Math.random() * 4);
+                switch (randomDirection) {
+                    case 0:
+                        this.velocity.x = -this.speed;
+                        this.velocity.y = 0;
+                        this.directionMem = 1;
+                        break;
+                    case 1:
+                        this.velocity.x = this.speed;
+                        this.velocity.y = 0;
+                        this.directionMem = 2;
+                        break;
+                    case 2:
+                        this.velocity.x = 0;
+                        this.velocity.y = -this.speed;
+                        this.directionMem = 3;
+                        break;
+                    case 3:
+                        this.velocity.x = 0;
+                        this.velocity.y = this.speed;
+                        this.directionMem = 4;
+                        break;
+                }
+            }
+        }
     }
-  //  Change animation based on direction
-    // if (this.directionMem === 1) {
-    //   this.currentAnim = this.animations.moveLeft;
-    // } else if (this.directionMem === 2) {
-    //   this.currentAnim = this.animations.moveRight;
-    // } else if (this.directionMem === 3) {
-    //   this.currentAnim = this.animations.moveUp;
-    // } else if (this.directionMem === 4) {
-    //   this.currentAnim = this.animations.moveDown;
-    // }
-  }
-draw(ctx){
-  // this.drawAnim(ctx, this.animations[3]);
-    if (this.velocity.x > 0) { //right
-         this.drawAnim(ctx, this.animations[2]);
-      } else if (this.velocity.x < 0) {//left
-        this.drawAnim(ctx, this.animations[1]);
-      } else if (this.velocity.y > 0) { //down
-        this.drawAnim(ctx, this.animations[0]);
-      } else if (this.velocity.y < 0) { //up
-        this.drawAnim(ctx, this.animations[3]);
-      } else {
-        // this.drawAnim = this.animations[0];
-      }
-      this.boundingBox.draw(ctx);
-
+    
+    
+    
+    draw(ctx){
+      // this.drawAnim(ctx, this.animations[3]);
+      if(Math.abs(this.velocity.x) > Math.abs(this.velocity.y)){
+        if (this.velocity.x > 0) { //right
+             this.drawAnim(ctx, this.animations[2]);
+          } else if (this.velocity.x < 0) {//left
+            this.drawAnim(ctx, this.animations[1]);
+          }
+         }
+          else{ if (this.velocity.y > 0) { //down
+            this.drawAnim(ctx, this.animations[0]);
+          } else if (this.velocity.y < 0) { //up
+            this.drawAnim(ctx, this.animations[3]);
+          } else {
+            // this.drawAnim = this.animations[0];
+          }
+        }
+          this.boundingBox.draw(ctx);
+    }
+    
+    
+    drawAnim(ctx,animation) {
+        animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
+    }
+    
 }
-
-drawAnim(ctx,animation) {
-    animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
-  }
-
-} 

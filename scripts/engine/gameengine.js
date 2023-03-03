@@ -12,7 +12,7 @@ class GameEngine {
         this.ctx = null;
 
         // Everything that will be updated and drawn each frame
-        this.entities = [[], [], [], [], []];
+        this.entities = [[], [], [], [], [], []];
 
         // Information on the input
         this.click = null;
@@ -35,7 +35,7 @@ class GameEngine {
 
     init(ctx) {
         this.ctx = ctx;
-        //this.ctx.imageSmoothingEnabled = false;
+        this.ctx.imageSmoothingEnabled = false;
         this.startInput();
         this.timer = new Timer();
     }
@@ -89,6 +89,12 @@ class GameEngine {
         });
 
         this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
+        this.ctx.canvas.addEventListener("keydown", event => {
+            this.keys[event.key] = true;
+            if(event.key === " ") {
+                event.preventDefault();
+            }
+        });
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
     }
 
@@ -97,8 +103,8 @@ class GameEngine {
      * @param {Entity | LightMap | SceneManager} entity the entity to add.
      * @param {number} layer
      */
-    addEntity(entity, layer = 1) {
-        if(layer < 0 || layer >= 5) {
+    addEntity(entity, layer = Layers.FOREGROUND) {
+        if(layer < 0 || layer >= 6) {
             throw new Error("GameEngine: invalid entity layer specified");
         }
         this.entities[layer].push(entity);
@@ -117,6 +123,12 @@ class GameEngine {
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
             if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
         }
+
+        i = Layers.GROUND;
+        for (let j = this.entities[i].length - 1; j >= 0; j--) {
+            if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
+        }
+
         i = Layers.FOREGROUND;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
             if(shouldDraw(this.entities[i][j]) && !(this.entities[i][j] instanceof Dragon)) {
@@ -128,14 +140,17 @@ class GameEngine {
                 if(shouldDraw(ent)) ent.draw(this.ctx);
             }
         }
+
         i = Layers.LIGHTMAP;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
             this.entities[i][j].draw(this.ctx);
         }
+
         i = Layers.GLOWING_ENTITIES;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
             if(shouldDraw(this.entities[i][j])) this.entities[i][j].draw(this.ctx);
         }
+
         i = Layers.UI;
         for (let j = this.entities[i].length - 1; j >= 0; j--) {
             this.entities[i][j].draw(this.ctx);
@@ -150,10 +165,16 @@ class GameEngine {
 
         let layer = this.entities[Layers.BACKGROUND];
         let entitiesCount = layer.length;
-        //No updates for background tiles until necessary
-        // for (let i = 0; i < entitiesCount; i++) {
-        //     let entity = layer[i];
-        // }
+
+        layer = this.entities[Layers.GROUND];
+        entitiesCount = layer.length;
+        //Sort entities by Y coord, backwards because of drawing oder in draw()
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = layer[i];
+            if (!entity.removeFromWorld && shouldUpdate(entity)) {
+                entity.update();
+            }
+        }
 
         layer = this.entities[Layers.FOREGROUND];
         entitiesCount = layer.length;
@@ -180,7 +201,7 @@ class GameEngine {
         //layer.sort((entA, entB) => entB.pos.y - entA.pos.y);
         for (let i = 0; i < entitiesCount; i++) {
             let entity = layer[i];
-            if (!entity.removeFromWorld && shouldUpdate(entity)) {
+            if (shouldUpdate(entity)) {
                 entity.update();
             }
         }
@@ -216,6 +237,7 @@ class GameEngine {
         this.draw();
         this.countFPS();
         this.click = null;
+        log.update();
     }
 
     countFPS() {

@@ -72,6 +72,8 @@ class LightMap {
         this.renderingCtx.fillStyle = this.lightValue;
         this.renderingCtx.fillRect(0 ,0, WIDTH, HEIGHT);
 
+        if(this.alpha === 0) return;
+
         for (let i = this.lightSources.length - 1; i >= 0; --i) {
             this.lightSources[i].update();
             if (this.lightSources[i].removeFromWorld) {
