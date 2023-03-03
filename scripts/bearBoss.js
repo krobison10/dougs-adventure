@@ -7,18 +7,16 @@
 
 'use strict';
 class BearBoss extends Enemy {
-    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints, player, direction) {
+    constructor(pos, spritesheet, size, spritePadding, damage, hitPoints) {
         super(pos, spritesheet, new Dimension(size.w * 1.5, size.h * 1.5), spritePadding, damage, hitPoints);
 
-
         this.changeDirectionDelay = 8;
-        this.player=player; //store the player object
-        this.pursueRange=200; //set the range at which the bear starts pursuing the player
+        this.pursueRange=400; //set the range at which the bear starts pursuing the player
         this.direction="right";  //default
-        // max hitpoints and damage of the boss
         this.maxHitPoints = 500;
         this.hitPoints = this.maxHitPoints;
-        this.damage = 50;
+
+        this.damage = 40;
         this.type = "bear";
 
         // boss's movement speed
@@ -32,17 +30,15 @@ class BearBoss extends Enemy {
 
         // animations for the boss
         //xstart,ystart,width,height,fraamecount,frameduration,framepadding,reverse,loop
-      this.animations = [
-        
-           // new Animator(this.spritesheet, 0, 0, 0, 0, 1, 1, 0, false, true), //idle
+        this.animations = [
+
+            // new Animator(this.spritesheet, 0, 0, 0, 0, 1, 1, 0, false, true), //idle
             new Animator(this.spritesheet, 0, 0, 56, 56, 3, 0.2, 0, false, true), //up
-             new Animator(this.spritesheet, 0,56, 56, 56, 3, 0.2, 0, false, true), //down
-             new Animator(this.spritesheet, 0, 56*2, 56, 56, 3, 0.2, 0, false, true),//left
-             new Animator(this.spritesheet, 0, 56*3, 56, 56, 3, 0.2, 0, false, true), //right
+            new Animator(this.spritesheet, 0,56, 56, 56, 3, 0.2, 0, false, true), //down
+            new Animator(this.spritesheet, 0, 56*2, 56, 56, 3, 0.2, 0, false, true),//left
+            new Animator(this.spritesheet, 0, 56*3, 56, 56, 3, 0.2, 0, false, true), //right
             //, new Animator(this.spritesheet, 0, this.size.h * 5, this.size.w, this.size.h, 3, 0.2, 0, false, true),
-      ];  
-        this.currentAnim = this.animations[0];
-      
+        ];
  
     }
 
@@ -57,8 +53,8 @@ class BearBoss extends Enemy {
 
 
     update() {
-// call custom move function
-this.move();
+        // call custom move function
+        this.move();
 
         // // check if the bear boss is dead
         if (this.hitPoints <= 0) {
@@ -82,15 +78,15 @@ this.move();
     }
 
     move() {
-      //Decrement the direction delay by 1
-       this.changeDirectionDelay-= gameEngine.clockTick;
-      //console.log(this.changeDirectionDelay);
-      //Check if the direction delay has elapsed
+        //Decrement the direction delay by 1
+        this.changeDirectionDelay-= gameEngine.clockTick;
+        //console.log(this.changeDirectionDelay);
+        //Check if the direction delay has elapsed
 
-        if(getDistance(this.pos, doug.pos) < this.pursueRange) {
+        if(getDistance(this.getCenter(), doug.getCenter()) < this.pursueRange && !doug.dead) {
             // calculate the direction vector from bear to player
-            let bearCenter = this.pos;
-            let playerCenter = this.player.pos;
+            let bearCenter = this.getCenter();
+            let playerCenter = doug.getCenter();
             let direction = {
                 x : bearCenter.x  - playerCenter.x,
                 y: bearCenter.y - playerCenter.y
@@ -139,31 +135,30 @@ this.move();
         }
     }
     
-    
-    
+
     draw(ctx){
       // this.drawAnim(ctx, this.animations[3]);
-      if(Math.abs(this.velocity.x) > Math.abs(this.velocity.y)){
-        if (this.velocity.x > 0) { //right
-             this.drawAnim(ctx, this.animations[2]);
-          } else if (this.velocity.x < 0) {//left
-            this.drawAnim(ctx, this.animations[1]);
-          }
-         }
-          else{ if (this.velocity.y > 0) { //down
-            this.drawAnim(ctx, this.animations[0]);
-          } else if (this.velocity.y < 0) { //up
-            this.drawAnim(ctx, this.animations[3]);
-          } else {
-            // this.drawAnim = this.animations[0];
-          }
+        if(Math.abs(this.velocity.x) > Math.abs(this.velocity.y)){
+            if (this.velocity.x > 0) { //right
+               this.drawAnim(ctx, this.animations[2]);
+            }
+            else if (this.velocity.x < 0) {//left
+               this.drawAnim(ctx, this.animations[1]);
+            }
         }
-          this.boundingBox.draw(ctx);
+        else {
+             if (this.velocity.y > 0) { //down
+                  this.drawAnim(ctx, this.animations[0]);} else if (this.velocity.y < 0) { //up
+                  this.drawAnim(ctx, this.animations[3]);
+             }
+             else {
+             // this.drawAnim = this.animations[0];
+             }
+        }
+        this.boundingBox.draw(ctx);
     }
-    
-    
+
     drawAnim(ctx,animation) {
         animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, 1.5);
     }
-    
 }
