@@ -12,9 +12,25 @@ class Wolf extends Enemy {
 
         this.type = 'wolf';
 
-        this.startX = doug.getCenter().x;
-        this.startY = doug.getCenter().y;
+        this.startX = this.pos.x;
+        this.startY = this.pos.y;
         this.aggroRange = 200;
+        this.enraged = false;
+        this.pursuing = false;
+        this.hitPoints = maxHitPoints;
+
+        this.playerRange = {
+            xDif: doug.getCenter().x - this.getCenter().x,
+            yDif: doug.getCenter().y - this.getCenter().y,
+            dist: Math.sqrt(Math.pow(doug.getCenter().x - this.getCenter().x, 2)
+                + Math.pow(doug.getCenter().y - this.getCenter().x, 2))
+        }
+
+        this.startRange = {
+            xDif: 0,
+            yDif: 0,
+            dist: 0
+        }
 
         this.setSpeed();
         this.directionMem = 0;
@@ -25,7 +41,18 @@ class Wolf extends Enemy {
 
     update() {
         this.setSpeed();
-        this.route(doug.pos);
+        this.determineRange();
+        if(!doug.dead && this.playerRange.dist < this.aggroRange && this.playerRange.dist > 1) {
+            this.pursuing = true;
+        } else {
+            this.pursuing = false;
+        }
+        if(this.enraged || this.pursuing || this.startRange.dist > 1) {
+            this.move();
+        } else {
+            this.velocity.x = 0;
+            this.velocity.y = 0;
+        }
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
@@ -34,29 +61,32 @@ class Wolf extends Enemy {
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-        
+
+        this.determineSize();
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
 
     draw(ctx) {
-        if(this.velocity.x < 0) {//left
-            this.drawAnim(ctx, this.animations[3]);
-            this.directionMem = 3;
-        }
-        if(this.velocity.x > 0) {//right
-            this.drawAnim(ctx, this.animations[1]);
-            this.directionMem = 1;
-        }
-        if(this.velocity.y > 0 && this.velocity.x === 0) {//down
-            this.drawAnim(ctx, this.animations[0]);
-            this.directionMem = 0;
-        }
-        if(this.velocity.y < 0 && this.velocity.x === 0) {//up
-            this.drawAnim(ctx, this.animations[2]);
-            this.directionMem = 2;
-        }
-        if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[this.directionMem]);
+        const xAbsVel = Math.abs(this.velocity.x);
+        const yAbsVel = Math.abs(this.velocity.y);
+        if(xAbsVel > yAbsVel) { //Horizontal Frame
+            if (this.velocity.x < 0) { //Left
+                this.drawAnim(ctx, this.animations[3]);
+                this.directionMem = 3;
+            } else { //Right
+                this.drawAnim(ctx, this.animations[1]);
+                this.directionMem = 1;
+            }
+        } else if (xAbsVel < yAbsVel) { //Vertical Frame
+            if(this.velocity.y > 0) { //Down
+                this.drawAnim(ctx, this.animations[0]);
+                this.directionMem = 0;
+            } else { //Up
+                this.drawAnim(ctx, this.animations[2]);
+                this.directionMem = 2;
+            }
+        } else { //Idle Frame
+            this.drawAnim(ctx, this.animations[this.directionMem + 4]);
         }
 
         this.boundingBox.draw(ctx);
@@ -70,28 +100,33 @@ class Wolf extends Enemy {
         ASSET_MANAGER.playAsset("sounds/wolf_kill.wav");
     }
 
-    route(dest) {
-        const xDif = dest.x - this.pos.x;
-        const yDif = dest.y - this.pos.y;
-        const dist = Math.sqrt(xDif * xDif + yDif * yDif);
-        
-        if(dist < this.aggroRange && dist > 1) { // Stops at one to smooth attack
-            if(xDif > 0 && yDif > 0) { //Move Up
-                this.velocity.y = this.speed;
-                this.velocity.x = 0;
-            } else if(xDif < 0 && yDif > 0) { //Move Left
-                this.velocity.y = 0;
-                this.velocity.x = -this.speed;
-            } else if(xDif < 0 && yDif < 0) { //Move Down
-                this.velocity.y = -this.speed;
-                this.velocity.x = 0;
-            } else if(xDif > 0 && yDif < 0) { //Move Right
-                this.velocity.y = 0;
-                this.velocity.x = this.speed;
-            }
+    determineSize() {
+        if(this.directionMem % 2 == 0) {
+            this.size = new Dimension(32, 64);
         } else {
-            this.velocity.x = 0;
-            this.velocity.y = 0;
+            this.size = new Dimension(64, 32);
+        }
+    }
+
+    determineRange() {
+        this.playerRange.xDif = doug.getCenter().x - this.getCenter().x;
+        this.playerRange.yDif = doug.getCenter().y - this.getCenter().y;
+        this.playerRange.dist =  Math.sqrt(Math.pow(this.playerRange.xDif, 2)
+            + Math.pow(this.playerRange.yDif, 2));
+        
+        this.startRange.xDif = this.startX - this.pos.x,
+        this.startRange.yDif = this.startY - this.pos.y,
+        this.startRange.dist = Math.sqrt(Math.pow(this.startRange.xDif, 2)
+                + Math.pow(this.startRange.yDif, 2));
+    }
+
+    move() {
+        if(this.enraged || this.pursuing) {
+            this.velocity.x = (this.playerRange.xDif / this.playerRange.dist) * this.speed;
+            this.velocity.y = (this.playerRange.yDif / this.playerRange.dist) * this.speed;
+        } else {
+            this.velocity.x = (this.startRange.xDif / this.startRange.dist) * this.speed;
+            this.velocity.y = (this.startRange.yDif / this.startRange.dist) * this.speed;
         }
     }
 
@@ -126,6 +161,30 @@ class Wolf extends Enemy {
             384, 288,                   //Start Positions
             64, 32,                     //Dimensions
             4, 0.2, 0, false, true);    //Frame Stats
+        
+        //Idle Down
+        this.animations[4] = new Animator(this.spritesheet, 
+            0, 128,                     //Start Positions
+            32, 64,                     //Dimensions
+            1, 0.2, 0, false, true);    //Frame Stats
+
+        //Idle Right
+        this.animations[5] = new Animator(this.spritesheet, 
+            384, 96,                    //Start Positions
+            64, 32,                     //Dimensions
+            1, 0.2, 0, false, true);    //Frame Stats
+
+        //Idle Up
+        this.animations[6] = new Animator(this.spritesheet, 
+            160, 128,                   //Start Positions
+            32, 64,                     //Dimensions
+            1, 0.2, 0, false, true);    //Frame Stats
+
+        //Walk Left
+        this.animations[7] = new Animator(this.spritesheet, 
+            384, 288,                   //Start Positions
+            64, 32,                     //Dimensions
+            1, 0.2, 0, false, true);    //Frame Stats
     }
 
     setSpeed() {

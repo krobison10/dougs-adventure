@@ -96,8 +96,7 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 let dragon = new Dragon(new Vec2(-400, -1800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
 
-gameEngine.addEntity(new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
-	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150));
+gameEngine.addEntity(new WolfPack(new Vec2(400, 200)));
 
 gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
 	new Dimension(56, 56), new Padding(0, -15, 0, 3),10,100,doug));
