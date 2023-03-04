@@ -36,6 +36,8 @@ class Slime extends Enemy {
         this.changeDirectionDelay = 1;
         this.speed = 150;
 
+        this.knockbackScale = parent ? 0.7 : 1.2;
+
         this.directionMem = 0;
 
         this.aggroRange = 250;

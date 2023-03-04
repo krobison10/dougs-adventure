@@ -24,6 +24,7 @@ class Bat extends Enemy {
             50);
         this.animations = [];
         this.scale = 1;
+        this.knockbackScale = 1.5;
         this.speed = 200;
         this.directionMem = 0;
         this.changeDirectionDelay = 1;
@@ -68,6 +69,7 @@ class Bat extends Enemy {
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
+
     move() {
         let center = this.getCenter();
         let dougDist = getDistance(center, doug.getCenter());

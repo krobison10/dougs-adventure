@@ -10,7 +10,7 @@ class Doug extends Character {
      * Delay in seconds before health regen will begin
      * @type {number}
      */
-    static regenDelay = 10;
+    static regenDelay = 15;
     /**
      * Time in seconds for how long doug must wait to drink another health potion.
      * @type {number}

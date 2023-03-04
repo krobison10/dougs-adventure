@@ -6,6 +6,7 @@
  */
 
 class Wolf extends Enemy {
+
     constructor(pos) {
         super(
             pos,
@@ -17,6 +18,8 @@ class Wolf extends Enemy {
         this.animations = [];
 
         this.type = 'wolf';
+        this.knockbackScale = 0.5;
+
 
         this.startX = doug.getCenter().x;
         this.startY = doug.getCenter().y;
