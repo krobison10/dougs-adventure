@@ -34,7 +34,7 @@ class Wolf extends Enemy {
         this.aggroRange = 200;
         this.enraged = false;
         this.pursuing = false;
-        this.hitPoints = maxHitPoints; //Make sure it is instantiated before first update call
+        this.hitPoints = this.maxHitPoints; //Make sure it is instantiated before first update call
 
         this.playerRange = {
             xDif: doug.getCenter().x - this.getCenter().x,
@@ -70,7 +70,7 @@ class Wolf extends Enemy {
             this.velocity.x *= scalingFactor;
             this.velocity.y *= scalingFactor;
         } else {
-            this.route(doug.pos);
+            this.determineVelocity();
         }
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
