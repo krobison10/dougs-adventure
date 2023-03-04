@@ -32,12 +32,10 @@ class BearBoss extends Enemy {
         //xstart,ystart,width,height,fraamecount,frameduration,framepadding,reverse,loop
         this.animations = [
 
-            // new Animator(this.spritesheet, 0, 0, 0, 0, 1, 1, 0, false, true), //idle
-            new Animator(this.spritesheet, 0, 0, 56, 56, 3, 0.2, 0, false, true), //up
-            new Animator(this.spritesheet, 0,56, 56, 56, 3, 0.2, 0, false, true), //down
-            new Animator(this.spritesheet, 0, 56*2, 56, 56, 3, 0.2, 0, false, true),//left
-            new Animator(this.spritesheet, 0, 56*3, 56, 56, 3, 0.2, 0, false, true), //right
-            //, new Animator(this.spritesheet, 0, this.size.h * 5, this.size.w, this.size.h, 3, 0.2, 0, false, true),
+            new Animator(this.spritesheet, 0, 56*4, 56, 56, 3, 0.2, 0, false, true), //up
+             new Animator(this.spritesheet, 0,56*5, 56, 56, 3, 0.2, 0, false, true), //down
+             new Animator(this.spritesheet, 0, 56*6, 56, 56, 3, 0.2, 0, false, true),//left
+             new Animator(this.spritesheet, 0, 56*7, 56, 56, 3, 0.2, 0, false, true), //right
         ];
  
     }
