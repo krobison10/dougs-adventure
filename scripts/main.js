@@ -104,6 +104,7 @@ let demon = new Demon(new Vec2(-400 , 1000), ASSET_MANAGER.getAsset("sprites/dem
 
 gameEngine.addEntity(new Wolf(new Vec2(400, 200)));
 
+gameEngine.addEntity(new WolfPack(new Vec2(400, 200)));
 
 gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
 	new Dimension(56, 56), new Padding(),10,100));
