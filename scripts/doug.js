@@ -71,7 +71,7 @@ class Doug extends Character {
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
          */
-        this.hitPoints = this.maxHitPoints + 1000000;
+        this.hitPoints = this.maxHitPoints;
         /**
          * The time of the last health regeneration frame.
          * @type {number}
