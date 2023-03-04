@@ -37,7 +37,7 @@ class SpawnManager {
 
     constructor() {
         this.entityList = [];
-        this.entityTarget = 50;
+        this.entityTarget = 30;
         this.pickEntityCode();
         for(let type in SpawnManager.table) {
             SpawnManager.table[type].densityRatio = SpawnManager.table[type].density / SpawnManager.totalDensity;

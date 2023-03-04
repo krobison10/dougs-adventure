@@ -31,7 +31,16 @@ class Wolf extends Enemy {
 
     update() {
         this.setSpeed();
-        this.route(doug.pos);
+        if(this.knockback) {
+            this.velocity = new Vec2(this.knockbackDir.x, this.knockbackDir.y);
+
+            let scalingFactor = this.knockbackSpeed / this.knockbackDir.magnitude();
+
+            this.velocity.x *= scalingFactor;
+            this.velocity.y *= scalingFactor;
+        } else {
+            this.route(doug.pos);
+        }
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {

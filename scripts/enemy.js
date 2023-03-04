@@ -45,7 +45,7 @@ class Enemy extends Character {
     }
 
     applyKnockback(player, amount, duration) {
-        if(this instanceof Bat || this instanceof Slime) {
+        if(!(this instanceof Dragon || this instanceof BearBoss || this instanceof Demon)) {
             this.knockback = true;
             this.knockbackSpeed = amount;
             this.knockbackDuration = duration;
