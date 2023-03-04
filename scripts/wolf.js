@@ -30,6 +30,7 @@ class Wolf extends Enemy {
     }
 
     update() {
+        super.update();
         this.setSpeed();
         if(this.knockback) {
             this.velocity = new Vec2(this.knockbackDir.x, this.knockbackDir.y);
