@@ -99,7 +99,7 @@ lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 let dragon = new Dragon(new Vec2(-100, -1500), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
 
-let demon = new Demon(new Vec2(-400 , 800), ASSET_MANAGER.getAsset("sprites/demon.png"),
+let demon = new Demon(new Vec2(-400 , 1000), ASSET_MANAGER.getAsset("sprites/demon.png"),
 	new Dimension(97, 72), new Padding(20,60,30,60), 10, 1000);
 
 gameEngine.addEntity(new Wolf(new Vec2(400, 200)));
