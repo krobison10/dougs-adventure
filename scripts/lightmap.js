@@ -15,6 +15,7 @@ class LightMap {
          * @type {number}
          */
         this.alpha = 1;
+        this.dayTime = true;
         /**
          * The light mask entity that applies darkness to the world
          * @type {HTMLCanvasElement}

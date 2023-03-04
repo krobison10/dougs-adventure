@@ -47,6 +47,7 @@ declareAssets([
 	"sprites/fires/orange/loops/burning_loop_3.png",
 	"sprites/potion_delay.png",
 	"sprites/rock_small.png",
+	"sprites/bunny.png",
 
 	"sounds/grab.wav",
 	"sounds/swing_2.wav",
