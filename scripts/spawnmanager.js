@@ -1,7 +1,7 @@
 class SpawnManager {
     static minRadius = 700;
     static maxRadius = 2000;
-    static despawnDist = 4000;
+    static despawnDist = 2500;
     static table = {
         1: {
             class: Bat,
@@ -24,6 +24,13 @@ class SpawnManager {
             night: true,
             day: true
         },
+        4: {
+            class: Bunny,
+            size: new Dimension(26, 22),
+            density: 25,
+            night: false,
+            day: true
+        }
         // 4: {
         //     class: BearBoss,
         //     size: new Dimension(1.5*56, 1.5*56),
@@ -57,22 +64,30 @@ class SpawnManager {
 
         //Spawn more if needed
         while (this.entityList.length < this.entityTarget) {
-            //Create instance of entity type with null position for now
-            const entityClass = SpawnManager.table[this.pickEntityCode()].class;
-            const entity = new entityClass(new Vec2(0, 0));
+            let timeValid = false;
+            while(!timeValid) {
+                //Create instance of entity type with null position for now
+                const key = this.pickEntityCode();
+                const entityClass = SpawnManager.table[key].class;
+                const entity = new entityClass(new Vec2(0, 0));
 
-            //Try different points until successful
-            let valid = false;
-            while(!valid) {
-                const point = radiusPickPoint(doug.getCenter(), SpawnManager.minRadius, SpawnManager.maxRadius);
-                entity.pos.x = point.x;
-                entity.pos.y = point.y;
+                //Try different points until successful
+                let valid = false;
+                while(!valid) {
+                    const point = radiusPickPoint(doug.getCenter(), SpawnManager.minRadius, SpawnManager.maxRadius);
+                    entity.pos.x = point.x;
+                    entity.pos.y = point.y;
 
-                const testBox = new BoundingBox(point, entity.size);
-                valid = !this.checkObstacles(testBox);
+                    const testBox = new BoundingBox(point, entity.size);
+                    valid = !this.checkObstacles(testBox);
+                }
+                if((lightMap.dayTime && SpawnManager.table[key].day)
+                    || (!lightMap.dayTime && SpawnManager.table[key].night === true)) {
+                    gameEngine.addEntity(entity, (entity instanceof Bunny ? Layers.GROUND : Layers.FOREGROUND));
+                    this.entityList.push(entity);
+                    timeValid = true;
+                }
             }
-            gameEngine.addEntity(entity);
-            this.entityList.push(entity);
         }
     }
 

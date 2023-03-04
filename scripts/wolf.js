@@ -6,6 +6,7 @@
  */
 
 class Wolf extends Enemy {
+
     constructor(pos) {
         super(
             pos,
@@ -17,6 +18,8 @@ class Wolf extends Enemy {
         this.animations = [];
 
         this.type = 'wolf';
+        this.knockbackScale = 0.5;
+
 
         this.startX = doug.getCenter().x;
         this.startY = doug.getCenter().y;
@@ -30,8 +33,18 @@ class Wolf extends Enemy {
     }
 
     update() {
+        super.update();
         this.setSpeed();
-        this.route(doug.pos);
+        if(this.knockback) {
+            this.velocity = new Vec2(this.knockbackDir.x, this.knockbackDir.y);
+
+            let scalingFactor = this.knockbackSpeed / this.knockbackDir.magnitude();
+
+            this.velocity.x *= scalingFactor;
+            this.velocity.y *= scalingFactor;
+        } else {
+            this.route(doug.pos);
+        }
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {

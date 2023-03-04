@@ -17,7 +17,7 @@ class Enemy extends Character {
         this.velocity = new Vec2(0,0);
         this.hitPoints = this.maxHitPoints;
 
-        gameEngine.addEntity(new HealthBar(this), Layers.GLOWING_ENTITIES);
+        gameEngine.addEntity(new HealthBar(this), Layers.FOREGROUND);
         this.type = undefined;
 
         this.knockback = false;
@@ -25,6 +25,7 @@ class Enemy extends Character {
         this.knockbackDuration = .35;
         this.knockbackSpeed = 250;
         this.lastKnockBack = 0;
+        this.knockbackScale = 1;
     }
 
     takeDamage(amount) {
@@ -40,15 +41,22 @@ class Enemy extends Character {
 
     update() {
         if(timeInSecondsBetween(Date.now(), this.lastKnockBack) > this.knockbackDuration) {
+            if(this.knockback && this.velocity) {
+                this.velocity.x = 0;
+                this.velocity.y = 0;
+            }
             this.knockback = false;
+        }
+        if(this.knockback) {
+            this.knockbackSpeed *= 0.965 * (1 - gameEngine.clockTick);
         }
     }
 
     applyKnockback(player, amount, duration) {
-        if(this instanceof Bat || this instanceof Slime) {
+        if(!(this instanceof Dragon || this instanceof BearBoss || this instanceof Demon)) {
             this.knockback = true;
-            this.knockbackSpeed = amount;
-            this.knockbackDuration = duration;
+            this.knockbackSpeed = amount * this.knockbackScale;
+            this.knockbackDuration = duration * this.knockbackScale;
             this.lastKnockBack = Date.now();
             let doug = player.getCenter();
             let enemy = this.getCenter();
