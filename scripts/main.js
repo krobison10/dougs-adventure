@@ -20,6 +20,7 @@ const log = new MessageLog();
 declareAssets([
 	"sprites/blondie_spritesheet.png",
 	"sprites/dragon2.png",
+	"sprites/demon.png",
 	"sprites/bat_spritesheet.png",
 	"sprites/wolf_spritesheet.png",
 	"sprites/slime01.png",
@@ -45,6 +46,8 @@ declareAssets([
 	"sprites/fires/orange/loops/burning_loop_1.png",
 	"sprites/fires/orange/loops/burning_loop_3.png",
 	"sprites/potion_delay.png",
+	"sprites/rock_small.png",
+	"sprites/bunny.png",
 
 	"sounds/grab.wav",
 	"sounds/swing_2.wav",
@@ -89,17 +92,22 @@ ASSET_MANAGER.downloadAll(() => {
 
 const spawnPoint = new Vec2(-140, 0)
 let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
- 	new Dimension(52, 72), );
+ 	new Dimension(52, 72));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
-let dragon = new Dragon(new Vec2(-400, -1800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+let dragon = new Dragon(new Vec2(-100, -1500), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
+
+let demon = new Demon(new Vec2(-400 , 1000), ASSET_MANAGER.getAsset("sprites/demon.png"),
+	new Dimension(97, 72), new Padding(20,60,30,60), 10, 1000);
+
+gameEngine.addEntity(new Wolf(new Vec2(400, 200)));
 
 gameEngine.addEntity(new WolfPack(new Vec2(400, 200)));
 
 gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
-	new Dimension(56, 56), new Padding(0, -15, 0, 3),10,100,doug));
+	new Dimension(56, 56), new Padding(),10,100));
 
 let hotbar;
 buildWorld();
@@ -108,6 +116,10 @@ buildUI();
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(dragon);
+gameEngine.addEntity(demon);
+
+const spawner = new SpawnManager();
+gameEngine.addToUpdateList(spawner);
 
 
 
@@ -156,7 +168,7 @@ function buildUI() {
 }
 
 function placeTorches() {
-	for(let y = 180; y >= -180; y -= 6) {
+	for(let y = 300; y >= -300; y -= 6) {
 		gameEngine.addEntity(new Torch(new Vec2(-6.5 * TILE_SIZE, y * TILE_SIZE)));
 		gameEngine.addEntity(new Torch(new Vec2(-1.5 * TILE_SIZE, (y - 3) * TILE_SIZE)));
 	}

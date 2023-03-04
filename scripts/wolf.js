@@ -6,12 +6,21 @@
  */
 
 class Wolf extends Enemy {
-    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
+
+    constructor(pos) {
+        super(
+            pos,
+            ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
+            new Dimension(32, 64),
+            new Padding(),
+            40,
+            150);
         this.animations = [];
         this.idleAnimations = [];
 
         this.type = 'wolf';
+        this.knockbackScale = 0.5;
+
         this.animDisplace = {
             lay: 4,
             attack: 8
@@ -48,10 +57,21 @@ class Wolf extends Enemy {
     }
 
     update() {
+        super.update();
         this.setSpeed();
         this.determineRange();
         this.determineSize();
         this.determineVelocity();
+        if(this.knockback) {
+            this.velocity = new Vec2(this.knockbackDir.x, this.knockbackDir.y);
+
+            let scalingFactor = this.knockbackSpeed / this.knockbackDir.magnitude();
+
+            this.velocity.x *= scalingFactor;
+            this.velocity.y *= scalingFactor;
+        } else {
+            this.route(doug.pos);
+        }
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {

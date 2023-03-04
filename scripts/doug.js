@@ -10,7 +10,7 @@ class Doug extends Character {
      * Delay in seconds before health regen will begin
      * @type {number}
      */
-    static regenDelay = 10;
+    static regenDelay = 15;
     /**
      * Time in seconds for how long doug must wait to drink another health potion.
      * @type {number}
@@ -339,7 +339,7 @@ class Doug extends Character {
 
         const entities = gameEngine.entities[Layers.FOREGROUND];
         for(const entity of entities) {
-            if(entity.boundingBox && entity instanceof Obstacle) {
+            if(entity.boundingBox && (entity instanceof Obstacle || entity instanceof InvisibleBorder)) {
                 if(entity !== this && box.collide(entity.boundingBox)) {
                     return true;
                 }

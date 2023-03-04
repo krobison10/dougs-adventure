@@ -54,7 +54,7 @@ class Particle extends Entity {
                }
 
                const speed = Math.random() * 150;
-               const duration = 5 + Math.random() * 4;
+               const duration = 5 + Math.random() * 10;
 
                const particle = new Particle(pos, size, new RGBColor(255, 0, 0),
                    sizeVar, speed, .05, dir, duration);
