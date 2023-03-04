@@ -13,9 +13,7 @@ class Demon extends Enemy {
         super(pos, spritesheet, new Dimension(size.w*scale1, size.h*scale1), spritePadding, damage, hitPoints);
         this.animations = [];
         this.scale = scale1
-        this.maxHitPoints = 1000;
-        this.hitPoints = 1000;
-        this.damage = 20;
+        this.maxHitPoints = hitPoints;
         this.aggroRange = 300;
         this.dead = false;
         this.type = "demon";
@@ -30,9 +28,12 @@ class Demon extends Enemy {
                 100, 70,
                 3, .4, 0, false, true);
         }
-        
+        gameEngine.addEntity(new FireCircle(this.getCenter()))
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-
+        
+        const source = new FlickeringLightSource(0.85, new Vec2(0, 0), this, new RGBColor(255, 100, 0), 50);
+        FireSphere.setFlicker(source);
+        lightMap.addLightSource(source);
     }
 
     /**
@@ -138,4 +139,90 @@ class Demon extends Enemy {
      drawAnim(ctx, animator) {
          animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y, this.scale);
      }
+}
+
+
+class FireCircle extends Entity {
+    static damage = 45;
+    constructor(position) {
+        super(position, new Dimension(48, 48));
+        
+        this.size = new Dimension(48,48);
+        this.pos = position;
+      
+
+        this.radius = 200;
+        this.center = position;
+        this.angle = 0;
+        this.attackBox = new BoundingBox(this.pos, this.size);
+
+    }
+
+    update() {
+        this.center.x = demon.getCenter().x - 24;
+        this.center.y = demon.getCenter().y - 24;
+        this.angle += 0.075;
+        let x = this.center.x + this.radius * Math.cos(this.angle);
+        let y = this.center.y + this.radius * Math.sin(this.angle);
+
+        this.pos.x = x;
+        this.pos.y = y;
+        this.attackBox = new BoundingBox(this.pos, this.size);
+        this.generateParticles();
+        this.checkCollide();
+    }
+    generateParticles() {
+        for(let i = 0; i < 20; i++) {
+            if(probability(5 * gameEngine.clockTick)) {
+                const duration = Math.random();
+                const speed = 20 + Math.random() * 40;
+
+                const x = this.getCenter().x - 20 + Math.random() * 32;
+                const y = this.getCenter().y - 20 + Math.random() * 32;
+
+                const g = 60 + Math.random() * 40;
+                const magnitude = 0.01 + Math.random() * 0.1;
+
+                const particle = new Particle(new Vec2(x, y), 10, new RGBColor(255, g, 2),
+                    2, speed, 0.3, null, duration)
+                gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
+
+                const source = new LightSource(magnitude, this.getCenter().clone(),
+                    particle, new RGBColor(255, 100, 0), 60);
+                lightMap.addLightSource(source);
+            }
+        }
+    }
+
+    static setFlicker(source) {
+        source.growSpeed = 0.5;
+        source.shrinkSpeed = .2;
+        source.maxMagnitude = source.magnitude * 1.1;
+        source.minMagnitude = source.magnitude * 0.86;
+    }
+
+    checkCollide() {
+        for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
+            if(entity.boundingBox && this.attackBox.collide(entity.boundingBox)) {
+                if(entity instanceof Obstacle) {
+                    if(getDistance(this.pos, demon.pos) < dontUpdateDistance) {
+                        ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+                    }
+    
+                }
+                if(entity instanceof Doug) {
+                    ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+                    entity.takeDamage(FireCircle.damage);
+                    
+                }
+            }
+        }
+    }
+    draw(ctx) {
+        this.attackBox.draw(ctx);
+        return;
+        ctx.drawImage(ASSET_MANAGER.getAsset("sprites/FireSphere.png"), 0, 0, 16, 16,
+            this.getScreenPos().x, this.getScreenPos().y, this.size.w, this.size.h);
+        
+    }
 }

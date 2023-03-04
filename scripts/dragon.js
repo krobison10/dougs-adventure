@@ -23,8 +23,6 @@ class Dragon extends Enemy {
         this.scale = scale1
         this.maxHitPoints = 1000;
         this.dragonRange = 400;
-        this.hitPoints = 1000;
-        this.damage = 10;
         this.aggroRange = 300;
         this.dead = false;
         this.type = "dragon";
@@ -42,6 +40,7 @@ class Dragon extends Enemy {
         }
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+        
 
     }
 
