@@ -59,13 +59,14 @@ class SpawnManager {
         while (this.entityList.length < this.entityTarget) {
             //Create instance of entity type with null position for now
             const entityClass = SpawnManager.table[this.pickEntityCode()].class;
-            const entity = new entityClass(new Vec2(0 , 0));
+            const entity = new entityClass(new Vec2(0, 0));
 
             //Try different points until successful
             let valid = false;
             while(!valid) {
                 const point = radiusPickPoint(doug.getCenter(), SpawnManager.minRadius, SpawnManager.maxRadius);
-                entity.pos = point;
+                entity.pos.x = point.x;
+                entity.pos.y = point.y;
 
                 const testBox = new BoundingBox(point, entity.size);
                 valid = !this.checkObstacles(testBox);
