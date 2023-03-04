@@ -15,8 +15,13 @@ class Bat extends Enemy {
      * @param {number} damage how much damage the entity deals to the player
      * @param {number} maxHitPoints maximum health of the enemy.
      */
-    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
+    constructor(pos) {
+        super(pos,
+            ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
+            new Dimension(32, 32),
+            new Padding(),
+            10,
+            50);
         this.animations = [];
         this.scale = 1;
         this.speed = 200;

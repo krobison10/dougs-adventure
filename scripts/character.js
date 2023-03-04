@@ -92,3 +92,4 @@ class Character extends Entity {
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 }
+
