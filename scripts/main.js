@@ -20,6 +20,7 @@ const log = new MessageLog();
 declareAssets([
 	"sprites/blondie_spritesheet.png",
 	"sprites/dragon2.png",
+	"sprites/demon.png",
 	"sprites/bat_spritesheet.png",
 	"sprites/wolf_spritesheet.png",
 	"sprites/slime01.png",
@@ -44,7 +45,10 @@ declareAssets([
 	"sprites/arrow_flaming.png",
 	"sprites/fires/orange/loops/burning_loop_1.png",
 	"sprites/fires/orange/loops/burning_loop_3.png",
+	"sprites/potion_delay.png",
+	"sprites/rock_small.png",
 
+	"sounds/grab.wav",
 	"sounds/swing_2.wav",
 	"sounds/bow.wav",
 	"sounds/Player_Hit_0.wav",
@@ -91,28 +95,17 @@ let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
-gameEngine.addEntity(new Bat(new Vec2(200, 200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
-	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50));
-gameEngine.addEntity(new Bat(new Vec2(-400, -200), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
-	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50));
-gameEngine.addEntity(new Bat(new Vec2(-400, 350), ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
-	new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50));
-
-let dragon = new Dragon(new Vec2(-400, -800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+let dragon = new Dragon(new Vec2(-400, -1800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
 
-gameEngine.addEntity(new Slime(new Vec2(0,0), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-	new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1));
-gameEngine.addEntity(new Slime(new Vec2(200,500), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-	new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1));
-gameEngine.addEntity(new Slime(new Vec2(-500,100), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-	new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1));
+let demon = new Demon(new Vec2(-400 , 900), ASSET_MANAGER.getAsset("sprites/demon.png"),
+	new Dimension(97, 72), new Padding(20,60,30,60), 10, 1000);
 
 gameEngine.addEntity(new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
 	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150));
 
 gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
-	new Dimension(56, 56), new Padding(0, -15, 0, 3),10,100,doug);
+	new Dimension(56, 56), new Padding(0, -15, 0, 3),10,100,doug));
 
 let hotbar;
 buildWorld();
@@ -121,6 +114,7 @@ buildUI();
 gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(dragon);
+gameEngine.addEntity(demon);
 
 
 
@@ -169,7 +163,7 @@ function buildUI() {
 }
 
 function placeTorches() {
-	for(let y = 180; y >= -180; y -= 6) {
+	for(let y = 300; y >= -300; y -= 6) {
 		gameEngine.addEntity(new Torch(new Vec2(-6.5 * TILE_SIZE, y * TILE_SIZE)));
 		gameEngine.addEntity(new Torch(new Vec2(-1.5 * TILE_SIZE, (y - 3) * TILE_SIZE)));
 	}
@@ -194,3 +188,7 @@ const toggleMute = () => {
 		ASSET_MANAGER.setVolume(1)
 	}
 }
+
+window.onbeforeunload = function() {
+	return "Data will be lost if you leave the page, are you sure?";
+};

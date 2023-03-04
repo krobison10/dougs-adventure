@@ -25,7 +25,7 @@ class Sword extends Entity {
         this.bbSize = new Dimension(72, 76);
         this.updateBB();
         ASSET_MANAGER.playAsset("sounds/swing_2.wav");
-        this.enemiesHit = new Set()
+        this.enemiesHit = new Set();
     }
 
     update() {
@@ -54,8 +54,13 @@ class Sword extends Entity {
 
     checkDamage() {
         for(let ent of gameEngine.entities[Layers.FOREGROUND]) {
-            if(ent instanceof Enemy && this.attackBox.collide(ent.boundingBox) && !this.enemiesHit.has(ent)) {
+            if(
+                ent instanceof Enemy
+                && this.attackBox.collide(ent.boundingBox)
+                && !this.enemiesHit.has(ent)
+                && this.enemiesHit.size < 4) {
                 ent.takeDamage(Sword.damage);
+                ent.applyKnockback(doug, 250, .35);
                 this.enemiesHit.add(ent);
             }
         }
@@ -107,6 +112,14 @@ class Bow extends Entity {
         this.dir = dir;
         this.startTime = Date.now();
         this.image = this.getImage();
+        this.tryArrow();
+    }
+
+    tryArrow() {
+        if(doug.inventory.arrow >= 1) {
+            gameEngine.addEntity(new Arrow(gameEngine.click));
+            doug.inventory.arrow--;
+        }
     }
 
     update() {
@@ -170,8 +183,9 @@ class Arrow extends Entity {
         //this.padding = new Padding();
         this.moveToStartingPoint();
         this.setBox();
-        lightMap.addLightSource(
-            new LightSource(.4, new Vec2(0, 0), this, new RGBColor(255, 146, 73), 50));
+        const source = new LightSource(.5, new Vec2(0, 0), this, new RGBColor(250, 97, 2), 60);
+        FireSphere.setFlicker(source);
+        lightMap.addLightSource(source);
     }
 
     setBox() {
@@ -187,8 +201,40 @@ class Arrow extends Entity {
     update() {
         this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;
         this.pos.y += this.velocity.y * this.speed * gameEngine.clockTick;
+        this.generateParticles();
         this.setBox();
         this.checkCollide();
+    }
+
+    generateParticles() {
+        for(let i = 0; i < 4; i++) {
+            if(probability(4 * gameEngine.clockTick)) {
+                const duration = 1 + Math.random();
+
+                const xVel = Math.random() / 2 * (probability(0.5) ? 1 : -1);
+                const speed = 150 + Math.random() * 50;
+
+                const magnitude = 0.1 + Math.random() / 10;
+                const g = 60 + Math.random() * 40;
+                const decay = .3 + Math.random() / 5;
+
+                const particle = new Particle(this.getCenter().clone(), 3, new RGBColor(255, g, 2),
+                    1, speed, decay, new Vec2(xVel, 1), duration)
+                gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
+
+                const source = new FlickeringLightSource(magnitude, this.getCenter().clone(),
+                        particle, new RGBColor(255, 100, 0), 60);
+                Arrow.setFlicker(source);
+                lightMap.addLightSource(source);
+            }
+        }
+    }
+
+    static setFlicker(source) {
+        source.growSpeed = 0.3;
+        source.shrinkSpeed = .1;
+        source.maxMagnitude = source.magnitude * 1.2;
+        source.minMagnitude = source.magnitude * 0.72;
     }
 
     checkCollide() {
@@ -202,6 +248,7 @@ class Arrow extends Entity {
                 }
                 if(entity instanceof Enemy) {
                     entity.takeDamage(Arrow.damage);
+                    entity.applyKnockback(doug, 100, .2);
                     return this.removeFromWorld = true;
                 }
             }
@@ -311,7 +358,7 @@ class WaterSphere extends Entity {
         this.moveToStartingPoint();
         this.setBox();
         lightMap.addLightSource(
-            new LightSource(1, new Vec2(0, 0), this, new RGBColor(123, 10, 252), 50));
+            new LightSource(0.8, new Vec2(0, 0), this, new RGBColor(11, 46, 255), 50));
     }
 
     setBox() {
@@ -327,8 +374,31 @@ class WaterSphere extends Entity {
     update() {
         this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;
         this.pos.y += this.velocity.y * this.speed * gameEngine.clockTick;
+        this.generateParticles();
         this.setBox();
         this.checkCollide();
+    }
+
+    generateParticles() {
+        for(let i = 0; i < 8; i++) {
+            if(probability(10 * gameEngine.clockTick)) {
+
+                const duration = 0.5 + Math.random();
+                const speed = 10 + Math.random() * 20;
+
+                const x = this.getCenter().x - 8 + Math.random() * 16;
+                const y = this.getCenter().y - 8 + Math.random() * 16;
+
+                //const magnitude = 0.075 + Math.random() / 10;
+
+                const particle = new Particle(new Vec2(x, y), 4, new RGBColor(11, 46, 255),
+                    1, speed, .3, null, duration)
+                gameEngine.addEntity(particle, Layers.GLOWING_ENTITIES);
+
+                //lightMap.addLightSource(
+                //    new LightSource(magnitude, this.getCenter().clone(), particle, particle.color, 60));
+            }
+        }
     }
 
     checkCollide() {
@@ -343,6 +413,7 @@ class WaterSphere extends Entity {
                 if(entity instanceof Enemy) {
                     ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
                     entity.takeDamage(WaterSphere.damage);
+                    entity.applyKnockback(doug, 150, .3);
                     return this.removeFromWorld = true;
                 }
             }

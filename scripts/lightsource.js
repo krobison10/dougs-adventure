@@ -53,7 +53,6 @@ class LightSource extends Entity {
         ctx.fill();
     }
 
-    //Definitely should update
     smoothGradient(gradient, steps) {
         for(let i = 1; i <= steps; i++) {
             let intensity =  -Math.log10(i/steps) * this.magnitude * lightMap.alpha;

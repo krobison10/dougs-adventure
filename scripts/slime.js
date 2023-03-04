@@ -22,6 +22,8 @@ class Slime extends Enemy {
                 damage, hitPoints, parent, scale) {
         super(pos, spritesheet, new Dimension(size.w * scale, size.h * scale), spritePadding, damage, hitPoints);
 
+        this.type = 'slime';
+
         this.parent = parent;
         this.scale = scale;
 
@@ -30,6 +32,8 @@ class Slime extends Enemy {
         this.speed = 150;
 
         this.directionMem = 0;
+
+        this.aggroRange = 250;
 
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, 13, (i * 37) + 8,
@@ -52,25 +56,46 @@ class Slime extends Enemy {
      * Updates the slime for the frame.
      */
     update() {
-        let dist = getDistance(this.pos, this.target);
-        if (dist < 5) {
-            this.targetID++;
-        }
-        this.target = this.path[this.targetID % 4];
-        dist = getDistance(this.pos, this.target)
-        //console.log(this.pos)
+        super.update();
 
-        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+        if(this.knockback) {
+            this.velocity = new Vec2(this.knockbackDir.x, this.knockbackDir.y);
+
+            let scalingFactor = this.knockbackSpeed / this.knockbackDir.magnitude();
+
+            this.velocity.x *= scalingFactor;
+            this.velocity.y *= scalingFactor;
+        }
+        else {
+            let dist = getDistance(this.pos, this.target);
+            let dougDist = getDistance(this.pos, doug.pos);
+
+            if(dougDist < this.aggroRange && !doug.dead) {
+                this.target = doug.pos;
+            } else {
+                if (dist < 5) {
+                    this.targetID++;
+                }
+                this.target = this.path[this.targetID % 4];
+                dist = getDistance(this.pos, this.target)
+            }
+
+            this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+
+        }
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
+        }else {
+            this.targetID = randomInt(3);
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
+        }else {
+            this.targetID = randomInt(3);
         }
-       
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
@@ -103,7 +128,7 @@ class Slime extends Enemy {
             this.drawAnim(ctx, this.animations[0]);
             this.directionMem = 1;
         }
-        if(this.velocity.x > 0 && this.velocity.x >= this.velocity.y) {//right
+        if(this.velocity.x > 0 && Math.abs(this.velocity.x) >= Math.abs(this.velocity.y)) {//right
             this.drawAnim(ctx, this.animations[3]);
             this.directionMem = 2;
         }

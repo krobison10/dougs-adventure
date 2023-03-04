@@ -37,9 +37,9 @@ class Obstacle extends Entity {
     }
 }
 
-class InvisibleBorder extends Obstacle {
+class InvisibleBorder extends Entity {
     constructor(pos, size) {
-        super(pos, size, null, true, null, null, null);
+        super(pos, size);
         pos.x = pos.x * TILE_SIZE;
         pos.y = pos.y * TILE_SIZE;
         size.w = size.w * TILE_SIZE;
