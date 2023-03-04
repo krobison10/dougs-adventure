@@ -392,7 +392,7 @@ class Doug extends Character {
     }
 
     takeDamage(amount) {
-        if(timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.immunityDuration) {
+        if(timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.immunityDuration && !this.dead) {
             this.lastDamage = Date.now();
             this.hitPoints -= amount;
             if(this.hitPoints > 0) {

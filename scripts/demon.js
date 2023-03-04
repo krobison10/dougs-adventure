@@ -204,16 +204,8 @@ class FireCircle extends Entity {
     checkCollide() {
         for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
             if(entity.boundingBox && this.attackBox.collide(entity.boundingBox)) {
-                if(entity instanceof Obstacle) {
-                    if(getDistance(this.pos, demon.pos) < dontUpdateDistance) {
-                        ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
-                    }
-    
-                }
                 if(entity instanceof Doug) {
-                    ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
                     entity.takeDamage(FireCircle.damage);
-                    
                 }
             }
         }
