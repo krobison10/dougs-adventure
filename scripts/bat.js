@@ -21,6 +21,7 @@ class Bat extends Enemy {
         this.scale = 1;
         this.speed = 200;
         this.directionMem = 0;
+        this.changeDirectionDelay = 1;
         this.type = 'bat';
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         this.time = 0;
@@ -30,13 +31,6 @@ class Bat extends Enemy {
                 this.size.w, this.size.h,
                 3, .1, 0, false, true);
         }
-
-        this.targetID = randomInt(3);
-        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ 200, y: this.pos.y}, {x: this.pos.x+200, y: this.pos.y+200}, {x: this.pos.x, y: this.pos.y+200}];
-        this.target = this.path[this.targetID % this.path.length];
-
-        let dist = getDistance(this.pos, this.target)
-        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
 
     }
 
@@ -54,38 +48,72 @@ class Bat extends Enemy {
             this.velocity.x *= scalingFactor;
             this.velocity.y *= scalingFactor;
         }
-        else {
-            let dist = getDistance(this.pos, this.target);
-            let dougDist = getDistance(this.pos, doug.pos);
-
-            if(dougDist < this.aggroRange && !doug.dead) {
-                this.target = doug.pos;
-            } else {
-                if (dist < 5) {
-                    this.targetID++;
-                }
-                this.target = this.path[this.targetID % 4];
-                dist = getDistance(this.pos, this.target)
-            }
-
-            this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
-
+        else {           
+            this.move()
         }
 
         const collisionLat = this.checkCollide("lateral");
         const collisionVert = this.checkCollide("vertical")
         if(!collisionLat) {
             this.pos.x += this.velocity.x * gameEngine.clockTick;
-        }else {
-            this.targetID = randomInt(3);
         }
         if(!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
-        }else {
-            this.targetID = randomInt(3);
         }
-
+        
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
+    }
+    move() {
+        let center = this.getCenter();
+        let dougDist = getDistance(center, doug.getCenter());
+        let dougCenter = doug.getCenter();
+
+        //Decrement the direction delay by 1
+        this.changeDirectionDelay-= gameEngine.clockTick;
+        //console.log(this.changeDirectionDelay);
+        //Check if the direction delay has elapsed
+        if(dougDist < this.aggroRange && !doug.dead && dougDist > 2) {
+            //this.target = doug.pos;
+            this.velocity= new Vec2((dougCenter.x - center.x)/dougDist * this.speed,(dougCenter.y - center.y)/dougDist * this.speed);
+        } else {
+            if(dougDist <= 2) {
+                this.velocity.x=0;
+                this.velocity.y=0;
+            }
+
+            if (this.changeDirectionDelay <= 0) {
+                            // Reset the direction delay to a new value
+                this.changeDirectionDelay = 1;
+                    // Change direction and velocity randomly with probability
+
+                const randomDirection = Math.floor(Math.random() * 5);
+                switch (randomDirection) {
+                    case 0:
+                        this.velocity.x = -this.speed;
+                        this.velocity.y = 0;
+                        this.directionMem = 1;
+                        break;
+                    case 1:
+                        this.velocity.x = this.speed;
+                        this.velocity.y = 0;
+                        this.directionMem = 2;
+                        break;
+                    case 2:
+                        this.velocity.x = 0;
+                        this.velocity.y = -this.speed;
+                        this.directionMem = 3;
+                        break;
+                    case 3:
+                        this.velocity.x = 0; 
+                        this.velocity.y = this.speed;
+                        this.directionMem = 4;
+                        break;
+                    case 4:
+                        this.velocity.x = 0;
+                        this.velocity.y = 0;
+                }
+            }
+        } 
     }
 
     deathSound() {
@@ -113,7 +141,7 @@ class Bat extends Enemy {
             this.directionMem = 3;
         }
         if(this.velocity.y === 0 && this.velocity.x === 0) {
-            this.drawAnim(ctx, this.animations[3]);
+            this.drawAnim(ctx, this.animations[0]);
         }
 
         this.boundingBox.draw(ctx);
