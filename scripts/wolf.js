@@ -13,8 +13,8 @@ class Wolf extends Enemy {
             ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
             new Dimension(32, 64),
             new Padding(),
-            40,
-            150);
+            50,
+            250);
         this.animations = [];
         this.idleAnimations = [];
 

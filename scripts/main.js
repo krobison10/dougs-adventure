@@ -6,7 +6,7 @@ const HEIGHT = 768;
 let boundingBoxes = false;
 
 const dontDrawDistance = 1000;
-const dontUpdateDistance = 2000;
+const dontUpdateDistance = 3000;
 const dontCheckCollideDistance = 800;
 
 let gameTime = 11 * 60; //12:00 pm
@@ -91,23 +91,17 @@ ASSET_MANAGER.downloadAll(() => {
 //------ Build Game ------//
 
 const spawnPoint = new Vec2(-140, 0)
-let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
+const doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72));
 lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
-let dragon = new Dragon(new Vec2(-100, -1500), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+const dragon = new Dragon(new Vec2(-100, -1500), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
 
-let demon = new Demon(new Vec2(-400 , 1000), ASSET_MANAGER.getAsset("sprites/demon.png"),
+const demon = new Demon(new Vec2(-400 , 1000), ASSET_MANAGER.getAsset("sprites/demon.png"),
 	new Dimension(97, 72), new Padding(20,60,30,60), 10, 1000);
 
-gameEngine.addEntity(new Wolf(new Vec2(400, 200)));
-
-gameEngine.addEntity(new WolfPack(new Vec2(400, 200)));
-
-gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
-	new Dimension(56, 56), new Padding(),10,100));
 
 let hotbar;
 buildWorld();

@@ -159,6 +159,8 @@ class FireCircle extends Entity {
     }
 
     update() {
+        if(demon.removeFromWorld) return this.removeFromWorld = true;
+
         this.center.x = demon.getCenter().x - 24;
         this.center.y = demon.getCenter().y - 24;
         this.angle += 0.075;
