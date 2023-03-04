@@ -18,9 +18,14 @@ class Slime extends Enemy {
      * @param {Boolean} parent whether the slime will split on death or not.
      * @param {Number} scale in relation to the spritesheet size.
      */
-    constructor(pos, spritesheet, size, spritePadding,
-                damage, hitPoints, parent, scale) {
-        super(pos, spritesheet, new Dimension(size.w * scale, size.h * scale), spritePadding, damage, hitPoints);
+    constructor(pos, parent = true, scale = 1) {
+        const size = new Dimension(55, 37);
+        super(pos,
+            ASSET_MANAGER.getAsset("sprites/slime01.png"),
+            new Dimension(size.w * scale, size.h * scale),
+            new Padding,
+            15,
+            100);
 
         this.type = 'slime';
 
@@ -135,10 +140,8 @@ class Slime extends Enemy {
         super.die();
         if (this.hitPoints <= 0) {
             if (this.parent) {
-                let slime = new Slime(new Vec2(this.pos.x, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-                    new Dimension(55, 37), new Padding(0,0,0,0), 10, 100, false, .7);
-                let slime2 = new Slime(new Vec2(this.pos.x + 55, this.pos.y), ASSET_MANAGER.getAsset("sprites/slime01.png"),
-                    new Dimension(55, 37), new Padding(0,0,0,0), 10, 100, false, .7);
+                let slime = new Slime(new Vec2(this.pos.x, this.pos.y), false, .7);
+                let slime2 = new Slime(new Vec2(this.pos.x + 55, this.pos.y), false, .7);
                 slime.targetID += 1;
                 gameEngine.addEntity(slime);
                 gameEngine.addEntity(slime2);

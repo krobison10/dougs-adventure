@@ -163,3 +163,9 @@ function getRandomPointWithinRadius(pos, radius) {
 
     return new Vec2(x, y);
 }
+
+function radiusPickPoint(origin, minRad, maxRad) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = minRad + Math.random() * (maxRad - minRad);
+    return new Vec2(origin.x + distance * Math.cos(angle), origin.y + distance * Math.sin(angle));
+}

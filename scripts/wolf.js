@@ -6,8 +6,14 @@
  */
 
 class Wolf extends Enemy {
-    constructor(pos, spritesheet, size, spritePadding, damage, maxHitPoints) {
-        super(pos, spritesheet, size, spritePadding, damage, maxHitPoints);
+    constructor(pos) {
+        super(
+            pos,
+            ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
+            new Dimension(32, 64),
+            new Padding(),
+            40,
+            150);
         this.animations = [];
 
         this.type = 'wolf';
