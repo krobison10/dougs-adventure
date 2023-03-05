@@ -11,23 +11,23 @@ class WolfPack extends Entity {
         super(pos, new Dimension(64 * 3, 64 * 3));
     
         this.protectMode = false; //Initially set enraged characteristic to false
-        this.size = 4;
         this.wolfList = [];
         this.maxHitPointList = [];
         this.wolfPosList = [];
         this.wolfPosList[0] = new Vec2(this.pos.x, this.pos.y);
         this.wolfPosList[1] = new Vec2(this.pos.x + 128, this.pos.y);
-        this.wolfPosList[2] = new Vec2(this.pos.x, this.pos.y + 128),
+        this.wolfPosList[2] = new Vec2(this.pos.x, this.pos.y + 128);
         this.wolfPosList[3] = new Vec2(this.pos.x + 128, this.pos.y + 128);
 
         for(let i = 0; i < 4; i++) {
             this.wolfList[i] = new Wolf(this.wolfPosList[i], this);
-            this.maxHitPointList[i] = 150;
+            this.maxHitPointList[i] = this.wolfList[i].maxHitPoints;
             gameEngine.addEntity(this.wolfList[i]);
         }
     }
 
     update() {
+
         if(!this.protectMode) {
             for(let i = 0; i < 4; i++) {
                 if(this.wolfList[i].hitPoints < this.maxHitPointList[i]) {
@@ -48,11 +48,5 @@ class WolfPack extends Entity {
                 wolf.enraged = true;
             });
         }
-    }
-
-
-
-    draw() {
-        //Empty draw method to satisfy game engine
     }
 }

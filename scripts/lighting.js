@@ -7,15 +7,12 @@
  *
  * @author Kyler Robison
  */
-class LightMap {
+class Lighting {
+    static color = new RGBColor(20, 20, 40);
+    static bloodMoonColor = new RGBColor(100, 20, 40);
 
     constructor() {
-        /**
-         * The alpha value of the mask, 1 is complete darkness and 0 is complete light.
-         * @type {number}
-         */
-        this.alpha = 1;
-        this.dayTime = true;
+
         /**
          * The light mask entity that applies darkness to the world
          * @type {HTMLCanvasElement}
@@ -38,13 +35,16 @@ class LightMap {
         this.lightSources = [];
 
         //this.setColor(new RGBColor(20, 20, 100));
-        this.setColor(new RGBColor(20, 20, 40));
+        this.setColor(Lighting.color);
         this.setLightValue();
 
         /**
-         * Represents the time at which the last update of lightmap occurred.
+         * The alpha value of the mask, 1 is complete darkness and 0 is complete light.
          * @type {number}
          */
+        this.alpha = 1;
+        this.dayTime = true;
+        this.bloodMoon = false;
         this.lastTime = Date.now();
     }
 
@@ -108,7 +108,17 @@ class LightMap {
         const fade = 30;
 
         //Update the flag that indicates day/night
-        this.dayTime = (gameTime >= sunrise && gameTime <= sunset);
+        let isDaytime = (gameTime >= sunrise && gameTime <= sunset);
+        if(isDaytime && this.dayTime === false) {
+            //Handle sunrise
+            this.dayTime = true;
+            if(this.bloodMoon) this.bloodMoonEnd();
+        }
+        else if(!isDaytime && this.dayTime === true) {
+            //Handle sunset
+            this.dayTime = false;
+            if(probability(0.5)) this.bloodMoonBegin();
+        }
 
         if(gameTime >= sunrise + fade && gameTime <= sunset - fade) {
             //complete day
@@ -129,6 +139,27 @@ class LightMap {
                 this.alpha = 1 - (sunset + fade - gameTime) / (2 * fade);
             }
         }
+    }
+
+    startBloodMoon() {
+        this.dayTime = false;
+        gameTime = 20 * 60 + 1;
+        this.bloodMoonBegin();
+    }
+
+    bloodMoonBegin() {
+        log.addMessage("The Blood Moon is rising...", MessageLog.colors.red);
+        this.bloodMoon = true;
+        this.setColor(Lighting.bloodMoonColor);
+        this.setLightValue();
+        spawner.entityTarget *= 1.5;
+    }
+
+    bloodMoonEnd() {
+        this.bloodMoon = false;
+        this.setColor(Lighting.color);
+        this.setLightValue();
+        spawner.entityTarget = SpawnManager.baseEntityTarget;
     }
 
     /**

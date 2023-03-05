@@ -1,7 +1,8 @@
 class SpawnManager {
     static minRadius = 700;
     static maxRadius = 2000;
-    static despawnDist = 2500;
+    static despawnDist = 2200;
+    static baseEntityTarget = 30;
     static table = {
         1: {
             class: Bat,
@@ -20,7 +21,7 @@ class SpawnManager {
         3: {
             class: Wolf,
             size: new Dimension(32, 64),
-            density: 10,
+            density: 0,
             night: true,
             day: true
         },
@@ -30,21 +31,28 @@ class SpawnManager {
             density: 25,
             night: false,
             day: true
+        },
+        5: {
+            class: WolfPack,
+            size: new Dimension(64*3, 64*3),
+            density: 4,
+            night: true,
+            day: true
+        },
+        6: {
+            class: BearBoss,
+            size: new Dimension(84, 84),
+            density: 2,
+            night: true,
+            day: true
         }
-        // 4: {
-        //     class: BearBoss,
-        //     size: new Dimension(1.5*56, 1.5*56),
-        //     density: 1,
-        //     night: true,
-        //     day: true
-        // }
 
     }
     static totalDensity = Object.values(SpawnManager.table).reduce((sum, type) => sum + type.density, 0);
 
     constructor() {
         this.entityList = [];
-        this.entityTarget = 50;
+        this.entityTarget = SpawnManager.baseEntityTarget;
         this.pickEntityCode();
         for(let type in SpawnManager.table) {
             SpawnManager.table[type].densityRatio = SpawnManager.table[type].density / SpawnManager.totalDensity;
@@ -53,11 +61,23 @@ class SpawnManager {
     update() {
         this.updateEntities();
     }
+
+    reset() {
+        this.entityList.forEach(entity => entity.removeFromWorld = true);
+        this.entityList.length = 0;
+        this.updateEntities();
+    }
+
     updateEntities() {
         // Search and despawn
         for (let i = this.entityList.length - 1; i >= 0; --i) {
             if(getDistance(doug.getCenter(), this.entityList[i].getCenter()) > SpawnManager.despawnDist) {
                 this.entityList[i].removeFromWorld = true;
+
+                if(this.entityList[i] instanceof WolfPack) {
+                    this.entityList[i].wolfList.forEach(wolf => wolf.removeFromWorld = true);
+                }
+
                 this.entityList.splice(i, 1);
             }
         }
@@ -68,21 +88,22 @@ class SpawnManager {
             while(!timeValid) {
                 //Create instance of entity type with null position for now
                 const key = this.pickEntityCode();
-                const entityClass = SpawnManager.table[key].class;
-                const entity = new entityClass(new Vec2(0, 0));
+                let pos = null;
 
                 //Try different points until successful
                 let valid = false;
                 while(!valid) {
-                    const point = radiusPickPoint(doug.getCenter(), SpawnManager.minRadius, SpawnManager.maxRadius);
-                    entity.pos.x = point.x;
-                    entity.pos.y = point.y;
+                    pos = radiusPickPoint(doug.getCenter(), SpawnManager.minRadius, SpawnManager.maxRadius);
 
-                    const testBox = new BoundingBox(point, entity.size);
+                    const testBox = new BoundingBox(pos, SpawnManager.table[key].size);
                     valid = !this.checkObstacles(testBox);
                 }
-                if((lightMap.dayTime && SpawnManager.table[key].day)
-                    || (!lightMap.dayTime && SpawnManager.table[key].night === true)) {
+                if((lightingSystem.dayTime && SpawnManager.table[key].day)
+                    || (!lightingSystem.dayTime && SpawnManager.table[key].night)) {
+
+                    const entityClass = SpawnManager.table[key].class;
+                    const entity = new entityClass(pos);
+
                     gameEngine.addEntity(entity, (entity instanceof Bunny ? Layers.GROUND : Layers.FOREGROUND));
                     this.entityList.push(entity);
                     timeValid = true;
@@ -93,7 +114,7 @@ class SpawnManager {
 
     checkObstacles(bb) {
         const list = gameEngine.entities[Layers.FOREGROUND];
-        for(let entity in list) {
+        for(let entity of list) {
             if(entity.boundingBox && bb.collide(entity.boundingBox)) return true;
         }
     }

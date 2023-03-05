@@ -13,8 +13,8 @@ class Wolf extends Enemy {
             ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
             new Dimension(32, 64),
             new Padding(),
-            40,
-            150);
+            50,
+            250);
         this.animations = [];
         this.idleAnimations = [];
 
@@ -298,29 +298,29 @@ class Wolf extends Enemy {
         this.animations[8] = new Animator(this.spritesheet, 
             0, 256,                     //Start Positions
             32, 64,                     //Dimensions
-            4, 0.2, 0, false, true);    //Frame Stats
+            4, 0.15, 0, false, true);    //Frame Stats
 
         //Bite Right
         this.animations[9] = new Animator(this.spritesheet, 
             384, 160,                    //Start Positions
             64, 32,                     //Dimensions
-            4, 0.2, 0, false, true);    //Frame Stats
+            4, 0.15, 0, false, true);    //Frame Stats
 
         //Bite Up
         this.animations[10] = new Animator(this.spritesheet, 
             160, 256,                   //Start Positions
             32, 64,                     //Dimensions
-            4, 0.2, 0, false, true);    //Frame Stats
+            4, 0.15, 0, false, true);    //Frame Stats
 
         //Bite Left
         this.animations[11] = new Animator(this.spritesheet, 
             384, 352,                   //Start Positions
             64, 32,                     //Dimensions
-            4, 0.2, 0, false, true);    //Frame Stats
+            4, 0.15, 0, false, true);    //Frame Stats
     }
 
     setSpeed() {
-        if(lightMap.dayTime) {
+        if(lightingSystem.dayTime) {
             this.speed = 100;
         } else {
             this.speed = 250;

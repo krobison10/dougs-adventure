@@ -33,7 +33,7 @@ class Demon extends Enemy {
         
         const source = new FlickeringLightSource(0.85, new Vec2(0, 0), this, new RGBColor(255, 100, 0), 50);
         FireSphere.setFlicker(source);
-        lightMap.addLightSource(source);
+        lightingSystem.addLightSource(source);
     }
 
     /**
@@ -159,6 +159,8 @@ class FireCircle extends Entity {
     }
 
     update() {
+        if(demon.removeFromWorld) return this.removeFromWorld = true;
+
         this.center.x = demon.getCenter().x - 24;
         this.center.y = demon.getCenter().y - 24;
         this.angle += 0.075;
@@ -189,7 +191,7 @@ class FireCircle extends Entity {
 
                 const source = new LightSource(magnitude, this.getCenter().clone(),
                     particle, new RGBColor(255, 100, 0), 60);
-                lightMap.addLightSource(source);
+                lightingSystem.addLightSource(source);
             }
         }
     }
@@ -204,16 +206,8 @@ class FireCircle extends Entity {
     checkCollide() {
         for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
             if(entity.boundingBox && this.attackBox.collide(entity.boundingBox)) {
-                if(entity instanceof Obstacle) {
-                    if(getDistance(this.pos, demon.pos) < dontUpdateDistance) {
-                        ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
-                    }
-    
-                }
                 if(entity instanceof Doug) {
-                    ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
                     entity.takeDamage(FireCircle.damage);
-                    
                 }
             }
         }

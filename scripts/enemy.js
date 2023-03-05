@@ -107,7 +107,7 @@ class Enemy extends Character {
         slime: {
             arrow: {
                 chance: 1/4,
-                rolls: 6,
+                rolls: 4,
             },
             heart: {
                 chance: 1/20,
@@ -157,10 +157,10 @@ class Enemy extends Character {
         bear: {
             arrow: {
                 chance: 4/5,
-                rolls: 50
+                rolls: 30
             },
             heart: {
-                chance: 1,
+                chance: 2,
                 rolls: 1
             },
             mana: {
