@@ -34,6 +34,8 @@ class Wolf extends Enemy {
         this.aggroRange = 200;
         this.enraged = false;
         this.pursuing = false;
+        this.layingDown = false;
+        this.animationTime = 0;
         this.hitPoints = this.maxHitPoints; //Make sure it is instantiated before first update call
 
         this.playerRange = {
@@ -87,12 +89,25 @@ class Wolf extends Enemy {
     draw(ctx) {
         this.determineFrameDirection();
         if(this.boundingBox.collide(doug.boundingBox)) { //Attack
+            this.layingDown = false;
             this.drawAnim(ctx, this.animations[this.directionMem + this.animDisplace.attack]);
         } 
         else if(this.startRange.dist <= 1) { //Lay - currently just an idle standing animation
-            this.drawAnim(ctx, this.idleAnimations[this.directionMem]);
+            if(this.layingDown && this.animationTime <= 0) {
+                this.drawAnim(ctx, this.idleAnimations[this.directionMem + this.animDisplace.lay]);
+            } else if(!this.layingDown && this.animationTime <= 0) {
+                this.layingDown = true;
+                this.animationTime = this.animations[this.directionMem + this.animDisplace.lay].totalTime;
+                this.drawAnim(ctx, this.animations[this.directionMem + this.animDisplace.lay]);
+            } else if(this.layingDown && this.animationTime > 0) {
+                this.animationTime -= gameEngine.clockTick;
+                this.drawAnim(ctx, this.animations[this.directionMem + this.animDisplace.lay]);
+            } else {
+                this.drawAnim(ctx, this.idleAnimations[this.directionMem]);
+            }
         } 
         else { //Walk
+            this.layingDown = false;
             this.drawAnim(ctx, this.animations[this.directionMem]);
         }
 
@@ -230,49 +245,49 @@ class Wolf extends Enemy {
         this.animations[4] = new Animator(this.spritesheet, 
             0, 64,                     //Start Positions
             32, 64,                     //Dimensions
-            4, 0.2, 0, false, false);    //Frame Stats
+            3, 0.2, 0, false, false);    //Frame Stats
 
         //Lay Right
         this.animations[5] = new Animator(this.spritesheet, 
             384, 0,                    //Start Positions
             64, 32,                     //Dimensions
-            4, 0.2, 0, false, false);    //Frame Stats
+            3, 0.2, 0, false, false);    //Frame Stats
 
         //Lay Up
         this.animations[6] = new Animator(this.spritesheet, 
             160, 64,                   //Start Positions
             32, 64,                     //Dimensions
-            4, 0.2, 0, false, false);    //Frame Stats
+            3, 0.2, 0, false, false);    //Frame Stats
 
         //Lay Left
         this.animations[7] = new Animator(this.spritesheet, 
             384, 192,                   //Start Positions
             64, 32,                     //Dimensions
-            4, 0.2, 0, false, false);    //Frame Stats
+            3, 0.2, 0, false, false);    //Frame Stats
 
         //Idle Lay Down
         this.idleAnimations[4] = new Animator(this.spritesheet, 
-            0, 64,                     //Start Positions
+            96, 64,                     //Start Positions
             32, 64,                     //Dimensions
             1, 0.2, 0, false, true);    //Frame Stats
 
         //Idle Lay Right
         this.idleAnimations[5] = new Animator(this.spritesheet, 
-            384, 0,                    //Start Positions
+            512, 0,                    //Start Positions
             64, 32,                     //Dimensions
             1, 0.2, 0, false, true);    //Frame Stats
 
         //Idle Lay Up
         this.idleAnimations[6] = new Animator(this.spritesheet, 
-            160, 64,                   //Start Positions
+            256, 64,                   //Start Positions
             32, 64,                     //Dimensions
             1, 0.2, 0, false, true);    //Frame Stats
 
         //Idle Lay Left
         this.idleAnimations[7] = new Animator(this.spritesheet, 
-            384, 192,                   //Start Positions
+            512, 192,                   //Start Positions
             64, 32,                     //Dimensions
-            1, 0.2, 0, false, false);    //Frame Stats
+            1, 0.2, 0, false, true);    //Frame Stats
 
         //Bite Down
         this.animations[8] = new Animator(this.spritesheet, 
