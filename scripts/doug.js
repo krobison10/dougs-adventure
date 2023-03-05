@@ -46,6 +46,22 @@ class Doug extends Character {
      * @type {number}
      */
     static respawnTime = 10;
+    /**
+     * Speed when dashing.
+     * @type {number}
+     */
+    static dashSpeed = 1000;
+    /**
+     * How long dashes will last.
+     * @type {number}
+     */
+    static dashDuration = 0.12;
+    /**
+     * Minimum time in seconds between dashes.
+     * @type {number}
+     */
+    static dashCoolDown = 6;
+
 
     /**
      * @param {Vec2} pos initial position of the player.
@@ -123,30 +139,15 @@ class Doug extends Character {
          */
         this.speed = 250;
         /**
-         * Speed when dashing.
-         * @type {number}
-         */
-        this.dashSpeed = 1000;
-        /**
          * Indicates whether currently dashing.
          * @type {boolean}
          */
         this.dashing = false;
         /**
-         * How long dashes will last.
-         * @type {number}
-         */
-        this.dashDuration = 0.12;
-        /**
          * Time that last dash occurred.
          * @type {number}
          */
         this.lastDash = 0;
-        /**
-         * Minimum time in seconds between dashes.
-         * @type {number}
-         */
-        this.dashCoolDown = 6;
         /**
          * Current velocity of the player.
          * @type {Vec2}
@@ -158,13 +159,22 @@ class Doug extends Character {
          */
         this.directionMem = 0;
         /**
+         * Indicates whether doug is attacking.
+         * @type {boolean}
+         */
+        this.attacking = false;
+        /**
+         * Direction of current attack.
+         * @type {undefined}
+         */
+        this.attackDir = undefined;
+        /**
          * Current bounding box of the player.
          * @type {BoundingBox}
          */
         this.walkingBox = Character.createBB(this.pos, this.size, this.walkingPadding);
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
-        this.attacking = false;
-        this.attackDir = undefined;
+
 
         //Create still animations
         for(let i = 0; i < 4; i++) {
@@ -182,7 +192,7 @@ class Doug extends Character {
         for(let i = 0; i < 4; i++) {
             this.animations[i + 8] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
-                2, .1 * this.speed / this.dashSpeed, 0, false, true);
+                2, .1 * this.speed / Doug.dashSpeed, 0, false, true);
         }
     }
 
@@ -209,7 +219,7 @@ class Doug extends Character {
         if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
 
         //if dashing is true but time since start is greater than duration, stop
-        if(this.dashing && timeInSecondsBetween(this.lastDash, Date.now()) > this.dashDuration) {
+        if(this.dashing && timeInSecondsBetween(this.lastDash, Date.now()) > Doug.dashDuration) {
             this.dashing = false;
         }
 
@@ -217,7 +227,7 @@ class Doug extends Character {
         if(this.velocity.magnitude() !== 0) {
             //Not currently dashing but tab key pressed and dash cooldown over, start dashing
             if(!this.dashing && gameEngine.keys[" "]
-                && timeInSecondsBetween(Date.now(), this.lastDash) - this.dashDuration > this.dashCoolDown) {
+                && timeInSecondsBetween(Date.now(), this.lastDash) - Doug.dashDuration > Doug.dashCoolDown) {
                 this.dashing = true;
                 this.lastDash = Date.now();
             }
@@ -232,15 +242,15 @@ class Doug extends Character {
         if(this.dashing) {
             this.velocity.x = this.velocity.y = 0;
 
-            if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.dashSpeed;
-            if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.dashSpeed;
-            if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.dashSpeed;
-            if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.dashSpeed;
+            if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= Doug.dashSpeed;
+            if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += Doug.dashSpeed;
+            if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= Doug.dashSpeed;
+            if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += Doug.dashSpeed;
 
-            if(this.velocity.magnitude() > this.dashSpeed) {
+            if(this.velocity.magnitude() > Doug.dashSpeed) {
                 //Modify components so that vector's magnitude (total speed) matches desired speed
-                this.velocity.x = this.dashSpeed/Math.sqrt(2) * this.velocity.x/this.dashSpeed;
-                this.velocity.y = this.dashSpeed/Math.sqrt(2) * this.velocity.y/this.dashSpeed;
+                this.velocity.x = Doug.dashSpeed/Math.sqrt(2) * this.velocity.x/Doug.dashSpeed;
+                this.velocity.y = Doug.dashSpeed/Math.sqrt(2) * this.velocity.y/Doug.dashSpeed;
             }
         }
         else {
@@ -521,11 +531,11 @@ class Doug extends Character {
                 this.drawAnim(ctx, this.animations[6 + d]);
                 this.directionMem = 2;
             }
-            else if(this.velocity.y === this.speed || this.velocity.y === this.dashSpeed) {
+            else if(this.velocity.y === this.speed || this.velocity.y === Doug.dashSpeed) {
                 this.drawAnim(ctx, this.animations[4 + d]);
                 this.directionMem = 0;
             }
-            else if(this.velocity.y === -this.speed || this.velocity.y === -this.dashSpeed) {
+            else if(this.velocity.y === -this.speed || this.velocity.y === -Doug.dashSpeed) {
                 this.drawAnim(ctx, this.animations[7 + d]);
                 this.directionMem = 3;
             }
