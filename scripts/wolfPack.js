@@ -1,13 +1,18 @@
 /**
- * Represents a pack of 4 wolf enemies.
+ * Represents a pack of 4 wolf enemies. Adds extra behaviors to the wolf enemies like
+ * protecting their pack mates.
  *
  * @author Ryan MacLeod
  *
  */
-
 class WolfPack extends Entity {
+    /**
+     * A constructor that creates and adds 4 wolves to the game world.
+     * 
+     * @param {Vec2} pos The position of the top left corner of the WolfPack.
+     */
     constructor(pos) {
-        //Make sure there is a enough reserved space for the "wolf den"
+        //Make sure there is a enough reserved space for the "wolf den" and space inbetween each wolf
         super(pos, new Dimension(64 * 3, 64 * 3));
     
         this.protectMode = false; //Initially set enraged characteristic to false
@@ -27,8 +32,7 @@ class WolfPack extends Entity {
     }
 
     update() {
-
-        if(!this.protectMode) {
+        if(!this.protectMode) { //Checks if any wolf has been damaged
             for(let i = 0; i < 4; i++) {
                 if(this.wolfList[i].hitPoints < this.maxHitPointList[i]) {
                     this.protectMode = true;
@@ -37,13 +41,13 @@ class WolfPack extends Entity {
             }
         }
 
-        if(doug.dead) {
+        if(doug.dead) { //Updates all hitPoints and stops protection mode when doug is dead
             this.protectMode = false;
             for(let i = 0; i < 4; i++) {
                 this.wolfList[i].enraged = false;
                 this.maxHitPointList[i] = this.wolfList[i].hitPoints;
             }
-        } else if(this.protectMode) {
+        } else if(this.protectMode) { //Enrages each wolf while in protection mode
             this.wolfList.forEach(wolf => {
                 wolf.enraged = true;
             });
