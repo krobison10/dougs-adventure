@@ -42,7 +42,7 @@ class SpawnManager {
         6: {
             class: BearBoss,
             size: new Dimension(84, 84),
-            density: 4,
+            density: 2,
             night: true,
             day: true
         }
@@ -73,6 +73,11 @@ class SpawnManager {
         for (let i = this.entityList.length - 1; i >= 0; --i) {
             if(getDistance(doug.getCenter(), this.entityList[i].getCenter()) > SpawnManager.despawnDist) {
                 this.entityList[i].removeFromWorld = true;
+
+                if(this.entityList[i] instanceof WolfPack) {
+                    this.entityList[i].wolfList.forEach(wolf => wolf.removeFromWorld = true);
+                }
+
                 this.entityList.splice(i, 1);
             }
         }

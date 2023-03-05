@@ -27,8 +27,6 @@ class WolfPack extends Entity {
     }
 
     update() {
-        // If pack is marked for removal, remove individual wolves too
-        if(this.removeFromWorld) return this.wolfList.forEach(wolf => wolf.removeFromWorld = true);
 
         if(!this.protectMode) {
             for(let i = 0; i < 4; i++) {
