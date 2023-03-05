@@ -103,7 +103,7 @@ class GameEngine {
 
     /**
      * Adds a new entity to the engine.
-     * @param {Entity | LightMap | SceneManager} entity the entity to add.
+     * @param {Entity | Lighting | SceneManager} entity the entity to add.
      * @param {number} layer
      */
     addEntity(entity, layer = Layers.FOREGROUND) {

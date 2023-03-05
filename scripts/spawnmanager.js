@@ -2,6 +2,7 @@ class SpawnManager {
     static minRadius = 700;
     static maxRadius = 2000;
     static despawnDist = 2200;
+    static baseEntityTarget = 30;
     static table = {
         1: {
             class: Bat,
@@ -51,13 +52,19 @@ class SpawnManager {
 
     constructor() {
         this.entityList = [];
-        this.entityTarget = 30;
+        this.entityTarget = SpawnManager.baseEntityTarget;
         this.pickEntityCode();
         for(let type in SpawnManager.table) {
             SpawnManager.table[type].densityRatio = SpawnManager.table[type].density / SpawnManager.totalDensity;
         }
     }
     update() {
+        this.updateEntities();
+    }
+
+    reset() {
+        this.entityList.forEach(entity => entity.removeFromWorld = true);
+        this.entityList.length = 0;
         this.updateEntities();
     }
 
@@ -86,8 +93,8 @@ class SpawnManager {
                     const testBox = new BoundingBox(pos, SpawnManager.table[key].size);
                     valid = !this.checkObstacles(testBox);
                 }
-                if((lightMap.dayTime && SpawnManager.table[key].day)
-                    || (!lightMap.dayTime && SpawnManager.table[key].night === true)) {
+                if((lightingSystem.dayTime && SpawnManager.table[key].day)
+                    || (!lightingSystem.dayTime && SpawnManager.table[key].night)) {
 
                     const entityClass = SpawnManager.table[key].class;
                     const entity = new entityClass(pos);

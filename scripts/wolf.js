@@ -300,7 +300,7 @@ class Wolf extends Enemy {
     }
 
     setSpeed() {
-        if(lightMap.dayTime) {
+        if(lightingSystem.dayTime) {
             this.speed = 100;
         } else {
             this.speed = 250;

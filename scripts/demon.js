@@ -33,7 +33,7 @@ class Demon extends Enemy {
         
         const source = new FlickeringLightSource(0.85, new Vec2(0, 0), this, new RGBColor(255, 100, 0), 50);
         FireSphere.setFlicker(source);
-        lightMap.addLightSource(source);
+        lightingSystem.addLightSource(source);
     }
 
     /**
@@ -191,7 +191,7 @@ class FireCircle extends Entity {
 
                 const source = new LightSource(magnitude, this.getCenter().clone(),
                     particle, new RGBColor(255, 100, 0), 60);
-                lightMap.addLightSource(source);
+                lightingSystem.addLightSource(source);
             }
         }
     }

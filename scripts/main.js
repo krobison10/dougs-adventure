@@ -13,7 +13,7 @@ let gameTime = 11 * 60; //12:00 pm
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
-const lightMap = new LightMap();
+const lightingSystem = new Lighting();
 const log = new MessageLog();
 
 //Add paths of assets to be downloaded here
@@ -92,10 +92,10 @@ ASSET_MANAGER.downloadAll(() => {
 
 //------ Build Game ------//
 
-const spawnPoint = new Vec2(-140, 0)
+const spawnPoint = new Vec2(300, 0)
 const doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72));
-lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
+lightingSystem.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
 
@@ -112,7 +112,7 @@ let hotbar;
 buildWorld();
 buildUI();
 
-gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
+gameEngine.addEntity(lightingSystem, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(dragon);
 gameEngine.addEntity(demon);

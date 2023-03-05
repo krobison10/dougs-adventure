@@ -455,13 +455,14 @@ class Doug extends Character {
 
     respawn() {
         //Go through and check that all necessary fields are reset
-        this.pos = new Vec2(spawnPoint.x, spawnPoint.y);
+        this.pos = spawnPoint.clone();
         this.lastDamage = Date.now();
         this.dead = false;
         this.hitPoints = this.maxHitPoints;
         this.manaLevel = this.maxMana;
         this.directionMem = 0;
         this.lastHealthPotion = 0;
+        spawner.reset();
     }
 
     getBoost(name, count) {
