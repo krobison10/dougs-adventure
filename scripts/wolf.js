@@ -7,7 +7,7 @@
 
 class Wolf extends Enemy {
 
-    constructor(pos) {
+    constructor(pos, wolfPack = null) {
         super(
             pos,
             ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
@@ -31,6 +31,7 @@ class Wolf extends Enemy {
             y: this.pos.y
         }
 
+        this.wolfPack = wolfPack;
         this.aggroRange = 200;
         this.enraged = false;
         this.pursuing = false;
@@ -59,6 +60,10 @@ class Wolf extends Enemy {
     }
 
     update() {
+        if(this.wolfPack.removeFromWorld) {
+            this.removeFromWorld = true;
+            return;
+        }
         super.update();
         this.setSpeed();
         this.determineRange();
