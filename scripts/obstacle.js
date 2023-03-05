@@ -25,7 +25,7 @@ class Obstacle extends Entity {
 
         if(lightSource) {
             lightSource.attachTo = this;
-            lightMap.addLightSource(lightSource);
+            lightingSystem.addLightSource(lightSource);
         }
     }
 

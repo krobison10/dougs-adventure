@@ -60,7 +60,7 @@ class Sword extends Entity {
                 && !this.enemiesHit.has(ent)
                 && this.enemiesHit.size < 4) {
                 ent.takeDamage(Sword.damage);
-                ent.applyKnockback(doug, 250, .35);
+                ent.applyKnockback(doug, 350, .45);
                 this.enemiesHit.add(ent);
             }
         }
@@ -185,7 +185,7 @@ class Arrow extends Entity {
         this.setBox();
         const source = new LightSource(.5, new Vec2(0, 0), this, new RGBColor(250, 97, 2), 60);
         FireSphere.setFlicker(source);
-        lightMap.addLightSource(source);
+        lightingSystem.addLightSource(source);
     }
 
     setBox() {
@@ -225,7 +225,7 @@ class Arrow extends Entity {
                 const source = new FlickeringLightSource(magnitude, this.getCenter().clone(),
                         particle, new RGBColor(255, 100, 0), 60);
                 Arrow.setFlicker(source);
-                lightMap.addLightSource(source);
+                lightingSystem.addLightSource(source);
             }
         }
     }
@@ -248,7 +248,7 @@ class Arrow extends Entity {
                 }
                 if(entity instanceof Enemy) {
                     entity.takeDamage(Arrow.damage);
-                    entity.applyKnockback(doug, 100, .2);
+                    entity.applyKnockback(doug, 150, .25);
                     return this.removeFromWorld = true;
                 }
             }
@@ -357,7 +357,7 @@ class WaterSphere extends Entity {
 
         this.moveToStartingPoint();
         this.setBox();
-        lightMap.addLightSource(
+        lightingSystem.addLightSource(
             new LightSource(0.8, new Vec2(0, 0), this, new RGBColor(11, 46, 255), 50));
     }
 
@@ -413,7 +413,7 @@ class WaterSphere extends Entity {
                 if(entity instanceof Enemy) {
                     ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
                     entity.takeDamage(WaterSphere.damage);
-                    entity.applyKnockback(doug, 150, .3);
+                    entity.applyKnockback(doug, 300, .35);
                     return this.removeFromWorld = true;
                 }
             }

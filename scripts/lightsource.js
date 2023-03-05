@@ -37,9 +37,6 @@ class LightSource extends Entity {
     }
 
     drawLight(ctx) {
-        //Hack line for doug's candle
-        if(this.attachTo instanceof Doug && hotbar.slots[hotbar.selectedIndex].itemID !== 85) return;
-
         let outerRadius = this.scale * Math.pow(this.magnitude + 1, 2);
 
         let gradient = ctx.createRadialGradient(this.getScreenPos().x, this.getScreenPos().y, 0,
@@ -55,7 +52,7 @@ class LightSource extends Entity {
 
     smoothGradient(gradient, steps) {
         for(let i = 1; i <= steps; i++) {
-            let intensity =  -Math.log10(i/steps) * this.magnitude * lightMap.alpha;
+            let intensity =  -Math.log10(i/steps) * this.magnitude * lightingSystem.alpha;
             gradient.addColorStop(i/steps, rgba(this.color.r, this.color.g, this.color.b, intensity));
         }
     }

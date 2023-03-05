@@ -14,6 +14,9 @@ class GameEngine {
         // Everything that will be updated and drawn each frame
         this.entities = [[], [], [], [], [], []];
 
+        // List of things to update each frame
+        this.updateList = [];
+
         // Information on the input
         this.click = null;
         this.mouse = null;
@@ -100,7 +103,7 @@ class GameEngine {
 
     /**
      * Adds a new entity to the engine.
-     * @param {Entity | LightMap | SceneManager} entity the entity to add.
+     * @param {Entity | Lighting | SceneManager} entity the entity to add.
      * @param {number} layer
      */
     addEntity(entity, layer = Layers.FOREGROUND) {
@@ -157,11 +160,23 @@ class GameEngine {
         }
     }
 
+    addToUpdateList(object) {
+        this.updateList.push(object);
+    }
+
     /**
      * Updates all the entities then removes them if necessary.
      */
     update() {
-        //----Code to draw each layer individually for performance control----//
+        for (let i = this.updateList.length - 1; i >= 0; --i) {
+            if (this.updateList[i].delete) {
+                this.updateList[i].splice(i, 1); // Delete element at i
+            } else {
+                this.updateList[i].update();
+            }
+        }
+
+        //----Code to update each layer individually for performance control----//
 
         let layer = this.entities[Layers.BACKGROUND];
         let entitiesCount = layer.length;

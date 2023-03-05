@@ -6,14 +6,14 @@ const HEIGHT = 768;
 let boundingBoxes = false;
 
 const dontDrawDistance = 1000;
-const dontUpdateDistance = 2000;
+const dontUpdateDistance = 3000;
 const dontCheckCollideDistance = 800;
 
 let gameTime = 11 * 60; //12:00 pm
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
-const lightMap = new LightMap();
+const lightingSystem = new Lighting();
 const log = new MessageLog();
 
 //Add paths of assets to be downloaded here
@@ -47,6 +47,9 @@ declareAssets([
 	"sprites/fires/orange/loops/burning_loop_3.png",
 	"sprites/potion_delay.png",
 	"sprites/rock_small.png",
+	"sprites/rock_large_1.png",
+	"sprites/rock_large_2.png",
+	"sprites/bunny.png",
 
 	"sounds/grab.wav",
 	"sounds/swing_2.wav",
@@ -89,32 +92,33 @@ ASSET_MANAGER.downloadAll(() => {
 
 //------ Build Game ------//
 
-const spawnPoint = new Vec2(-140, 0)
-let doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
- 	new Dimension(52, 72), );
-lightMap.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
+const spawnPoint = new Vec2(300, 0)
+const doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
+ 	new Dimension(52, 72));
+lightingSystem.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 	doug, new RGBColor(252, 204, 67)));
 
-let dragon = new Dragon(new Vec2(-400, -1800), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+
+//Dragon arena is at x=7000 y = -8000, and is 1000 x 1000, move doug's spawn there for easy testing
+const dragon = new Dragon(new Vec2(7300, -7700), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 1000);
 
-let demon = new Demon(new Vec2(-400 , 900), ASSET_MANAGER.getAsset("sprites/demon.png"),
+//Demon arena is at x=-8000 y = 7000, and is 1000 x 1000, move doug's spawn there for easy testing
+const demon = new Demon(new Vec2(-7600 , 6400), ASSET_MANAGER.getAsset("sprites/demon.png"),
 	new Dimension(97, 72), new Padding(20,60,30,60), 10, 1000);
 
-gameEngine.addEntity(new Wolf(new Vec2(400, 200), ASSET_MANAGER.getAsset("sprites/wolf_spritesheet.png"),
-	new Dimension(32, 64), new Padding(0, 0, 0, 0), 30, 150));
-
-gameEngine.addEntity(new BearBoss(new Vec2(-270,300), ASSET_MANAGER.getAsset("sprites/bear.png"),
-	new Dimension(56, 56), new Padding(0, -15, 0, 3),10,100,doug));
 
 let hotbar;
 buildWorld();
 buildUI();
 
-gameEngine.addEntity(lightMap, Layers.LIGHTMAP);
+gameEngine.addEntity(lightingSystem, Layers.LIGHTMAP);
 gameEngine.addEntity(doug);
 gameEngine.addEntity(dragon);
 gameEngine.addEntity(demon);
+
+const spawner = new SpawnManager();
+gameEngine.addToUpdateList(spawner);
 
 
 
@@ -127,8 +131,11 @@ function buildWorld() {
 	//Torch line along path
 	placeTorches();
 
+
+
 	//Cute campfire
-	const fire = new CampFire(new Vec2(13 * TILE_SIZE, TILE_SIZE));
+	removeNatureFromArea(new BoundingBox(new Vec2( 550, -50), new Dimension(150, 150)));
+	const fire = new CampFire(new Vec2(600, 0));
 	gameEngine.addEntity(fire);
 }
 

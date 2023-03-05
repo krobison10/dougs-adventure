@@ -10,7 +10,6 @@ class MapBuilder {
     static width = 150;
     static height = 150;
     static removeOnClear = new Set();
-    static removeOnSoftClear = new Set();
 
     constructor() {
         this.tilemap = ASSET_MANAGER.getAsset("sprites/tiles.png");
@@ -24,9 +23,21 @@ class MapBuilder {
         placeRandomVegetation();
         this.placePath();
         this.placeGrassTiles();
-        placeRandomEnemies();
         placeBorderWalls();
-        
+
+        //Clear area for bosses
+        //Dragon
+        removeNatureFromArea(new BoundingBox(new Vec2(7000, -8000), new Dimension(1000, 1000)), false);
+
+        //Demon
+        removeNatureFromArea(new BoundingBox(new Vec2(-8000, 7000), new Dimension(1000, 1000)), false);
+
+
+        //remove nature from spawn area
+        let bb = new BoundingBox(
+            new Vec2(-10 * TILE_SIZE, -10 * TILE_SIZE),
+            new Dimension(30 * TILE_SIZE, 20 * TILE_SIZE));
+        removeNatureFromArea(bb, false);
     }
 
     placePath() {
@@ -71,93 +82,15 @@ class GrassTile extends Entity {
         ctx.drawImage(this.sprite, 0, 0, 128, 128, this.getScreenPos().x, this.getScreenPos().y, 128, 128);
     }
 }
-function placeRandomEnemies() {
-    const numBats = 250;
-    const numSlimes = 200;
-    const obstacles = [];
 
-    const grassTileSize = 4;
-    let rightBound = (MapBuilder.width * grassTileSize / 2) * TILE_SIZE;
-    const leftBound = -rightBound;
-    rightBound -= 50;
-    let bottomBound = (MapBuilder.height * grassTileSize / 2) * TILE_SIZE;
-    const topBound = -bottomBound;
-    bottomBound -= 100;
-    //----------------------------------Bat spawn checker----------------------------------------
-    for(let i = 0; i < numBats; i++) {
-        let newBat;
-        let valid = false;
-        do {
-            //Create potential Bat
-            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
-            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
-
-            newBat = {
-                type: "Bat",
-                box: new BoundingBox(new Vec2(x, y), new Dimension(50,50)),
-                remove: false
-            }
-
-            valid = true;
-            //check among others
-            for(let obstacle of obstacles) {
-                if(newBat.box.collide(obstacle.box)) {
-                    valid = false;
-                }
-            }
-        } while(!valid)
-        obstacles.push(newBat);
-    }
-    //----------------------------------Smile spawn checker----------------------------------------
-    for(let i = 0; i < numSlimes; i++) {
-        let newSlime;
-        let valid = false;
-        do {
-            //Create potential Bat
-            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
-            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
-
-            newSlime = {
-                type: "Slime",
-                box: new BoundingBox(new Vec2(x, y), new Dimension(60,60)),
-                remove: false
-            }
-
-            valid = true;
-            //check among others
-            for(let obstacle of obstacles) {
-                if(newSlime.box.collide(obstacle.box)) {
-                    valid = false;
-                }
-            }
-        } while(!valid)
-        obstacles.push(newSlime);
-    }
-
-    //----------------------------------Bat Spawner----------------------------------------
-    for(let obstacle of obstacles) {
-        if(obstacle.type === "Bat") {
-            const realBat = new Bat(obstacle.box.pos, ASSET_MANAGER.getAsset("sprites/bat_spritesheet.png"),
-                                    new Dimension(32, 32), new Padding(0, 0, 0, 0), 10, 50)
-            
-            realBat.footPrint = realBat.boundingBox;
-            gameEngine.addEntity(realBat);
-        }
-        else if(obstacle.type === "Slime") {
-            const realSlime = new Slime(obstacle.box.pos, ASSET_MANAGER.getAsset("sprites/slime01.png"),
-                                    new Dimension(55, 37), new Padding(0, 0, 0, 0), 15, 150, true, 1)
-            
-            realSlime.footPrint = realSlime.boundingBox;
-            gameEngine.addEntity(realSlime);
-        }
-    }
-}
 function placeRandomVegetation() {
-    const numTrees = 3000;
-    const numGrass = 12000;
+    const numTrees = 3500;
+    const numGrass = 14000;
     const numFlower1 = 2000;
     const numFlower2 = 2000;
-    const numSmallRock = 3000;
+    const numSmallRock = 4000;
+    const numLargeRock1 = 200;
+    const numLargeRock2 = 100;
 
     const obstacles = [];
 
@@ -275,7 +208,7 @@ function placeRandomVegetation() {
             let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
             newRock = {
                 type: "small_rock",
-                box: new BoundingBox(new Vec2(x, y), new Dimension(16, 16)),
+                box: new BoundingBox(new Vec2(x, y), new Dimension(22, 12)),
                 remove: false
             }
 
@@ -286,6 +219,53 @@ function placeRandomVegetation() {
                 }
             }
 
+        } while(!valid)
+        obstacles.push(newRock);
+    }
+
+    for(let i = 0; i < numLargeRock1; i++) {
+        let newRock;
+        let valid = false;
+        do {
+            //Create potential tree
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newRock = {
+                type: "large_rock_1",
+                box: new BoundingBox(new Vec2(x, y), new Dimension(177, 111)),
+                remove: false
+            }
+
+            valid = true;
+            //check among others
+            for(let obstacle of obstacles) {
+                if(newRock.box.collide(obstacle.box)) {
+                    valid = false;
+                }
+            }
+        } while(!valid)
+        obstacles.push(newRock);
+    }
+    for(let i = 0; i < numLargeRock2; i++) {
+        let newRock;
+        let valid = false;
+        do {
+            //Create potential tree
+            let x = leftBound + Math.round(Math.random() * (rightBound - leftBound));
+            let y = topBound + Math.round(Math.random() * (bottomBound - topBound));
+            newRock = {
+                type: "large_rock_2",
+                box: new BoundingBox(new Vec2(x, y), new Dimension(189, 120)),
+                remove: false
+            }
+
+            valid = true;
+            //check among others
+            for(let obstacle of obstacles) {
+                if(newRock.box.collide(obstacle.box)) {
+                    valid = false;
+                }
+            }
         } while(!valid)
         obstacles.push(newRock);
     }
@@ -351,16 +331,46 @@ function placeRandomVegetation() {
         else if(obstacle.type === "small_rock") {
             const realRock = new Obstacle(
                 obstacle.box.pos,
-                new Dimension(16, 16),
+                new Dimension(22, 12),
                 ASSET_MANAGER.getAsset("sprites/rock_small.png"),
                 false,
                 null,
                 new Vec2(0, 0),
-                new Dimension(16, 16)
+                new Dimension(22, 12)
             )
             realRock.footPrint = new BoundingBox(realRock.pos, realRock.size);
 
             gameEngine.addEntity(realRock, Layers.BACKGROUND);
+        }
+        if(obstacle.type === "large_rock_1") {
+            const realRock = new Obstacle(
+                obstacle.box.pos,
+                new Dimension(177, 111),
+                ASSET_MANAGER.getAsset("sprites/rock_large_1.png"),
+                true,
+                null,
+                new Vec2(0, 0),
+                new Dimension(177, 111)
+            );
+            realRock.boundingBox =
+                Character.createBB(realRock.pos, realRock.size, new Padding(40, 30, 0, 20));
+            realRock.footPrint = realRock.boundingBox;
+            gameEngine.addEntity(realRock);
+        }
+        if(obstacle.type === "large_rock_2") {
+            const realRock = new Obstacle(
+                obstacle.box.pos,
+                new Dimension(189, 120),
+                ASSET_MANAGER.getAsset("sprites/rock_large_2.png"),
+                true,
+                null,
+                new Vec2(0, 0),
+                new Dimension(189, 120)
+            );
+            realRock.boundingBox =
+                Character.createBB(realRock.pos, realRock.size, new Padding(40, 10, 0, 20));
+            realRock.footPrint = realRock.boundingBox;
+            gameEngine.addEntity(realRock);
         }
     }
 
@@ -370,27 +380,30 @@ function placeRandomVegetation() {
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_2.png"));
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/flower_2.png"));
     MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/rock_small.png"));
-
-
-    //remove nature from spawn area
-    let bb = new BoundingBox(
-        new Vec2(-10 * TILE_SIZE, -10 * TILE_SIZE),
-        new Dimension(30 * TILE_SIZE, 20 * TILE_SIZE));
-    removeNatureFromArea(bb);
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/rock_large_1.png"));
+    MapBuilder.removeOnClear.add(ASSET_MANAGER.getAsset("sprites/rock_large_2.png"));
 }
 
-function removeNatureFromArea(boundingBox) {
+/**
+ * Removes obstacles from an area.
+ * @param boundingBox the bounding box that defines the area.
+ * @param hard if true removes all, even non collidable. If false, removes collidable only.
+ */
+function removeNatureFromArea(boundingBox, hard = true) {
+
     for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
         if(MapBuilder.removeOnClear.has(entity.spritesheet)) {
-            if(boundingBox.collide(entity.footPrint)) {
+            if(boundingBox.collide(entity.footPrint) && (hard || entity.boundingBox)) {
                 entity.removeFromWorld = true;
             }
         }
     }
-    for(let entity of gameEngine.entities[Layers.BACKGROUND]) {
-        if(MapBuilder.removeOnClear.has(entity.spritesheet)) {
-            if(boundingBox.collide(entity.footPrint)) {
-                entity.removeFromWorld = true;
+    if(hard) {
+        for(let entity of gameEngine.entities[Layers.BACKGROUND]) {
+            if(MapBuilder.removeOnClear.has(entity.spritesheet)) {
+                if(boundingBox.collide(entity.footPrint)) {
+                    entity.removeFromWorld = true;
+                }
             }
         }
     }

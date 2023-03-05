@@ -28,7 +28,7 @@ class Torch extends Entity {
             null,
             new RGBColor(252, 146, 83), 60);
 
-        lightMap.addLightSource(this.lightSource);
+        lightingSystem.addLightSource(this.lightSource);
     }
 
     draw(ctx) {
@@ -67,7 +67,7 @@ class CampFire extends Entity{
             null,
             new RGBColor(252, 146, 83), 60);
 
-        lightMap.addLightSource(this.lightSource);
+        lightingSystem.addLightSource(this.lightSource);
     }
 
     draw(ctx) {
