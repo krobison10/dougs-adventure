@@ -104,8 +104,7 @@ class Wolf extends Enemy {
         this.setSpeed();
         this.determineRange();
         this.determineSize();
-        this.determineVelocity();
-        this.determineKnockback();
+        this.determineKnockback(); //Can call determineVelocity() which can call move()
         this.determineCollision();
 
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
