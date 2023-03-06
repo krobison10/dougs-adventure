@@ -52,15 +52,16 @@ class Enemy extends Character {
         }
     }
 
-    applyKnockback(player, amount, duration) {
+    applyKnockback(amount, duration, source = doug) {
         if(!(this instanceof Dragon || this instanceof BearBoss || this instanceof Demon)) {
             this.knockback = true;
             this.knockbackSpeed = amount * this.knockbackScale;
             this.knockbackDuration = duration * this.knockbackScale;
             this.lastKnockBack = Date.now();
-            let doug = player.getCenter();
             let enemy = this.getCenter();
-            this.knockbackDir = new Vec2(enemy.x - doug.x, enemy.y - doug.y);
+
+            source = source.getCenter()
+            this.knockbackDir = new Vec2(enemy.x - source.x, enemy.y - source.y);
         }
     }
 

@@ -282,7 +282,7 @@ function placeRandomVegetation() {
                 new Dimension(467, 627)
             );
             realTree.boundingBox =
-                Character.createBB(realTree.pos, realTree.size, new Padding(50, 20, 0 ,20));
+                Character.createBB(realTree.pos, realTree.size, new Padding(36, 20, 0 ,20));
             realTree.footPrint = realTree.boundingBox;
             gameEngine.addEntity(realTree);
         }
@@ -353,7 +353,7 @@ function placeRandomVegetation() {
                 new Dimension(177, 111)
             );
             realRock.boundingBox =
-                Character.createBB(realRock.pos, realRock.size, new Padding(40, 30, 0, 20));
+                Character.createBB(realRock.pos, realRock.size, new Padding(36, 30, 0, 20));
             realRock.footPrint = realRock.boundingBox;
             gameEngine.addEntity(realRock);
         }
@@ -368,7 +368,7 @@ function placeRandomVegetation() {
                 new Dimension(189, 120)
             );
             realRock.boundingBox =
-                Character.createBB(realRock.pos, realRock.size, new Padding(40, 10, 0, 20));
+                Character.createBB(realRock.pos, realRock.size, new Padding(36, 10, 0, 20));
             realRock.footPrint = realRock.boundingBox;
             gameEngine.addEntity(realRock);
         }

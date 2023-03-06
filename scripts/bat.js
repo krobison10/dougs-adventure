@@ -31,7 +31,7 @@ class Bat extends Enemy {
         this.type = 'bat';
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
         this.time = 0;
-        this.aggroRange = 300;
+        this.aggroRange = 400;
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, this.size.w, i * this.size.h,
                 this.size.w, this.size.h,
@@ -58,14 +58,8 @@ class Bat extends Enemy {
             this.move()
         }
 
-        const collisionLat = this.checkCollide("lateral");
-        const collisionVert = this.checkCollide("vertical")
-        if(!collisionLat) {
-            this.pos.x += this.velocity.x * gameEngine.clockTick;
-        }
-        if(!collisionVert) {
-            this.pos.y += this.velocity.y * gameEngine.clockTick;
-        }
+        this.pos.x += this.velocity.x * gameEngine.clockTick;
+        this.pos.y += this.velocity.y * gameEngine.clockTick;
         
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
@@ -79,9 +73,20 @@ class Bat extends Enemy {
         this.changeDirectionDelay-= gameEngine.clockTick;
         //console.log(this.changeDirectionDelay);
         //Check if the direction delay has elapsed
-        if(dougDist < this.aggroRange && !doug.dead && dougDist > 2) {
+
+        //Run away if day time
+        if(lightingSystem.dayTime) {
+            this.velocity = new Vec2(
+                -(dougCenter.x - center.x)/dougDist * this.speed,
+                -(dougCenter.y - center.y)/dougDist * this.speed
+            );
+        }
+        else if(dougDist < this.aggroRange && !doug.dead && dougDist > 2) {
             //this.target = doug.pos;
-            this.velocity= new Vec2((dougCenter.x - center.x)/dougDist * this.speed,(dougCenter.y - center.y)/dougDist * this.speed);
+            this.velocity = new Vec2(
+                (dougCenter.x - center.x)/dougDist * this.speed,
+                (dougCenter.y - center.y)/dougDist * this.speed
+            );
         } else {
             if(dougDist <= 2) {
                 this.velocity.x=0;
