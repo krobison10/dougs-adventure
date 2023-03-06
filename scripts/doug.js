@@ -85,7 +85,7 @@ class Doug extends Character {
          * The maximum hit points of doug
          * @type {number}
          */
-        this.maxHitPoints = 200;
+        this.maxHitPoints = 100;
         /**
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
@@ -120,7 +120,7 @@ class Doug extends Character {
          * The maximum mana level of doug.
          * @type {number}
          */
-        this.maxMana = 100;
+        this.maxMana = 20;
         /**
          * The current mana level of doug.
          * @type {number}
@@ -213,13 +213,13 @@ class Doug extends Character {
             this.handleClick();
         }
 
-        if(gameEngine.keys["h"] || gameEngine.keys["H"]) this.useHealthPotion();
+        if(gameEngine.keys["h"]) this.useHealthPotion();
 
 
-        if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
-        if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.speed;
-        if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
+        if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
+        if(gameEngine.keys["d"]) this.velocity.x += this.speed;
+        if(gameEngine.keys["w"]) this.velocity.y -= this.speed;
+        if(gameEngine.keys["s"]) this.velocity.y += this.speed;
 
         //if dashing is true but time since start is greater than duration, stop
         if(this.dashing && timeInSecondsBetween(this.lastDash, Date.now()) > Doug.dashDuration) {
@@ -245,10 +245,10 @@ class Doug extends Character {
         if(this.dashing) {
             this.velocity.x = this.velocity.y = 0;
 
-            if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= Doug.dashSpeed;
-            if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += Doug.dashSpeed;
-            if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= Doug.dashSpeed;
-            if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += Doug.dashSpeed;
+            if(gameEngine.keys["a"]) this.velocity.x -= Doug.dashSpeed;
+            if(gameEngine.keys["d"]) this.velocity.x += Doug.dashSpeed;
+            if(gameEngine.keys["w"]) this.velocity.y -= Doug.dashSpeed;
+            if(gameEngine.keys["s"]) this.velocity.y += Doug.dashSpeed;
 
             if(this.velocity.magnitude() > Doug.dashSpeed) {
                 //Modify components so that vector's magnitude (total speed) matches desired speed

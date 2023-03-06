@@ -139,7 +139,7 @@ class Enemy extends Character {
                 rolls: 4,
             },
             heart: {
-                chance: 1/20,
+                chance: 1/30,
                 rolls: 1
             },
             'healing potion': {
@@ -171,11 +171,11 @@ class Enemy extends Character {
                 rolls: 20
             },
             heart: {
-                chance: 1/10,
+                chance: 1/20,
                 rolls: 1
             },
             mana: {
-                chance: 1/10,
+                chance: 1/20,
                 rolls: 1
             },
             'healing potion': {
@@ -189,7 +189,7 @@ class Enemy extends Character {
                 rolls: 30
             },
             heart: {
-                chance: 2,
+                chance: 1,
                 rolls: 1
             },
             mana: {
@@ -234,7 +234,7 @@ class Enemy extends Character {
             },
             heart: {
                 chance: 1,
-                rolls: 2
+                rolls: 4
             },
             mana: {
                 chance: 1,

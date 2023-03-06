@@ -22,7 +22,7 @@ class Dragon extends Enemy {
         this.animations = [];
         this.scale = scale1
         this.maxHitPoints = 1000;
-        this.dragonRange = 400;
+        this.dragonRange = 600;
         this.aggroRange = 300;
         this.dead = false;
         this.type = "dragon";
