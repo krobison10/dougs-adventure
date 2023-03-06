@@ -97,8 +97,7 @@ class Wolf extends Enemy {
     update() {
         //Ensures wolves get removed from the world if the wolf pack is removed. Optimization reasons.
         if(this.wolfPack.removeFromWorld) {
-            this.removeFromWorld = true;
-            return;
+            return this.removeFromWorld = true;
         }
         super.update();
         this.setSpeed();

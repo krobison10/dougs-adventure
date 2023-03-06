@@ -40,7 +40,7 @@ class Slime extends Enemy {
 
         this.directionMem = 0;
 
-        this.aggroRange = 250;
+        this.aggroRange = 350;
 
         for(let i = 0; i < 4; i++) {
             this.animations[i] = new Animator(this.spritesheet, 13, (i * 37) + 8,
@@ -142,8 +142,22 @@ class Slime extends Enemy {
         super.die();
         if (this.hitPoints <= 0) {
             if (this.parent) {
-                let slime = new Slime(new Vec2(this.pos.x, this.pos.y), false, .7);
-                let slime2 = new Slime(new Vec2(this.pos.x + 55, this.pos.y), false, .7);
+                let slime = new Slime(this.pos.clone(), false, .7);
+                let slime2 = new Slime(this.pos.clone(), false, .7);
+
+                const center = new Vec2(
+                    this.getCenter().x - slime.size.w / 2,
+                    this.getCenter().y - slime2.size.h / 2);
+
+                slime.pos.x = center.x - 4;
+                slime.pos.y = center.y;
+
+                slime2.pos.x = center.x + 4;
+                slime2.pos.y = center.y;
+
+                slime.applyKnockback(200, 0.3, this);
+                slime2.applyKnockback(200, 0.3, this);
+
                 slime.targetID += 1;
                 gameEngine.addEntity(slime);
                 gameEngine.addEntity(slime2);

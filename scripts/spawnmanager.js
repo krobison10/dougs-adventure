@@ -69,7 +69,7 @@ class SpawnManager {
     }
 
     updateEntities() {
-        // Search and despawn
+        // Search and ddespawn
         for (let i = this.entityList.length - 1; i >= 0; --i) {
             if(getDistance(doug.getCenter(), this.entityList[i].getCenter()) > SpawnManager.despawnDist) {
                 this.entityList[i].removeFromWorld = true;
