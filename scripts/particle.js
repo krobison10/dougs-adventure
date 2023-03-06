@@ -7,15 +7,15 @@
  */
 class Particle extends Entity {
      /**
-      *
-      * @param {Vec2} pos
-      * @param {number} size
-      * @param {RGBColor} color
-      * @param {number} sizeVariance
-      * @param {number} speed
-      * @param {number} speedDecay
-      * @param {Vec2} direction
-      * @param {number} duration
+      * Creates a particle.
+      * @param {Vec2} pos the starting position.
+      * @param {number} size the size.
+      * @param {RGBColor} color the color.
+      * @param {number} sizeVariance the amount the particle can vary from size.
+      * @param {number} speed the speed of the particle.
+      * @param {number} speedDecay how quickly the particle slows.
+      * @param {Vec2} direction the direction to travel, random by default.
+      * @param {number} duration the lifetime of the particle.
       */
      constructor(pos, size, color, sizeVariance, speed, speedDecay, direction, duration) {
           super(pos, new Dimension(size, size));
@@ -44,6 +44,14 @@ class Particle extends Entity {
           this.createdTime = Date.now();
      }
 
+     /**
+      * Generates blood particles.
+      * @param {Vec2} centerPoint
+      * @param {number} count
+      * @param {number} radius
+      * @param {number} size
+      * @param {number} sizeVar
+      */
      static generateDeathParticles(centerPoint, count, radius, size, sizeVar) {
           for(let i = 0; i < count; i++) {
                const pos = getRandomPointWithinRadius(centerPoint, radius);

@@ -1,3 +1,10 @@
+'use strict'
+
+/**
+ *
+ *
+ * @author Cameron Lempitsky
+ */
 class Demon extends Enemy {
     /**
      * @param {Vec2} pos initial position of the demon.

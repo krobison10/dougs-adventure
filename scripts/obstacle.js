@@ -37,6 +37,11 @@ class Obstacle extends Entity {
     }
 }
 
+/**
+ * Represents the border that keeps doug on the map.
+ *
+ * @author Kyler Robison
+ */
 class InvisibleBorder extends Entity {
     constructor(pos, size) {
         super(pos, size);

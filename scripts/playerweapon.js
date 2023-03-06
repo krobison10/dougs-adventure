@@ -1,6 +1,15 @@
 'use strict'
 
 
+//----------------------------------------------------------------------------------------------------------------------
+// SWORD
+//----------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents a swinging sword in the game.
+ *
+ * @author Kyler Robison
+ */
 class Sword extends Entity {
     static damage = 29;
 
@@ -95,11 +104,17 @@ class Sword extends Entity {
 
 }
 
-const Directions = {
-    LEFT: 0,
-    RIGHT: 1
-}
 
+
+//----------------------------------------------------------------------------------------------------------------------
+// BOW
+//----------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents the bow in the game.
+ *
+ * @author Kyler Robison
+ */
 class Bow extends Entity {
     static useTime = 0.4;
 
@@ -158,6 +173,17 @@ class Bow extends Entity {
     }
 }
 
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// ARROW
+//----------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents an arrow in the game.
+ *
+ * @author Kyler Robison
+ */
 class Arrow extends Entity {
     static damage = 14;
     constructor(clickPos) {
@@ -285,6 +311,15 @@ class Arrow extends Entity {
 
 
 
+//----------------------------------------------------------------------------------------------------------------------
+// MANA BOLT
+//----------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents the Mana Bolt in game.
+ *
+ * @author Kyler Robison
+ */
 class ManaBolt extends Entity {
     static useTime = 0.3;
     static ManaCost = 15;
@@ -339,6 +374,15 @@ class ManaBolt extends Entity {
 
 
 
+//----------------------------------------------------------------------------------------------------------------------
+// WATER SPHERE
+//----------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents a water sphere in the game.
+ *
+ * @author Kyler Robison
+ */
 class WaterSphere extends Entity {
     static damage = 45;
     constructor(clickPos) {
@@ -425,4 +469,15 @@ class WaterSphere extends Entity {
             this.getScreenPos().x, this.getScreenPos().y, this.size.w, this.size.h);
         this.attackBox.draw(ctx);
     }
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// DIRECTIONS
+//----------------------------------------------------------------------------------------------------------------------
+
+const Directions = {
+    LEFT: 0,
+    RIGHT: 1
 }

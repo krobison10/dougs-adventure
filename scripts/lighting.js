@@ -141,12 +141,18 @@ class Lighting {
         }
     }
 
+    /**
+     * Starts a blood moon immediately. Sets time to sunset.
+     */
     startBloodMoon() {
         this.dayTime = false;
         gameTime = 20 * 60 + 1;
         this.bloodMoonBegin();
     }
 
+    /**
+     * Takes steps to begin the blood moon.
+     */
     bloodMoonBegin() {
         log.addMessage("The Blood Moon is rising...", MessageLog.colors.red);
         this.bloodMoon = true;
@@ -155,6 +161,9 @@ class Lighting {
         spawner.entityTarget *= 1.5;
     }
 
+    /**
+     * Takes steps to end the blood moon.
+     */
     bloodMoonEnd() {
         this.bloodMoon = false;
         this.setColor(Lighting.color);

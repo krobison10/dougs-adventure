@@ -1,6 +1,15 @@
 'use strict'
 
+/**
+ * Literally is a bunny.
+ *
+ * @author Kyler Robison
+ */
 class Bunny extends Character {
+    /**
+     * Creates a bunny at the position.
+     * @param {Vec2} pos
+     */
     constructor(pos) {
         super(
             pos,

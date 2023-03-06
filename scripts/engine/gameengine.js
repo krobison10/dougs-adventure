@@ -160,6 +160,11 @@ class GameEngine {
         }
     }
 
+    /**
+     * Adds an object to a list of objects that need to be updated every frame.
+     * Object must have an 'update' function.
+     * @param {Object} object the object to add.
+     */
     addToUpdateList(object) {
         this.updateList.push(object);
     }
@@ -255,6 +260,9 @@ class GameEngine {
         log.update();
     }
 
+    /**
+     * Counts and sets the fps of the engine currently.
+     */
     countFPS() {
         this.frameCount++;
         if(timeInSecondsBetween(Date.now(), this.startCount) >= 1) {

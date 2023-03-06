@@ -175,8 +175,17 @@ class HotbarSlot {
     }
 }
 
-
+/**
+ * Represents a buff icon to be displayed under the hotbar.
+ *
+ * @author Kyler Robison
+ */
 class BuffIcon extends Entity {
+    /**
+     * Creates a new one at the position.
+     * @param pos
+     * @param size
+     */
     constructor(pos, size) {
         super(pos, size);
         this.sprite = ASSET_MANAGER.getAsset("sprites/potion_delay.png");
@@ -431,6 +440,14 @@ class UIText extends Entity {
         this.updateFn();
     }
 
+    /**
+     * Draws a UI text label.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {Vec2} pos the location (on screen)
+     * @param {string} content the text
+     * @param {number} size the font size
+     * @param {RGBColor} color the font color
+     */
     static drawText(ctx, pos, content, size = 20, color = new RGBColor(255, 255, 255)) {
         ctx.font = `${size}px ${UIText.font}`;
         ctx.fillStyle = rgba(color.r, color.g, color.b, 1);
@@ -439,6 +456,11 @@ class UIText extends Entity {
     }
 }
 
+/**
+ * Represents dynamic rainbow text.
+ *
+ * @author Kyler Robison
+ */
 class UITextRainbow extends UIText {
     constructor(pos, text, size) {
         super(pos, text, size);
@@ -457,6 +479,11 @@ class UITextRainbow extends UIText {
     }
 }
 
+/**
+ * Represents the message log that displays messages in the bottom left.
+ *
+ * @author Kyler Robison
+ */
 class MessageLog {
     static colors = {
         red: new RGBColor(255, 45, 45),
@@ -465,6 +492,7 @@ class MessageLog {
         yellow: new RGBColor(255, 247, 0),
         lightGray: new RGBColor(200, 200, 200)
     }
+
     constructor() {
         this.messages = [];
         this.pos = new Vec2(100, 600);
@@ -488,6 +516,11 @@ class MessageLog {
         return this.pos.y + i * this.messageHeight
     }
 
+    /**
+     * Adds a message to the log.
+     * @param {UIText | string} text the text to display. Can be a UIText object (font size must be 20), or a string.
+     * @param {RGBColor} color the font color of the text, presets are static in MessageLog.colors
+     */
     addMessage(text, color = new RGBColor(255, 255, 255)) {
         const pos = new Vec2(this.pos.x, this.getMessagePos(this.messages.length));
         if(text instanceof UIText) {
@@ -507,6 +540,11 @@ class MessageLog {
     }
 }
 
+/**
+ * Creates a damage marker in game.
+ * @param entity the entity which is being damaged.
+ * @param amount the amount of the damage.
+ */
 function createDamageMarker(entity, amount) {
     let x = entity.getCenter().x;
     let y = entity.getCenter().y;
@@ -525,7 +563,7 @@ function createDamageMarker(entity, amount) {
         }
     }
     marker.draw = function(ctx) {
-        UIText.drawText(ctx, this.getScreenPos(), this.content, this.size, this.color);
+        UIText.drawText(ctx, this.getScreenPos(), this.content, 20, this.color);
     }
     gameEngine.addEntity(marker, Layers.GLOWING_ENTITIES);
 }

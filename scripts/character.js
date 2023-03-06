@@ -72,6 +72,9 @@ class Character extends Entity {
         );
     }
 
+    /**
+     * Creates the death particles for the character.
+     */
     deathParticles() {
         let count = this.size.h * this.size.w / 50;
         Particle.generateDeathParticles(this.getCenter().clone(), count, this.size.w / 2, 4, 2);

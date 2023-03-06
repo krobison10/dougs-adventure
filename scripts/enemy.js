@@ -52,6 +52,12 @@ class Enemy extends Character {
         }
     }
 
+    /**
+     * Applies knockback to the enemy.
+     * @param {number} amount the amount (speed) of the knockback.
+     * @param {number} duration amount of time in seconds it will last.
+     * @param {*} source the source of the knockback (to calculate direction).
+     */
     applyKnockback(amount, duration, source = doug) {
         if(!(this instanceof Dragon || this instanceof BearBoss || this instanceof Demon)) {
             this.knockback = true;
@@ -60,19 +66,28 @@ class Enemy extends Character {
             this.lastKnockBack = Date.now();
             let enemy = this.getCenter();
 
-            source = source.getCenter()
+            source = source.getCenter();
             this.knockbackDir = new Vec2(enemy.x - source.x, enemy.y - source.y);
         }
     }
 
+    /**
+     * Plays the death sound of the enemy.
+     */
     deathSound() {
         ASSET_MANAGER.playAsset("sounds/std_kill.wav");
     }
 
+    /**
+     * Plays the hit sound of the enemy.
+     */
     hitSound() {
         ASSET_MANAGER.playAsset("sounds/Hit_1.wav")
     }
 
+    /**
+     * Takes steps to remove the enemy from the game.
+     */
     die() {
         super.deathParticles();
         this.removeFromWorld = true;
@@ -80,6 +95,9 @@ class Enemy extends Character {
         this.drops();
     }
 
+    /**
+     * Calculates and executes drops of the killed enemy.
+     */
     drops() {
         const table = Enemy.dropTable[this.type];
         if(table) {
@@ -109,6 +127,11 @@ class Enemy extends Character {
         this.animation.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
     }
 
+    /**
+     * Represents the types and probabilities of drops for various enemies.
+     * For each drop, each item has a chance of being given specified by probability.
+     * Rolls represent how many times the drop will be attempted, to facilitate multiple drops at a time.
+     */
     static dropTable = {
         slime: {
             arrow: {
@@ -223,6 +246,10 @@ class Enemy extends Character {
             }
         }
     }
+
+    /**
+     * Specifies the type of drop for each item.
+     */
     static dropTypes = {
         arrow: "item",
         'healing potion': "item",
@@ -233,6 +260,11 @@ class Enemy extends Character {
     }
 }
 
+/**
+ * Calculates the drop quantity.
+ * @param {Object} drop the drop object from the table.
+ * @returns {number} the amount to give.
+ */
 function dropQuantity(drop) {
     let count = 0;
     for(let i = 0; i < drop.rolls; i++) {

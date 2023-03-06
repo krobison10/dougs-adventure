@@ -86,12 +86,25 @@ const Layers = {
  * Represents a vector with an x and y component.
  */
 class Vec2 {
+    /**
+     * Creates a new 2d vector.
+     * @param {number} x
+     * @param {number} y
+     */
     constructor(x, y) {
         Object.assign(this, {x, y});
     }
+
+    /**
+     * @returns {number} the magnitude of the vector.
+     */
     magnitude() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
+
+    /**
+     * @returns {Vec2} a clone of the vector.
+     */
     clone() {
         return new Vec2(this.x, this.y);
     }
@@ -101,6 +114,10 @@ class Vec2 {
  * Represents a dimension containing a width and height field.
  */
 class Dimension {
+    /**
+     * @param {number} w width
+     * @param {number} h height
+     */
     constructor(w, h) {
         Object.assign(this, {w, h});
     }
@@ -150,6 +167,11 @@ function probability(chance) {
     return randomInt(size) < Math.ceil(chance * size);
 }
 
+/**
+ * @param {number} pos center point
+ * @param {number} radius radius
+ * @returns {Vec2} a point within the circle created by pos and radius.
+ */
 function getRandomPointWithinRadius(pos, radius) {
     // Generate a random angle in radians
     const angle = Math.random() * 2 * Math.PI;
@@ -164,6 +186,13 @@ function getRandomPointWithinRadius(pos, radius) {
     return new Vec2(x, y);
 }
 
+/**
+ * Picks a point within a min and max radius from a point.
+ * @param {Vec2} origin the center point.
+ * @param {number} minRad the inside radius.
+ * @param {number} maxRad the outside radius.
+ * @returns {Vec2} the new point.
+ */
 function radiusPickPoint(origin, minRad, maxRad) {
     const angle = Math.random() * Math.PI * 2;
     const distance = minRad + Math.random() * (maxRad - minRad);

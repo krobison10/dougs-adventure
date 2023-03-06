@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * Represents the bear enemy.
  *
