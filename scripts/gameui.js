@@ -14,7 +14,7 @@ class Hotbar extends Entity {
          */
         this.slots = [];
 
-        for(let i = 0; i < 8; i++) {
+        for(let i = 0; i < 5; i++) {
             this.slots.push(new HotbarSlot(this, i));
         }
 
@@ -31,15 +31,13 @@ class Hotbar extends Entity {
             let id = this.slots[this.selectedIndex].itemID;
             if(!id) return this.label.content = "";
             let text = Item.items[id].name;
-            this.label.content = id ? `${text}: ${id}` : "";
+            this.label.content = id ? `${text}` : "";
         }
         gameEngine.addEntity(this.label, Layers.UI);
 
         this.addItem(0, 336);
-        this.addItem(1, 76);
-        this.addItem(2, 351);
-        this.addItem(6, 246);
-        this.addItem(7, 85);
+        this.addItem(3, 246);
+        this.addItem(4, 85);
     }
 
     addItem(slot, id) {
@@ -441,6 +439,24 @@ class UIText extends Entity {
     }
 }
 
+class UITextRainbow extends UIText {
+    constructor(pos, text, size) {
+        super(pos, text, size);
+        this.hue = 0;
+    }
+
+    setColor(hue, saturation, lightness) {
+        this.fillStyle = `hsl(${hue * 360}, ${saturation * 100}%, ${lightness * 100}%)`;
+    }
+
+    update() {
+        super.update();
+        this.hue += 0.25 * gameEngine.clockTick;
+        if (this.hue > 1) this.hue -= 1;
+        this.setColor(this.hue, 1, 0.5);
+    }
+}
+
 class MessageLog {
     static colors = {
         red: new RGBColor(255, 45, 45),
@@ -466,7 +482,6 @@ class MessageLog {
         for(let i = 0; i < this.messages.length; i++) {
             this.messages[i].pos.y = this.getMessagePos(i);
         }
-
     }
 
     getMessagePos(i) {
@@ -474,15 +489,21 @@ class MessageLog {
     }
 
     addMessage(text, color = new RGBColor(255, 255, 255)) {
-        let message = new UIText(new Vec2(this.pos.x, this.getMessagePos(this.messages.length)), text, 20, color);
-        message.createdTime = Date.now();
-        message.updateFn = function() {
+        const pos = new Vec2(this.pos.x, this.getMessagePos(this.messages.length));
+        if(text instanceof UIText) {
+            text.pos = pos;
+        }
+        else {
+            text = new UIText(pos, text, 20, color);
+        }
+        text.createdTime = Date.now();
+        text.updateFn = function() {
             if(timeInSecondsBetween(this.createdTime, Date.now()) >= 10) {
-                this.removeFromWorld = true;2
+                this.removeFromWorld = true;
             }
         }
-        this.messages.push(message);
-        gameEngine.addEntity(message, Layers.UI);
+        this.messages.push(text);
+        gameEngine.addEntity(text, Layers.UI);
     }
 }
 

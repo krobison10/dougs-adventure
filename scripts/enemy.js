@@ -80,17 +80,22 @@ class Enemy extends Character {
         this.drops();
     }
 
-
-
     drops() {
         const table = Enemy.dropTable[this.type];
         if(table) {
             for(let drop in table) {
-                if(Enemy.dropTypes[drop] === "item") {
-                    doug.getDrop(drop, dropQuantity(table[drop]));
+                if(Enemy.dropTypes[drop] === "newitem") {
+                    if (drop === "manaBolt") {
+                        doug.getManaBolt();
+                    } else if(drop === "bow") {
+                        doug.getBow();
+                    }
                 }
-                else if(Enemy.dropTypes[drop] === "boost") {
+                else if (Enemy.dropTypes[drop] === "boost") {
                     doug.getBoost(drop, dropQuantity(table[drop]));
+                }
+                else if (Enemy.dropTypes[drop] === "item") {
+                    doug.getDrop(drop, dropQuantity(table[drop]));
                 }
             }
         }

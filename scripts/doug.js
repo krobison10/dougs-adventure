@@ -75,9 +75,12 @@ class Doug extends Character {
         this.animations = [];
 
         this.inventory = {
+            bow: 0,
+            manaBolt: 0,
             arrow: 50,
             'healing potion': 2
         }
+
         /**
          * The maximum hit points of doug
          * @type {number}
@@ -508,6 +511,26 @@ class Doug extends Character {
                 log.addMessage(message, MessageLog.colors.lightGray);
                 ASSET_MANAGER.playAsset("sounds/grab.wav");
             }, 200);
+        }
+    }
+
+    getManaBolt() {
+        if(!this.hasManaBolt) {
+            this.hasManaBolt = true;
+            hotbar.addItem(2, 351);
+            const message = new UITextRainbow(null, "Unlocked Mana Bolt", 20);
+            log.addMessage(message);
+            ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+        }
+    }
+
+    getBow() {
+        if(!this.hasBow) {
+            this.hasBow = true;
+            hotbar.addItem(1, 76);
+            const message = new UITextRainbow(null, "Unlocked Diamond Bow", 20);
+            log.addMessage(message);
+            ASSET_MANAGER.playAsset("sounds/upgrade.wav");
         }
     }
 
