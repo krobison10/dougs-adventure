@@ -89,7 +89,7 @@ class Lighting {
      * Updates the game time, 1 real life second equals 2 in game minutes.
      */
     updateTime() {
-        gameTime = gameTime + (Date.now() - this.lastTime) / 250;
+        gameTime = gameTime + (Date.now() - this.lastTime) / 500;
         this.lastTime = Date.now();
         if(gameTime > (24 * 60)) {
             gameTime = 0;

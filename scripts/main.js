@@ -9,12 +9,17 @@ const dontDrawDistance = 1000;
 const dontUpdateDistance = 3000;
 const dontCheckCollideDistance = 800;
 
+let debug = false;
+let showFPS = false;
+
 let gameTime = 11 * 60; //12:00 pm
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightingSystem = new Lighting();
 const log = new MessageLog();
+
+setDebug();
 
 //Add paths of assets to be downloaded here
 declareAssets([
@@ -131,8 +136,6 @@ function buildWorld() {
 	//Torch line along path
 	placeTorches();
 
-
-
 	//Cute campfire
 	removeNatureFromArea(new BoundingBox(new Vec2( 550, -50), new Dimension(150, 150)));
 	const fire = new CampFire(new Vec2(600, 0));
@@ -165,7 +168,13 @@ function buildUI() {
 	gameEngine.addEntity(clock, Layers.UI);
 
 	const fpsCounter = new UIText(new Vec2(WIDTH - 300, 120), "", 20);
-	fpsCounter.updateFn = () => {fpsCounter.content = `FPS: ${gameEngine.fps}`};
+	fpsCounter.updateFn = () => {
+		if(showFPS || debug) {
+			fpsCounter.content = `FPS: ${gameEngine.fps}`
+		} else {
+			fpsCounter.content = "";
+		}
+	};
 	gameEngine.addEntity(fpsCounter, Layers.UI);
 }
 
@@ -199,3 +208,34 @@ const toggleMute = () => {
 window.onbeforeunload = function() {
 	return "Data will be lost if you leave the page, are you sure?";
 };
+
+window.addEventListener("keypress", e => {
+	if(e.key === "d" && e.ctrlKey) {
+		debug = !debug;
+		setDebug();
+	}
+})
+
+window.addEventListener("keypress", e => {
+	if(e.key === "f" && e.ctrlKey) {
+		showFPS = !showFPS;
+		setDebug();
+	}
+})
+
+function setDebug() {
+	if(!debug) {
+		for (let e of document.querySelectorAll(".debug")) {
+			e.style = "display: none";
+		}
+
+		boundingBoxes = false;
+		const box = document.getElementById("toggle-boxes");
+		box.checked = false;
+	}
+	else {
+		for (let e of document.querySelectorAll(".debug")) {
+			e.style = "display: inline-block";
+		}
+	}
+}
