@@ -14,6 +14,7 @@ let showFPS = false;
 
 let gameTime = 11 * 60; //12:00 pm
 
+const music = new MusicManager();
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const lightingSystem = new Lighting();
@@ -81,7 +82,9 @@ declareAssets([
 
 
 	"sounds/Menu_Tick.wav",
-	"sounds/theme.mp3"
+	"sounds/day_music.mp3",
+	"sounds/night_music.mp3",
+
 
 ]);
 
@@ -90,7 +93,8 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	gameEngine.init(ctx);
 	gameEngine.start();
-	ASSET_MANAGER.setVolume(0.5)
+	ASSET_MANAGER.setVolume(0.5);
+	music.setTracks();
 });
 
 
