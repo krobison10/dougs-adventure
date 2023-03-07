@@ -15,7 +15,7 @@ class Doug extends Character {
      * Time in seconds for how long doug must wait to drink another health potion.
      * @type {number}
      */
-    static healthPotionCooldown = 15;
+    static healthPotionCooldown = 20;
     /**
      * Amount of HP that the health potion regenerates.
      * @type {number}
@@ -60,7 +60,7 @@ class Doug extends Character {
      * Minimum time in seconds between dashes.
      * @type {number}
      */
-    static dashCoolDown = 6;//6
+    static dashCoolDown = 6;
 
 
     /**
@@ -75,14 +75,15 @@ class Doug extends Character {
         this.animations = [];
 
         this.inventory = {
-            arrow: 50,
-            'healing potion': 2
+            arrow: 0,
+            'healing potion': 0
         }
+
         /**
          * The maximum hit points of doug
          * @type {number}
          */
-        this.maxHitPoints = 200;
+        this.maxHitPoints = 100;
         /**
          * The current health of doug. Should not exceed 400 because the health bar will break.
          * @type {number}
@@ -117,7 +118,7 @@ class Doug extends Character {
          * The maximum mana level of doug.
          * @type {number}
          */
-        this.maxMana = 100;
+        this.maxMana = 20;
         /**
          * The current mana level of doug.
          * @type {number}
@@ -210,13 +211,13 @@ class Doug extends Character {
             this.handleClick();
         }
 
-        if(gameEngine.keys["h"] || gameEngine.keys["H"]) this.useHealthPotion();
+        if(gameEngine.keys["h"]) this.useHealthPotion();
 
 
-        if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= this.speed;
-        if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += this.speed;
-        if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= this.speed;
-        if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += this.speed;
+        if(gameEngine.keys["a"]) this.velocity.x -= this.speed;
+        if(gameEngine.keys["d"]) this.velocity.x += this.speed;
+        if(gameEngine.keys["w"]) this.velocity.y -= this.speed;
+        if(gameEngine.keys["s"]) this.velocity.y += this.speed;
 
         //if dashing is true but time since start is greater than duration, stop
         if(this.dashing && timeInSecondsBetween(this.lastDash, Date.now()) > Doug.dashDuration) {
@@ -242,10 +243,10 @@ class Doug extends Character {
         if(this.dashing) {
             this.velocity.x = this.velocity.y = 0;
 
-            if(gameEngine.keys["a"] || gameEngine.keys["A"]) this.velocity.x -= Doug.dashSpeed;
-            if(gameEngine.keys["d"] || gameEngine.keys["D"]) this.velocity.x += Doug.dashSpeed;
-            if(gameEngine.keys["w"] || gameEngine.keys["W"]) this.velocity.y -= Doug.dashSpeed;
-            if(gameEngine.keys["s"] || gameEngine.keys["S"]) this.velocity.y += Doug.dashSpeed;
+            if(gameEngine.keys["a"]) this.velocity.x -= Doug.dashSpeed;
+            if(gameEngine.keys["d"]) this.velocity.x += Doug.dashSpeed;
+            if(gameEngine.keys["w"]) this.velocity.y -= Doug.dashSpeed;
+            if(gameEngine.keys["s"]) this.velocity.y += Doug.dashSpeed;
 
             if(this.velocity.magnitude() > Doug.dashSpeed) {
                 //Modify components so that vector's magnitude (total speed) matches desired speed
@@ -280,7 +281,7 @@ class Doug extends Character {
         const entities = gameEngine.entities[Layers.FOREGROUND];
         for(const entity of entities) {
             if (entity instanceof Enemy && this.boundingBox.collide(entity.boundingBox)) {
-                 this.takeDamage(entity.damage);
+                this.takeDamage(entity.damage);
             }
         }
 
@@ -294,7 +295,10 @@ class Doug extends Character {
         this.regen();
         this.updateDebug();
     }
-    
+
+    /**
+     * Handles a click event on the canvas
+     */
     handleClick() {
         if(!this.attacking) {
             if(hotbar.slots[hotbar.selectedIndex].itemID === 336) {
@@ -328,19 +332,11 @@ class Doug extends Character {
         }
     }
 
-    useHealthPotion() {
-        if(this.inventory['healing potion'] >= 1 &&
-            timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
-            this.inventory['healing potion']--;
-            this.lastHealthPotion = Date.now();
-            gameEngine.addEntity(new BuffIcon(new Vec2(hotbar.pos.x, hotbar.pos.y + 52), null), Layers.UI);
-            this.hitPoints += Doug.healthPotionAmount;
-            if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-            ASSET_MANAGER.playAsset("sounds/drink.wav");
-            createDamageMarker(this, -Doug.healthPotionAmount);
-        }
-    }
-
+    /**
+     * Checks for a collision.
+     * @param {string} dir the direction to check in, 'lateral' or 'vertical'.
+     * @returns {boolean} true if a collision is detected.
+     */
     checkCollide(dir) {
         let futurePos = {};
         futurePos.x = this.pos.x + (dir === 'lateral' ? this.velocity.x * gameEngine.clockTick : 0);
@@ -389,6 +385,22 @@ class Doug extends Character {
     }
 
     /**
+     * Consumes a health potion if available.
+     */
+    useHealthPotion() {
+        if(this.inventory['healing potion'] >= 1 &&
+            timeInSecondsBetween(Date.now(), this.lastHealthPotion) >= Doug.healthPotionCooldown) {
+            this.inventory['healing potion']--;
+            this.lastHealthPotion = Date.now();
+            gameEngine.addEntity(new BuffIcon(new Vec2(hotbar.pos.x, hotbar.pos.y + 52), null), Layers.UI);
+            this.hitPoints += Doug.healthPotionAmount;
+            if(this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+            ASSET_MANAGER.playAsset("sounds/drink.wav");
+            createDamageMarker(this, -Doug.healthPotionAmount);
+        }
+    }
+
+    /**
      * Takes mana away from doug and makes necessary updates. If doug does not have enough mana, none will be taken.
      * @param amount the amount to take away.
      * @returns {boolean} True if there was enough mana, false if there was not.
@@ -401,6 +413,10 @@ class Doug extends Character {
         return true;
     }
 
+    /**
+     * Takes hit points away appropriately.
+     * @param {number} amount the amount to take.
+     */
     takeDamage(amount) {
         if(timeInSecondsBetween(this.lastDamage, Date.now()) >= Doug.immunityDuration && !this.dead) {
             this.lastDamage = Date.now();
@@ -453,6 +469,9 @@ class Doug extends Character {
 
     }
 
+    /**
+     * Respawns doug and handles other necessary resets.
+     */
     respawn() {
         //Go through and check that all necessary fields are reset
         this.pos = spawnPoint.clone();
@@ -465,6 +484,11 @@ class Doug extends Character {
         spawner.reset();
     }
 
+    /**
+     * Applies a boost to doug. Will not apply more than he is supposed to get.
+     * @param {string} name the name of the boost.
+     * @param {number} count the amount to give.
+     */
     getBoost(name, count) {
         if(count < 1) return;
 
@@ -500,6 +524,11 @@ class Doug extends Character {
         }
     }
 
+    /**
+     * Adds an item to the inventory.
+     * @param {string} name the name of the item.
+     * @param {number} count the amount to give.
+     */
     getDrop(name, count) {
         if(count > 0) {
             const message = `Picked up ${count} ${name}${count > 1 ? 's' : ''}`;
@@ -512,11 +541,29 @@ class Doug extends Character {
     }
 
     /**
-     * Updates the position label below the canvas
+     * Gives doug the mana bolt weapon.
      */
-    updateDebug() {
-        const label = document.getElementById("position");
-        label.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
+    getManaBolt() {
+        if(!this.hasManaBolt) {
+            this.hasManaBolt = true;
+            hotbar.addItem(2, 351);
+            const message = new UITextRainbow(null, "Unlocked Mana Bolt", 20);
+            log.addMessage(message);
+            ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+        }
+    }
+
+    /**
+     * Gives doug the bow weapon.
+     */
+    getBow() {
+        if(!this.hasBow) {
+            this.hasBow = true;
+            hotbar.addItem(1, 76);
+            const message = new UITextRainbow(null, "Unlocked Diamond Bow", 20);
+            log.addMessage(message);
+            ASSET_MANAGER.playAsset("sounds/upgrade.wav");
+        }
     }
 
     draw(ctx) {
@@ -566,5 +613,13 @@ class Doug extends Character {
 
     drawAnim(ctx, animator) {
         animator.drawFrame(gameEngine.clockTick, ctx, this.getScreenPos().x, this.getScreenPos().y);
+    }
+
+    /**
+     * Updates the position label below the canvas
+     */
+    updateDebug() {
+        const label = document.getElementById("position");
+        label.innerText = `X: ${Math.round(this.pos.x / TILE_SIZE)}, Y: ${Math.round(this.pos.y / TILE_SIZE)}`;
     }
 }

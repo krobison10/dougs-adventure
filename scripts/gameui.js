@@ -568,3 +568,4 @@ function createDamageMarker(entity, amount) {
     gameEngine.addEntity(marker, Layers.GLOWING_ENTITIES);
 }
 
+
