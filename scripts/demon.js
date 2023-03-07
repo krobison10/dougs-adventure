@@ -41,6 +41,14 @@ class Demon extends Enemy {
         const source = new FlickeringLightSource(0.85, new Vec2(0, 0), this, new RGBColor(255, 100, 0), 50);
         FireSphere.setFlicker(source);
         lightingSystem.addLightSource(source);
+
+        this.targetID = 0;
+        let pathDist = 600;
+        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ pathDist, y: this.pos.y}, {x: this.pos.x+pathDist, y: this.pos.y+pathDist}, {x: this.pos.x, y: this.pos.y+pathDist}];
+        this.target = this.path[this.targetID % 4];
+
+        let dist = getDistance(this.pos, this.target)
+        this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
     }
 
     /**
@@ -70,39 +78,17 @@ class Demon extends Enemy {
             if(dougDist <= 2) {
                 this.velocity.x=0;
                 this.velocity.y=0;
-            }
-
-            if (this.changeDirectionDelay <= 0) {
-                            // Reset the direction delay to a new value
-                this.changeDirectionDelay = 1;
-                    // Change direction and velocity randomly with probability
-
-                const randomDirection = Math.floor(Math.random() * 5);
-                switch (randomDirection) {
-                    case 0:
-                        this.velocity.x = -this.speed;
-                        this.velocity.y = 0;
-                        this.directionMem = 1;
-                        break;
-                    case 1:
-                        this.velocity.x = this.speed;
-                        this.velocity.y = 0;
-                        this.directionMem = 2;
-                        break;
-                    case 2:
-                        this.velocity.x = 0;
-                        this.velocity.y = -this.speed;
-                        this.directionMem = 3;
-                        break;
-                    case 3:
-                        this.velocity.x = 0; 
-                        this.velocity.y = this.speed;
-                        this.directionMem = 4;
-                        break;
-                    case 4:
-                        this.velocity.x = 0;
-                        this.velocity.y = 0;
+            } else {
+                
+                let dist = getDistance(this.pos, this.target);
+                if (dist < 5) {
+                    this.targetID += Math.floor(Math.random() * 4);;
                 }
+                this.target = this.path[this.targetID % 4];
+                dist = getDistance(this.pos, this.target)
+                //console.log(this.pos)
+
+                this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
             }
         } 
     }

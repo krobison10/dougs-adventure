@@ -80,18 +80,16 @@ class Dragon extends Enemy {
                 this.velocity.x=0;
                 this.velocity.y=0;
             } else {
+                
+                let dist = getDistance(this.pos, this.target);
+                if (dist < 5) {
+                    this.targetID += Math.floor(Math.random() * 4);;
+                }
+                this.target = this.path[this.targetID % 4];
+                dist = getDistance(this.pos, this.target)
+                //console.log(this.pos)
 
-            
-
-            let dist = getDistance(this.pos, this.target);
-            if (dist < 5) {
-                this.targetID += Math.floor(Math.random() * 4);;
-            }
-            this.target = this.path[this.targetID % 4];
-            dist = getDistance(this.pos, this.target)
-            //console.log(this.pos)
-
-            this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+                this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
             }
         } 
     }
