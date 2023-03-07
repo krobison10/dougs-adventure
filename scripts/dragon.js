@@ -21,7 +21,7 @@ class Dragon extends Enemy {
         super(pos, spritesheet, new Dimension(size.w*scale1, size.h*scale1), spritePadding, damage, hitPoints);
         this.animations = [];
         this.scale = scale1
-        this.maxHitPoints = 1000;
+        this.maxHitPoints = hitPoints;
         this.dragonRange = 600;
         this.aggroRange = 300;
         this.dead = false;
