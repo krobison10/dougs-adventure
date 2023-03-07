@@ -92,7 +92,7 @@ ASSET_MANAGER.downloadAll(() => {
 
 //------ Build Game ------//
 
-const spawnPoint = new Vec2(300, 0)
+const spawnPoint = new Vec2(7000, -7000)
 const doug = new Doug(new Vec2(spawnPoint.x, spawnPoint.y), ASSET_MANAGER.getAsset("sprites/blondie_spritesheet.png"),
  	new Dimension(52, 72));
 lightingSystem.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
@@ -100,7 +100,7 @@ lightingSystem.addLightSource(new FlickeringLightSource(.6, new Vec2(0, 0),
 
 
 //Dragon arena is at x=7000 y = -8000, and is 1000 x 1000, move doug's spawn there for easy testing
-const dragon = new Dragon(new Vec2(7300, -7700), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
+const dragon = new Dragon(new Vec2(7100, -7900), ASSET_MANAGER.getAsset("sprites/dragon2.png"),
 	new Dimension(96, 96), new Padding(20,0,20,0), 10, 2000);
 
 //Demon arena is at x=-8000 y = 7000, and is 1000 x 1000, move doug's spawn there for easy testing
