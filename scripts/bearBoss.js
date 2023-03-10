@@ -1,5 +1,6 @@
 'use strict';
 
+
 /**
  * Represents the bear enemy.
  *
@@ -9,7 +10,8 @@
 class BearBoss extends Enemy {
     constructor(pos) {
         super(pos, ASSET_MANAGER.getAsset("sprites/bear.png"),
-            new Dimension(84, 84), new Padding(), 40, 500);
+            new Dimension(84, 84), new Padding(8, 3, 8, 3), 40, 500); // top, right, bottom, left
+
 
         this.changeDirectionDelay = 8;
         this.pursueRange=400; //set the range at which the bear starts pursuing the player
@@ -17,6 +19,8 @@ class BearBoss extends Enemy {
         this.hitPoints = this.maxHitPoints;
 
         this.type = "bear";
+        // store the original padding
+        this.originalPadding = this.spritePadding;
 
         // boss's movement speed
         this.speed = 100;
@@ -57,7 +61,32 @@ class BearBoss extends Enemy {
         if (this.hitPoints <= 0) {
             this.velocity.x = this.velocity.y = 0;
             return;
-        }    
+        }  
+        
+        // adjust the padding when moving to the right or left
+        if (this.velocity.x > 0) { // moving right
+            this.spritePadding = new Padding(
+                this.originalPadding.top + 3,  // top padding + 5
+                this.originalPadding.right, 
+                this.originalPadding.bottom + 3,  // bottom padding + 5
+                this.originalPadding.left
+            );
+        } else if (this.velocity.x < 0) { // moving left
+            this.spritePadding = new Padding(
+                this.originalPadding.top + 5, 
+                this.originalPadding.right, 
+                this.originalPadding.bottom + 5, 
+                this.originalPadding.left
+            );
+        } else { // not moving
+            this.spritePadding = new Padding(
+                this.originalPadding.top + 5, 
+                this.originalPadding.right, 
+                this.originalPadding.bottom + 5, 
+                this.originalPadding.left
+            );
+        }
+
         /**
          * Check for collision, we do two separate checks
          */
@@ -69,7 +98,6 @@ class BearBoss extends Enemy {
         if (!collisionVert) {
             this.pos.y += this.velocity.y * gameEngine.clockTick;
         }
-    
         // update bounding box
         this.boundingBox = Character.createBB(this.pos, this.size, this.spritePadding);
     }
@@ -77,9 +105,6 @@ class BearBoss extends Enemy {
     move() {
         //Decrement the direction delay by 1
         this.changeDirectionDelay-= gameEngine.clockTick;
-        //console.log(this.changeDirectionDelay);
-        //Check if the direction delay has elapsed
-
         if(getDistance(this.getCenter(), doug.getCenter()) < this.pursueRange && !doug.dead) {
             // calculate the direction vector from bear to player
             let bearCenter = this.getCenter();
@@ -131,7 +156,6 @@ class BearBoss extends Enemy {
             }
         }
     }
-    
 
     draw(ctx){
       // this.drawAnim(ctx, this.animations[3]);
@@ -147,9 +171,6 @@ class BearBoss extends Enemy {
              if (this.velocity.y > 0) { //down
                   this.drawAnim(ctx, this.animations[0]);} else if (this.velocity.y < 0) { //up
                   this.drawAnim(ctx, this.animations[3]);
-             }
-             else {
-             // this.drawAnim = this.animations[0];
              }
         }
         this.boundingBox.draw(ctx);
