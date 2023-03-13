@@ -2,7 +2,7 @@ class SpawnManager {
     static minRadius = 700;
     static maxRadius = 2000;
     static despawnDist = 2200;
-    static baseEntityTarget = 30;
+    static baseEntityTarget = 20;
     static table = {
         1: {
             class: Bat,
@@ -35,7 +35,7 @@ class SpawnManager {
         5: {
             class: WolfPack,
             size: new Dimension(64*3, 64*3),
-            density: 4,
+            density: 2,
             night: true,
             day: true
         },

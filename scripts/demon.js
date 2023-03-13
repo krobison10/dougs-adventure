@@ -44,10 +44,15 @@ class Demon extends Enemy {
 
         this.targetID = 0;
         let pathDist = 600;
-        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ pathDist, y: this.pos.y}, {x: this.pos.x+pathDist, y: this.pos.y+pathDist}, {x: this.pos.x, y: this.pos.y+pathDist}];
-        this.target = this.path[this.targetID % 4];
+        this.path = [
+            new Vec2(this.pos.x, this.pos.y),
+            new Vec2(this.pos.x + pathDist, this.pos.y),
+            new Vec2(this.pos.x + pathDist, this.pos.y + pathDist),
+            new Vec2(this.pos.x, this.pos.y + pathDist)
+        ];
+        this.target = this.path[2];
 
-        let dist = getDistance(this.pos, this.target)
+        let dist = getDistance(this.pos, this.target);
         this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
     }
 
@@ -79,16 +84,22 @@ class Demon extends Enemy {
                 this.velocity.x=0;
                 this.velocity.y=0;
             } else {
-                
-                let dist = getDistance(this.pos, this.target);
-                if (dist < 5) {
-                    this.targetID += Math.floor(Math.random() * 4);;
-                }
-                this.target = this.path[this.targetID % 4];
-                dist = getDistance(this.pos, this.target)
-                //console.log(this.pos)
 
-                this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+                let dist = getDistance(this.pos, this.target);
+
+                if (dist < 5) {
+                    let newID;
+                    do {
+                        newID = randomInt(4);
+                    } while(newID === this.targetID);
+                    this.targetID = newID;
+                }
+                this.target = this.path[this.targetID];
+                dist = getDistance(this.pos, this.target)
+
+                if(dist > 1) {
+                    this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+                }
             }
         } 
     }
@@ -142,7 +153,6 @@ class FireCircle extends Entity {
         
         this.size = new Dimension(48,48);
         this.pos = position;
-      
 
         this.radius = 200;
         this.center = position;
@@ -189,13 +199,6 @@ class FireCircle extends Entity {
         }
     }
 
-    static setFlicker(source) {
-        source.growSpeed = 0.5;
-        source.shrinkSpeed = .2;
-        source.maxMagnitude = source.magnitude * 1.1;
-        source.minMagnitude = source.magnitude * 0.86;
-    }
-
     checkCollide() {
         for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
             if(entity.boundingBox && this.attackBox.collide(entity.boundingBox)) {
@@ -207,9 +210,5 @@ class FireCircle extends Entity {
     }
     draw(ctx) {
         this.attackBox.draw(ctx);
-        return;
-        ctx.drawImage(ASSET_MANAGER.getAsset("sprites/FireSphere.png"), 0, 0, 16, 16,
-            this.getScreenPos().x, this.getScreenPos().y, this.size.w, this.size.h);
-        
     }
 }

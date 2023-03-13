@@ -43,8 +43,13 @@ class Dragon extends Enemy {
         
         this.targetID = 0;
         let pathDist = 600;
-        this.path = [{x: this.pos.x, y: this.pos.y}, {x: this.pos.x+ pathDist, y: this.pos.y}, {x: this.pos.x+pathDist, y: this.pos.y+pathDist}, {x: this.pos.x, y: this.pos.y+pathDist}];
-        this.target = this.path[this.targetID % 4];
+        this.path = [
+            new Vec2(this.pos.x, this.pos.y),
+            new Vec2(this.pos.x + pathDist, this.pos.y),
+            new Vec2(this.pos.x + pathDist, this.pos.y + pathDist),
+            new Vec2(this.pos.x, this.pos.y + pathDist)
+        ];
+        this.target = this.path[1];
 
         let dist = getDistance(this.pos, this.target)
         this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
@@ -73,23 +78,28 @@ class Dragon extends Enemy {
         //console.log(this.changeDirectionDelay);
         //Check if the direction delay has elapsed
         if(dougDist < this.aggroRange && !doug.dead && dougDist > 2) {
-            //this.target = doug.pos;
-            this.velocity= new Vec2((dougCenter.x - center.x)/dougDist * this.speed,(dougCenter.y - center.y)/dougDist * this.speed);
+            this.velocity = new Vec2((dougCenter.x - center.x)/dougDist * this.speed,(dougCenter.y - center.y)/dougDist * this.speed);
         } else {
             if(dougDist <= 2) {
-                this.velocity.x=0;
-                this.velocity.y=0;
+                this.velocity.x = 0;
+                this.velocity.y = 0;
             } else {
                 
                 let dist = getDistance(this.pos, this.target);
-                if (dist < 5) {
-                    this.targetID += Math.floor(Math.random() * 4);;
-                }
-                this.target = this.path[this.targetID % 4];
-                dist = getDistance(this.pos, this.target)
-                //console.log(this.pos)
 
-                this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+                if (dist < 5) {
+                    let newID;
+                    do {
+                        newID = randomInt(4);
+                    } while(newID === this.targetID);
+                    this.targetID = newID;
+                }
+                this.target = this.path[this.targetID];
+                dist = getDistance(this.pos, this.target)
+
+                if(dist > 1) {
+                    this.velocity = new Vec2((this.target.x - this.pos.x)/dist * this.speed,(this.target.y - this.pos.y)/dist * this.speed);
+                }
             }
         } 
     }
@@ -109,9 +119,7 @@ class Dragon extends Enemy {
                 this.time = Date.now();
                 gameEngine.addEntity(new FireSphere(new Vec2(doug.getCenter().x, doug.getCenter().y)));
                 ASSET_MANAGER.playAsset("sounds/dragon_attack.wav")
-
             }
-            
         }
     }
 
@@ -167,19 +175,24 @@ class FireSphere extends Entity {
         const source = new FlickeringLightSource(0.85, new Vec2(0, 0), this, new RGBColor(255, 100, 0), 50);
         FireSphere.setFlicker(source);
         lightingSystem.addLightSource(source);
+
+        this.origin = this.pos.clone();
     }
 
     setBox() {
         this.attackBox = new BoundingBox(this.pos, this.size);
     }
 
-    // gives a jump in its direction, so it doesn't start inside the player
     moveToStartingPoint() {
         this.pos.x += this.velocity.x * 120;
         this.pos.y += this.velocity.y * 120;
     }
 
     update() {
+        if(getDistance(this.pos, this.origin) > 2000) {
+            ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+            return this.removeFromWorld = true;
+        }
         this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;
         this.pos.y += this.velocity.y * this.speed * gameEngine.clockTick;
         this.generateParticles();
@@ -220,12 +233,6 @@ class FireSphere extends Entity {
     checkCollide() {
         for(let entity of gameEngine.entities[Layers.FOREGROUND]) {
             if(entity.boundingBox && this.attackBox.collide(entity.boundingBox)) {
-                if(entity instanceof Obstacle) {
-                    if(getDistance(this.pos, dragon.pos) < dontUpdateDistance) {
-                        ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
-                    }
-                    return this.removeFromWorld = true;
-                }
                 if(entity instanceof Doug) {
                     ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
                     entity.takeDamage(FireSphere.damage);
