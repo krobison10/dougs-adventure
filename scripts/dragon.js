@@ -189,8 +189,10 @@ class FireSphere extends Entity {
     }
 
     update() {
-        if(getDistance(this.pos, this.origin) > 2000) {
-            ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+        if(getDistance(this.pos, this.origin) > 1200) {
+            if(getDistance(this.pos, doug.pos) < dontUpdateDistance) {
+                ASSET_MANAGER.playAsset("sounds/projectile_impact.wav");
+            }
             return this.removeFromWorld = true;
         }
         this.pos.x += this.velocity.x * this.speed * gameEngine.clockTick;

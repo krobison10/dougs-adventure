@@ -6,7 +6,7 @@ const HEIGHT = 768;
 let boundingBoxes = false;
 
 const dontDrawDistance = 1000;
-const dontUpdateDistance = 30000;
+const dontUpdateDistance = 3000;
 const dontCheckCollideDistance = 800;
 
 let debug = false;

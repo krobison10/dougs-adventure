@@ -157,7 +157,7 @@ class Enemy extends Character {
                 rolls: 1
             },
             mana: {
-                chance: 1/10,
+                chance: 1/5,
                 rolls: 1
             },
             'healing potion': {

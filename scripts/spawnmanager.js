@@ -2,7 +2,7 @@ class SpawnManager {
     static minRadius = 700;
     static maxRadius = 2000;
     static despawnDist = 2200;
-    static baseEntityTarget = 20;
+    static baseEntityTarget = 25;
     static table = {
         1: {
             class: Bat,
@@ -28,7 +28,7 @@ class SpawnManager {
         4: {
             class: Bunny,
             size: new Dimension(26, 22),
-            density: 25,
+            density: 15,
             night: false,
             day: true
         },
