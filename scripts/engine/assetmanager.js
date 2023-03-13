@@ -111,7 +111,7 @@ class AssetManager {
 
     /**
      * @param {string} path the path of the asset.
-     * @returns {HTMLImageElement} the image.
+     * @returns {HTMLImageElement | HTMLAudioElement} the asset.
      */
     getAsset(path) {
         return this.cache[path];
