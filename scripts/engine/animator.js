@@ -56,7 +56,6 @@ class Animator {
             if(this.loop) {
                 this.elapsedTime -= this.totalTime;
             } else {
-                console.error("Attempted to draw a complete animation");
                 return;
             }
         }
