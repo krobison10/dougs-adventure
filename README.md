@@ -1,5 +1,5 @@
 # Doug's Adventure
-A 2d JavaScript RPG/Adventure web game.
+A 2D JavaScript RPG/Adventure web game.
 
 <br>
 
